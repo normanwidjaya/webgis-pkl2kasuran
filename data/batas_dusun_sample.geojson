@@ -1,0 +1,33 @@
+{
+    "type": "FeatureCollection",
+    "name": "batas_dusun_kasuran",
+    "crs": {
+        "type": "name",
+        "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" }
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "nama": "Dusun Kasuran",
+                "desa": "Sumberarum",
+                "kecamatan": "Tempuran",
+                "kabupaten": "Magelang",
+                "provinsi": "Jawa Tengah",
+                "keterangan": "Data sementara - akan diperbarui dari ArcGIS export"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [110.175, -7.551],
+                        [110.181, -7.551],
+                        [110.181, -7.555],
+                        [110.175, -7.555],
+                        [110.175, -7.551]
+                    ]
+                ]
+            }
+        }
+    ]
+}
