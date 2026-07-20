@@ -1,0 +1,26 @@
+{
+  "name": "webgis-pkl2kasuran",
+  "version": "1.0.0",
+  "description": "Sistem Informasi Geospasial Terintegrasi untuk Pemerintah dan Masyarakat Dusun Kasuran, Desa Sumberarum, Kecamatan Tempuran, Kabupaten Magelang, Jawa Tengah.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/normanwidjaya/webgis-pkl2kasuran.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/normanwidjaya/webgis-pkl2kasuran/issues"
+  },
+  "homepage": "https://github.com/normanwidjaya/webgis-pkl2kasuran#readme",
+  "dependencies": {
+    "ogr2ogr": "^6.0.1",
+    "proj4": "^2.20.9",
+    "shapefile": "^0.6.6"
+  }
+}

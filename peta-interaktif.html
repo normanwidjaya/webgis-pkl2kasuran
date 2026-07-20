@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Interaktif — Dusun Kasuran</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary: #2d6a4f;
+            --primary-dark: #1b4332;
+            --primary-light: #40916c;
+            --accent: #52b788;
+            --accent-light: #95d5b2;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --info: #3498db;
+            --dark: #1a1a2e;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --white: #ffffff;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--dark);
+        }
+
+        /* ==================== TOP BAR ==================== */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 56px;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-300);
+            z-index: 1001;
+            flex-shrink: 0;
+        }
+        .topbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            text-decoration: none;
+        }
+        .topbar-brand img { height: 32px; }
+        .topbar-actions { display: flex; gap: 8px; }
+        .topbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            color: var(--gray-700);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .topbar-btn:hover { background: var(--gray-100); border-color: var(--primary); color: var(--primary); }
+        .topbar-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+
+        /* ==================== MAP CONTAINER ==================== */
+        .map-container { flex: 1; position: relative; }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* ==================== LAYER PANEL ==================== */
+        .layer-panel {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            z-index: 1000;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 300px;
+            max-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .layer-panel.collapsed .layer-body { display: none; }
+        .layer-panel.collapsed { width: auto; }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            background: var(--primary);
+            color: var(--white);
+            cursor: pointer;
+            user-select: none;
+            flex-shrink: 0;
+        }
+        .layer-header h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .layer-header .toggle-icon { transition: transform 0.3s; }
+        .layer-panel.collapsed .toggle-icon { transform: rotate(180deg); }
+
+        .layer-body {
+            overflow-y: auto;
+            flex: 1;
+            padding: 8px 0;
+        }
+        .layer-group {
+            border-bottom: 1px solid var(--gray-200);
+            padding: 6px 0;
+        }
+        .layer-group:last-child { border-bottom: none; }
+        .layer-group-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-500);
+            padding: 4px 16px;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 0.85rem;
+            color: var(--gray-700);
+        }
+        .layer-item:hover { background: var(--gray-100); }
+        .layer-item input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+
+        .layer-swatch {
+            width: 20px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.15);
+        }
+        .layer-swatch.line {
+            height: 3px;
+            border-radius: 2px;
+            border: none;
+        }
+        .layer-label {
+            flex: 1;
+            font-weight: 500;
+        }
+        .layer-count {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            background: var(--gray-200);
+            padding: 1px 6px;
+            border-radius: 10px;
+        }
+
+        /* ==================== LEGEND ==================== */
+        .legend-box {
+            position: absolute;
+            bottom: 28px;
+            left: 16px;
+            z-index: 1000;
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow);
+            padding: 14px 16px;
+            font-size: 0.8rem;
+            max-width: 220px;
+            transition: var(--transition);
+        }
+        .legend-box h4 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            color: var(--gray-700);
+        }
+        .legend-row:last-child { margin-bottom: 0; }
+        .legend-swatch {
+            width: 16px;
+            height: 12px;
+            border-radius: 2px;
+            flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.2);
+        }
+        .legend-swatch.circle { border-radius: 50%; width: 10px; height: 10px; }
+        .legend-swatch.line {
+            height: 3px;
+            width: 20px;
+            border: none;
+            border-radius: 2px;
+        }
+
+        /* ==================== MOBILE ==================== */
+        @media (max-width: 768px) {
+            .layer-panel {
+                width: 260px;
+                top: 10px;
+                right: 10px;
+            }
+            .topbar { padding: 0 12px; }
+            .topbar-btn span { display: none; }
+        }
+        @media (max-width: 480px) {
+            .layer-panel {
+                width: calc(100vw - 20px);
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+                max-height: 45vh;
+            }
+            .legend-box { bottom: 50vh; left: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== TOP BAR ==================== -->
+    <div class="topbar">
+        <a href="index.html" class="topbar-brand">
+            <i class="fas fa-map-marked-alt" style="color:var(--primary);font-size:1.3rem;"></i>
+            Peta Interaktif Dusun Kasuran
+        </a>
+        <div class="topbar-actions">
+            <button class="topbar-btn" onclick="mainMap.fitBounds(fullExtent);" title="Zoom ke semua layer">
+                <i class="fas fa-expand-arrows-alt"></i> <span>Zoom Semua</span>
+            </button>
+            <a href="index.html" class="topbar-btn">
+                <i class="fas fa-home"></i> <span>Beranda</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ==================== MAP ==================== -->
+    <div class="map-container">
+        <div id="map-container"></div>
+
+        <!-- Layer Panel -->
+        <div class="layer-panel" id="layerPanel">
+            <div class="layer-header" onclick="togglePanel()">
+                <h3><i class="fas fa-layer-group"></i> Layer Peta</h3>
+                <i class="fas fa-chevron-up toggle-icon"></i>
+            </div>
+            <div class="layer-body" id="layerBody">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend-box" id="legendBox">
+            <h4><i class="fas fa-list-ul"></i> Legenda</h4>
+            <div id="legendContent">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+    // ================================================================
+    //  PETA INTERAKTIF — Dusun Kasuran
+    //  Data shapefile hardbaked via GeoJSON (data/ folder)
+    // ================================================================
+
+    // ---- Map Init ----
+    var mainMap = L.map('map-container', {
+        center: [-7.57406, 110.18705],
+        zoom: 15,
+        zoomControl: true,
+        scrollWheelZoom: true,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> | WebGIS Dusun Kasuran',
+        maxZoom: 19,
+    }).addTo(mainMap);
+
+    L.control.scale({ imperial: false, metric: true, position: 'bottomright' }).addTo(mainMap);
+
+    // ---- Globals ----
+    var layerGroups = {};
+    var fullExtent = null;
+    var allLayers = [];
+
+    // ---- Symbology ----
+    var symbology = {
+        batas_kasuran: {
+            style: { color: '#2d6a4f', weight: 3, fillColor: '#52b788', fillOpacity: 0.15, opacity: 1 },
+            legendLabel: 'Batas Dusun Kasuran',
+            legendSwatch: '<div class="legend-swatch" style="background:#52b788;border-color:#2d6a4f;"></div>',
+        },
+        batas_sumberarum: {
+            style: { color: '#e67e22', weight: 2, fillColor: '#f39c12', fillOpacity: 0.1, opacity: 0.8, dashArray: '6 3' },
+            legendLabel: 'Batas Dusun (Sumberarum)',
+            legendSwatch: '<div class="legend-swatch" style="background:#f39c12;border-color:#e67e22;"></div>',
+            popupFn: function(f) { return '<strong>' + (f.properties.Toponimi || f.properties.DUSUN || f.properties.NAMOBJ) + '</strong>'; },
+        },
+        batas_desa_magelang: {
+            style: { color: '#bdc3c7', weight: 1, fillColor: '#ecf0f1', fillOpacity: 0.05, opacity: 0.5 },
+            legendLabel: 'Batas Desa (Magelang)',
+            legendSwatch: '<div class="legend-swatch" style="background:#ecf0f1;border-color:#bdc3c7;"></div>',
+            popupFn: function(f) { return '<strong>Desa ' + f.properties.WADMKD + '</strong><br>Kec. ' + f.properties.WADMKC; },
+        },
+        batas_magelang: {
+            style: { color: '#2980b9', weight: 3, fillColor: '#3498db', fillOpacity: 0.08, opacity: 1 },
+            legendLabel: 'Batas Kab. Magelang',
+            legendSwatch: '<div class="legend-swatch" style="background:#3498db;border-color:#2980b9;"></div>',
+            popupFn: function(f) { return '<strong>' + f.properties.NAME_2 + '</strong><br>' + f.properties.NAME_1; },
+        },
+        batas_magelang_sekitar: {
+            styleFn: function(f) {
+                var name = f.properties.WADMKK || '';
+                var colors = { 'Magelang':'#2980b9','Sleman':'#8e44ad','Bantul':'#16a085','Kulon Progo':'#d35400','Gunungkidul':'#c0392b','Boyolali':'#27ae60','Klaten':'#f39c12','Sukoharjo':'#1abc9c','Semarang':'#e74c3c','Temanggung':'#9b59b6','Wonosobo':'#2ecc71','Purworejo':'#e67e22','Kebumen':'#3498db' };
+                var c = colors[name] || '#95a5a6';
+                return { color: c, weight: 2, fillColor: c, fillOpacity: 0.08, opacity: 0.7 };
+            },
+            legendLabel: 'Batas Wilayah Sekitar',
+            legendSwatch: '<div class="legend-swatch" style="background:transparent;border:2px dashed #95a5a6;"></div>',
+            popupFn: function(f) { return '<strong>' + (f.properties.WADMKK || f.properties.NAMOBJ) + '</strong><br>' + (f.properties.WADMPR || ''); },
+        },
+        jalan_desa: {
+            styleFn: function(f) {
+                var k = f.properties.Kelas;
+                if (k === '1') return { color: '#e74c3c', weight: 3.5, opacity: 0.9 };
+                if (k === '2') return { color: '#f39c12', weight: 2.5, opacity: 0.85 };
+                return { color: '#95a5a6', weight: 1.5, opacity: 0.7, dashArray: '5 3' };
+            },
+            popupFn: function(f) {
+                var k = f.properties.Kelas;
+                var label = k === '1' ? 'Jalan Utama' : k === '2' ? 'Jalan Sekunder' : 'Jalan Lokal/Setapak';
+                return '<strong>' + label + '</strong>' + (f.properties.Toponimi ? '<br>' + f.properties.Toponimi : '');
+            },
+        },
+    };
+
+    var roadLegend = [
+        { color: '#e74c3c', width: 3.5, label: 'Jalan Utama (Kelas 1)' },
+        { color: '#f39c12', width: 2.5, label: 'Jalan Sekunder (Kelas 2)' },
+        { color: '#95a5a6', width: 1.5, label: 'Jalan Lokal/Setapak (Kelas 3)', dash: '5 3' },
+    ];
+
+    var layerConfigs = [
+        { name: 'batas_kasuran', label: 'Batas Dusun Kasuran', group: 'Batas' },
+        { name: 'batas_sumberarum', label: 'Batas Dusun Sumberarum', group: 'Batas' },
+        { name: 'batas_desa_magelang', label: 'Batas Desa Magelang', group: 'Batas' },
+        { name: 'batas_magelang', label: 'Batas Kab. Magelang', group: 'Batas' },
+        { name: 'batas_magelang_sekitar', label: 'Batas Wilayah Sekitar', group: 'Batas' },
+        { name: 'jalan_desa', label: 'Jalan Desa', group: 'Transportasi' },
+    ];
+
+    var layerMeta = {
+        batas_kasuran:1, batas_sumberarum:15, batas_desa_magelang:372,
+        batas_magelang:1, batas_magelang_sekitar:16, jalan_desa:282,
+    };
+
+    // ---- Build Layer Panel ----
+    function buildLayerPanel() {
+        var body = document.getElementById('layerBody');
+        var groups = {};
+        layerConfigs.forEach(function(c) {
+            if (!groups[c.group]) groups[c.group] = [];
+            groups[c.group].push(c);
+        });
+        var html = '';
+        Object.keys(groups).forEach(function(groupName) {
+            html += '<div class="layer-group"><div class="layer-group-title">' + groupName + '</div>';
+            groups[groupName].forEach(function(item) {
+                var sym = symbology[item.name];
+                var swatchHtml = '';
+                if (item.name === 'jalan_desa') {
+                    swatchHtml = '<div class="layer-swatch line" style="background:#e74c3c;"></div>';
+                } else if (sym && sym.style) {
+                    swatchHtml = '<div class="layer-swatch" style="background:' + sym.style.fillColor + ';border-color:' + sym.style.color + ';"></div>';
+                } else {
+                    swatchHtml = '<div class="layer-swatch" style="background:#ccc;"></div>';
+                }
+                var count = layerMeta[item.name] || '';
+                html += '<label class="layer-item"><input type="checkbox" checked data-layer="' + item.name + '">' +
+                    swatchHtml + '<span class="layer-label">' + item.label + '</span>' +
+                    (count ? '<span class="layer-count">' + count + '</span>' : '') + '</label>';
+            });
+            html += '</div>';
+        });
+        body.innerHTML = html;
+
+        body.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                var name = this.dataset.layer;
+                var lg = layerGroups[name];
+                if (!lg) return;
+                if (this.checked) mainMap.addLayer(lg);
+                else mainMap.removeLayer(lg);
+            });
+        });
+    }
+
+    // ---- Build Legend ----
+    function buildLegend() {
+        var c = document.getElementById('legendContent');
+        var h = '<div style="margin-bottom:10px;"><strong style="font-size:0.7rem;color:#666;">BATAS WILAYAH</strong></div>';
+        ['batas_kasuran','batas_magelang','batas_sumberarum','batas_desa_magelang'].forEach(function(n) {
+            var s = symbology[n];
+            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
+        });
+        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">JARINGAN JALAN</strong></div>';
+        roadLegend.forEach(function(r) {
+            var ds = r.dash ? 'border:none;border-top:' + r.width + 'px dashed ' + r.color + ';height:0;width:20px;' : '';
+            h += '<div class="legend-row"><div class="legend-swatch line" style="background:' + r.color + ';height:' + r.width + 'px;' + ds + '"></div> ' + r.label + '</div>';
+        });
+        c.innerHTML = h;
+    }
+
+    // ---- Load GeoJSON ----
+    function loadLayer(config) {
+        return fetch('data/' + config.name + '.geojson')
+            .then(function(resp) {
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                return resp.json();
+            })
+            .then(function(geojson) {
+                var sym = symbology[config.name];
+                var options = {
+                    onEachFeature: function(feature, layer) {
+                        if (sym && sym.popupFn) layer.bindPopup(sym.popupFn(feature), { offset: [0, -5] });
+                    }
+                };
+                if (sym && sym.styleFn) options.style = sym.styleFn;
+                else if (sym && sym.style) options.style = sym.style;
+
+                var lg = L.geoJSON(geojson, options);
+                layerGroups[config.name] = lg;
+                allLayers.push(lg);
+                mainMap.addLayer(lg);
+
+                var bounds = lg.getBounds();
+                if (bounds.isValid()) {
+                    if (!fullExtent) fullExtent = bounds;
+                    else fullExtent.extend(bounds);
+                }
+                console.log('OK: ' + config.label + ' (' + geojson.features.length + ')');
+            })
+            .catch(function(err) {
+                console.error('FAIL: ' + config.name + ' - ' + err.message);
+            });
+    }
+
+    // ---- Init ----
+    function init() {
+        buildLayerPanel();
+        buildLegend();
+
+        // Load layers sequentially
+        var promises = layerConfigs.map(function(c) { return loadLayer(c); });
+        Promise.all(promises).then(function() {
+            // Fit to Sumberarum + Kasuran local area first
+            var localExtent = null;
+            ['batas_kasuran','batas_sumberarum','jalan_desa'].forEach(function(name) {
+                var lg = layerGroups[name];
+                if (lg) {
+                    var b = lg.getBounds();
+                    if (b.isValid()) {
+                        if (!localExtent) localExtent = b;
+                        else localExtent.extend(b);
+                    }
+                }
+            });
+            if (localExtent) {
+                mainMap.fitBounds(localExtent, { padding: [40, 40] });
+            }
+            console.log('Peta Interaktif Ready - ' + allLayers.length + ' layers - Fokus: Sumberarum');
+        });
+    }
+
+    function togglePanel() {
+        document.getElementById('layerPanel').classList.toggle('collapsed');
+    }
+
+    init();
+    </script>
+</body>
+</html>

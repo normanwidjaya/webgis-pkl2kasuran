@@ -1,0 +1,50 @@
+[
+  {
+    "name": "batas_kasuran",
+    "label": "Batas Dusun Kasuran",
+    "group": "Batas",
+    "type": "Polygon",
+    "file": "batas_kasuran.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "jalan_desa",
+    "label": "Jalan Desa Sumberarum",
+    "group": "Transportasi",
+    "type": "LineString",
+    "file": "jalan_desa.geojson",
+    "featureCount": 282
+  },
+  {
+    "name": "batas_sumberarum",
+    "label": "Batas Dusun Sumberarum",
+    "group": "Batas",
+    "type": "Polygon",
+    "file": "batas_sumberarum.geojson",
+    "featureCount": 15
+  },
+  {
+    "name": "batas_desa_magelang",
+    "label": "Batas Desa Magelang",
+    "group": "Batas",
+    "type": "MultiPolygon",
+    "file": "batas_desa_magelang.geojson",
+    "featureCount": 372
+  },
+  {
+    "name": "batas_magelang",
+    "label": "Batas Kab. Magelang",
+    "group": "Batas",
+    "type": "Polygon",
+    "file": "batas_magelang.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "batas_magelang_sekitar",
+    "label": "Batas Sekitar Magelang",
+    "group": "Batas",
+    "type": "Polygon",
+    "file": "batas_magelang_sekitar.geojson",
+    "featureCount": 16
+  }
+]
