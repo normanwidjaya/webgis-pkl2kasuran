@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    WebGIS Dusun Kasuran - Main Stylesheet
    ============================================================ */
 
@@ -1579,7 +1579,7 @@ body {
 }
 
 /* ================================================================
-   TAB SYSTEM — PETA DASAR & TEMATIK
+   TAB SYSTEM â€” PETA DASAR & TEMATIK
    ================================================================ */
 
 .section-badge-primary { background: var(--primary); color: var(--white); }
@@ -1631,54 +1631,45 @@ body {
 .map-panel.active { display: block; }
 
 .map-panel-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .map-panel-info {
     background: var(--white);
     border-radius: var(--radius);
-    padding: 28px;
-    box-shadow: var(--shadow);
+    padding: 24px 28px 16px;
+    box-shadow: var(--shadow-sm);
     border: 1px solid var(--gray-200);
 }
 
 .map-panel-info h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--dark);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .map-panel-info h3 i { color: var(--primary); }
 
 .map-panel-info > p {
     color: var(--gray-700);
-    font-size: 0.95rem;
-    line-height: 1.7;
-    margin-bottom: 20px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
 }
 
 .map-panel-map {
-    background: var(--gray-200);
+    background: var(--white);
     border-radius: var(--radius);
-    min-height: 350px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
-    border: 1px solid var(--gray-300);
-}
-
-.map-panel-map::before {
-    content: '🗺️ Peta akan ditampilkan di sini';
-    color: var(--gray-500);
-    font-size: 0.9rem;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--gray-300);
+    line-height: 0;
 }
 
 /* Map Stats Row */
@@ -2028,7 +2019,6 @@ body {
     }
 
     .map-panel-map {
-        min-height: 250px;
         order: -1;
     }
 
@@ -2052,4 +2042,56 @@ body {
     .sektor-grid { grid-template-columns: 1fr; }
     .komoditas-grid { grid-template-columns: repeat(2, 1fr); }
     .map-stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ==================== PETA IMAGE DISPLAY ==================== */
+.peta-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: zoom-in;
+    background: var(--white);
+    padding: 6px;
+}
+
+.peta-image:hover {
+    filter: brightness(0.97);
+}
+
+.peta-image.zoomed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    height: 90vh;
+    z-index: 9999;
+    object-fit: contain;
+    cursor: zoom-out;
+    background: rgba(0,0,0,0.95);
+    padding: 24px;
+    border-radius: 4px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+
+.map-panel-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    gap: 8px;
+    padding: 60px 40px;
+    background: var(--gray-100);
+}
+
+.map-panel-placeholder i { font-size: 2.5rem; opacity: 0.5; }
+
+@media (max-width: 768px) {
+    .peta-image.zoomed {
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+    }
 }

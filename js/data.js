@@ -1,13 +1,16 @@
 /**
- * WebGIS Dusun Kasuran - Data Configuration
+ * WebGIS Dusun Kasuran — Data Configuration v3 (2026)
  * 
- * Sumber data: Wonderful Dusun Kasuran (StoryMaps ArcGIS, Juli 2025)
- * Tim C5 Kasuran | PKL 2 Sumberarum | SIG - UGM
+ * Survei Lapangan: 6–9 Juli 2026 — Kelompok C5, PKL 2 SIG, SV UGM
+ * Kompilasi dari: Foto Udara Drone skala 1:5.000 (2025) secara Fotogrametri
+ * Skala Peta Final: 1:3.500
  * 
- * Update data sesuai hasil survei terbaru di sini.
+ * ⚠️ Data 2025 = dari StoryMaps tahun lalu (referensi)
+ * ✅ Data 2026 = dari survei lapangan terbaru
  */
 
 const DUSUN_DATA = {
+
     // ==================== INFORMASI DASAR ====================
     nama: "Dusun Kasuran",
     desa: "Desa Sumberarum",
@@ -16,144 +19,68 @@ const DUSUN_DATA = {
     provinsi: "Jawa Tengah",
     rw: "RW 17",
     rt: ["RT 01", "RT 02", "RT 03"],
-    tahunSurvei: "2025",
+    tahunSurvei: "2026",
+    timSurvei: "Kelompok C5 — PKL 2 SIG, SV UGM",
+    tanggalSurvei: "6–9 Juli 2026",
+    skalaPeta: "1:3.500",
+    sumberCitra: "Foto Udara Drone skala 1:5.000 (2025)",
+    koordinatTengah: "7°34' LS, 110°11' BT",
 
-    // Koordinat Pusat Dusun
-    center: [-7.5532, 110.1784],
+    // Koordinat pusat untuk Leaflet
+    center: [-7.5694, 110.1903],
     zoom: 16,
 
-    // ==================== DEMOGRAFI & DATA UTAMA ====================
+    // ==================== DEMOGRAFI ====================
     demografi: {
-        populasi: 0,            // Jumlah jiwa (isi setelah survei penduduk)
-        bangunan: 119,          // Total bangunan yang disurvei
-        luasHektar: 29.17,      // ±291.699 m²
-        kk: 0,                  // Kartu Keluarga (isi setelah survei)
+        // 2026: data dari survei lapangan terbaru
+        populasi_2026: 0,           // TODO: isi dari survei 2026
+        bangunan_2026: 119,         // dari Peta Bangunan (2026)
+        kk_2026: 0,                 // TODO: isi
         luasM2: 291699,
+        luasHektar: 29.17,
+        // 2025: data referensi tahun lalu (StoryMaps)
+        populasi_2025: 0,
+        bangunan_2025: 119,
     },
 
-    // ==================== BANGUNAN DETAIL ====================
-    bangunan: {
+    // ==================== BANGUNAN (2026) ====================
+    bangunan2026: {
         total: 119,
         tempatTinggal: 101,
-        umkm: 16,
-        fasilitasUmum: 6,
-        masjid: 1,
-        posRonda: 2,
-        toko: 1,
-        industriProduksi: 1,
+        gedung: "terdata di peta",
+        catatan: "Data dari Peta Bangunan Kasuran, skala 1:3.500, survei 2026",
     },
 
-    // ==================== MATERIAL BANGUNAN ====================
-    materialBangunan: {
-        tembok: 97,
-        kayu: 8,
-        bambu: 4,
-        tembokCampurKayu: 2,
-        tanpaDinding: 2,
-        lainnya: 5,
-    },
-
-    // ==================== JENIS LANTAI ====================
-    jenisLantai: {
-        keramik: 71,
-        tanah: 26,
-        beton: 9,
-        lainnya: 12,
-        kayu: 1,
-    },
-
-    // ==================== PENGGUNAAN LAHAN ====================
-    penggunaanLahan: {
-        hutan: 60,              // 60% tutupan hutan alami (barat & selatan)
-        perkebunan: 30,         // 30% perkebunan hortikultura (melon greenhouse)
-        permukiman: 10,         // 10% area permukiman
-    },
-
-    // ==================== EKONOMI & UMKM ====================
-    umkm: {
-        total: 16,
-        jenis: [
-            "Produksi Usus Ayam (komoditas camilan khas)",
-            "Wisata Melon (agrowisata panen langsung di kebun)",
-            "Pengrajin Miniatur",
-            "Pengrajin Replika Candi",
-            "Warung-warung kecil",
-            "dan UMKM lainnya",
-        ],
-    },
-
-    sektorPendapatan: {
-        primer: "Pertanian, peternakan, pekebun (dominan di RT 03)",
-        sekunder: "Pengolahan, tukang kayu, penjahit (terbatas)",
-        tersier: "Jasa, perdagangan, warung (dominan di RT 01 & RT 02, PALING DOMINAN secara keseluruhan)",
-        kuartener: "Pengetahuan, profesional, pengajar (sangat minim)",
-    },
-
-    // ==================== KESEHATAN ====================
-    kesehatan: {
-        dominan: "Penyakit Tidak Menular (PTM)",
-        ptm: ["Hipertensi", "Diabetes", "Stroke", "Penyakit Jantung"],
-        faktorRisiko: "Gaya hidup sedentari, konsumsi tinggi gula/garam/lemak, merokok",
-        catatan: "Penyakit menular rendah → sanitasi cukup baik, tapi PTM jadi perhatian serius",
-    },
-
-    // ==================== NDVI (Indeks Vegetasi) ====================
-    ndvi: {
-        sumber: "Citra Sentinel-2, 2024",
-        rentang: "0.0075 – 0.6352",
-        tinggi: "Bagian utara, timur, barat (lahan pertanian aktif, pekarangan, semak alami)",
-        rendah: "Zona tengah-selatan, RT 01 & RT 02 (permukiman padat, bangunan, jalan)",
-    },
-
-    // ==================== NDMI (Kelembapan Vegetasi) ====================
-    ndmi: {
-        sumber: "Citra Sentinel-2, 2023",
-        rentang: "-0.150196 – 0.337077",
-        tinggi: "Barat dan tenggara (sawah, kebun, pekarangan hijau)",
-        rendah: "Tengah, timur, utara (permukiman, jalan, lahan terbuka)",
-    },
-
-    // ==================== ELEVASI & BANJIR ====================
-    elevasi: {
-        sumber: "DEM (Digital Elevation Model)",
-        aman: "Barat hingga tengah (RT 01 & RT 02) — elevasi menengah-tinggi, aman dari banjir",
-        rawan: "Timur (RT 03) — zona rendah, dekat sungai, rentan genangan & banjir",
-        catatan: "Sungai di sisi timur menjadi batas alam dengan Desa Pasuruhan & Wringinputih",
-    },
-
-    // ==================== JARINGAN JALAN ====================
-    jalan: {
-        utama: "Jalan Kyai Zainudin (satu-satunya jalan bernama, membentang barat ke tengah dusun)",
-        lainnya: "Jalan lingkungan kecil (tidak bernama resmi, vital untuk mobilitas harian)",
-        pusatMobilitas: "RT 02 sebagai simpul utama, terhubung ke RT 01 (barat laut) dan RT 03 (tenggara)",
+    // ==================== PENGGUNAAN LAHAN (2026 Revisi) ====================
+    penggunaanLahan2026: {
+        sumber: "Peta Penggunaan Lahan Revisi (2026)",
+        hutan: 60,
+        perkebunan: 30,
+        permukiman: 10,
     },
 
     // ==================== BATAS ADMINISTRASI ====================
     batasRT: {
-        rt01: {
-            nama: "RT 01",
-            posisi: "Barat laut dusun",
-            karakter: "Relatif terbuka, menyatu dengan perbatasan Dusun Dimajar 3",
-            ekonomi: "Didominasi sektor tersier (jasa & perdagangan)",
-        },
-        rt02: {
-            nama: "RT 02",
-            posisi: "Bagian tengah",
-            karakter: "Zona transisi RT 01–RT 03, akses baik ke jalan utama",
-            ekonomi: "Paling beragam — primer, sekunder, tersier, kuartener tersebar merata",
-        },
-        rt03: {
-            nama: "RT 03",
-            posisi: "Tenggara dusun",
-            karakter: "Dekat zona pertanian & perbukitan timur, area rendah rawan banjir",
-            ekonomi: "Didominasi sektor primer (petani, pekebun, peternak kambing)",
-        },
+        rt01: { nama: "RT 01", posisi: "Barat laut", tetangga: "Dusun Dimajar 3" },
+        rt02: { nama: "RT 02", posisi: "Tengah", akses: "Jalan Kyai Zainudin" },
+        rt03: { nama: "RT 03", posisi: "Tenggara", catatan: "Dekat pertanian & perbukitan" },
+    },
+
+    batasDesa: ["Desa Sumberarum", "Desa Ringinanom", "Desa Wringinputih", "Desa Pasuruhan"],
+    dusunTetangga: ["Dusun Dimajar 1", "Dusun Dimajar 3"],
+
+    // ==================== JARINGAN JALAN ====================
+    infrastruktur: {
+        jalanLokal: "Jalan Kyai Zainudin (jalan utama bernama)",
+        jalanLain: "Jalan lingkungan (tidak bernama resmi)",
+        jalanSetapak: "Jalan setapak",
+        sungai: "Sungai Progo (batas alam timur)",
     },
 
     // ==================== TOPONIMI ====================
     toponimi: {
-        versi1: "Berasal dari nama tokoh sesepuh: Mbah Kyai Kasur, cikal bakal dusun Kasuran.",
-        versi2: "Berasal dari kisah Perang Diponegoro. Para pahlawan yang kalah perang melarikan diri ke wilayah dusun ini, sehingga disebut 'Kasoran' (bahasa Jawa: orang-orang yang melarikan diri).",
+        versi1: "Mbah Kyai Kasur — tokoh sesepuh cikal bakal dusun",
+        versi2: "\"Kasoran\" — bahasa Jawa: orang yang melarikan diri (Perang Diponegoro)",
         sumber: "Cerita sesepuh dusun",
     },
 
@@ -164,60 +91,242 @@ const DUSUN_DATA = {
         whatsapp: "08xx-xxxx-xxxx",
     },
 
-    // ==================== 10 PETA (5 DASAR + 5 TEMATIK) ====================
+    // ================================================================
+    //  5 PETA DASAR (2026)
+    // ================================================================
     petaDasar: [
-        { id: 'd-1', name: 'Peta Persil & Bangunan', icon: 'fa-building', desc: 'Sebaran bidang tanah dan bangunan berdasarkan material dan jenis lantai.', stats: { total: 119, rumah: 101, tembok: 97, keramik: 71 } },
-        { id: 'd-2', name: 'Peta Citra Foto Udara', icon: 'fa-drone', desc: 'Citra udara skala 1:5.000 hasil akuisisi Drone UAV tahun 2025.', stats: { skala: '1:5.000', wahana: 'UAV', tahun: 2025, cakupan: '±29 Ha' } },
-        { id: 'd-3', name: 'Peta Penggunaan Lahan', icon: 'fa-tree', desc: 'Distribusi fungsi lahan: hutan 60%, perkebunan 30%, permukiman 10%.', stats: { hutan: '60%', perkebunan: '30%', permukiman: '10%' } },
-        { id: 'd-4', name: 'Peta Sarana & Prasarana', icon: 'fa-landmark', desc: 'Persebaran bangunan berdasarkan fungsi: tempat tinggal, UMKM, fasilitas umum.', stats: { tinggal: 101, umkm: 16, masjid: 1, posRonda: 2 } },
-        { id: 'd-5', name: 'Peta Batas Administrasi RT/RW', icon: 'fa-border-all', desc: 'Pembagian wilayah RT 01, 02, 03 di RW 17 Dusun Kasuran.', stats: { rt: '3 RT', rw: 'RW 17', luas: '±29 Ha' } },
+        {
+            id: 'd-1', tabId: 'd-1',
+            name: 'Peta Foto Udara',
+            icon: 'fa-drone',
+            filePDF: 'Peta Foto Udara.pdf',
+            tahun: 2026,
+            desc: 'Peta citra udara hasil akuisisi drone UAV tahun 2025, diolah secara fotogrametri. Menampilkan visualisasi wilayah Dusun Kasuran secara komprehensif: jaringan jalan, permukiman, vegetasi, lahan pertanian, dan fitur hidrografi.',
+            stats: [
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Wahana', value: 'Drone UAV' },
+                { label: 'Sumber', value: 'Foto Udara 2025' },
+                { label: 'Cakupan', value: '±29 Ha' },
+            ],
+            legend: [
+                { color: '#7f8c8d', label: 'Jalan Lokal' },
+                { color: '#bdc3c7', label: 'Jalan Lain' },
+                { color: '#ecf0f1', label: 'Jalan Setapak' },
+                { color: '#3498db', label: 'Sungai Progo' },
+            ],
+        },
+        {
+            id: 'd-2', tabId: 'd-2',
+            name: 'Peta Bangunan',
+            icon: 'fa-building',
+            filePDF: 'Peta_Bangunan_Kasuran.pdf',
+            tahun: 2026,
+            desc: 'Peta sebaran bangunan di Dusun Kasuran berdasarkan hasil digitasi foto udara dan verifikasi lapangan 2026. Mencakup klasifikasi bangunan: Gedung dan Tempat Tinggal.',
+            stats: [
+                { label: 'Total Bangunan', value: '119' },
+                { label: 'Tempat Tinggal', value: '101' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Survei', value: 'Juli 2026' },
+            ],
+            legend: [
+                { color: '#e74c3c', label: 'Tempat Tinggal' },
+                { color: '#8e44ad', label: 'Gedung' },
+                { color: '#7f8c8d', label: 'Jalan Lokal' },
+                { color: '#3498db', label: 'Sungai' },
+            ],
+        },
+        {
+            id: 'd-3', tabId: 'd-3',
+            name: 'Peta Batas Administrasi RT/RW',
+            icon: 'fa-border-all',
+            filePDF: 'Peta_Batas Admin RTRW_Kasuran.pdf',
+            tahun: 2026,
+            desc: 'Peta pembagian wilayah administratif tingkat RT di RW 17 Dusun Kasuran. Menampilkan batas dusun, batas desa, dan tiga wilayah RT untuk mendukung kegiatan administratif dan perencanaan.',
+            stats: [
+                { label: 'RT', value: '3 (01-03)' },
+                { label: 'RW', value: 'RW 17' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Survei', value: 'Juli 2026' },
+            ],
+            legend: [
+                { color: '#e74c3c', label: 'Batas Dusun' },
+                { color: '#c0392b', label: 'Batas Desa' },
+                { color: '#e67e22', label: 'RT 01' },
+                { color: '#f1c40f', label: 'RT 02' },
+                { color: '#2ecc71', label: 'RT 03' },
+            ],
+            rtDetail: [
+                { nama: 'RT 01', warna: '#e67e22', deskripsi: 'Barat laut — terbuka, berbatasan Dusun Dimajar 3' },
+                { nama: 'RT 02', warna: '#f1c40f', deskripsi: 'Tengah — pusat mobilitas, akses Jl. Kyai Zainudin' },
+                { nama: 'RT 03', warna: '#2ecc71', deskripsi: 'Tenggara — dekat pertanian & perbukitan' },
+            ],
+        },
+        {
+            id: 'd-4', tabId: 'd-4',
+            name: 'Peta Sarana & Prasarana',
+            icon: 'fa-landmark',
+            filePDF: 'Peta Sarana dan Prasarana.pdf',
+            tahun: 2026,
+            desc: 'Peta tematik persebaran sarana dan prasarana di Dusun Kasuran. Mencakup fasilitas umum, peribadatan, keamanan, dan infrastruktur pendukung kehidupan masyarakat.',
+            stats: [
+                { label: 'Bangunan', value: '119' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Survei', value: 'Juli 2026' },
+                { label: 'Sumber', value: 'Foto Udara 2025' },
+            ],
+            legend: [
+                { color: '#e74c3c', label: 'Tempat Tinggal' },
+                { color: '#f39c12', label: 'Fasilitas Umum' },
+                { color: '#3498db', label: 'Peribadatan' },
+                { color: '#2ecc71', label: 'Pendidikan' },
+            ],
+        },
+        {
+            id: 'd-5', tabId: 'd-5',
+            name: 'Peta Penggunaan Lahan',
+            icon: 'fa-tree',
+            filePDF: 'Peta Penggunaan Lahan Revisi.pdf',
+            tahun: 2026,
+            desc: 'Peta penggunaan lahan revisi 2026 — hasil interpretasi citra dan verifikasi lapangan. Klasifikasi berdasarkan jenis aktivitas dan penutup lahan: hutan, perkebunan, permukiman.',
+            stats: [
+                { label: 'Hutan', value: '60%' },
+                { label: 'Perkebunan', value: '30%' },
+                { label: 'Permukiman', value: '10%' },
+                { label: 'Skala', value: '1:3.500' },
+            ],
+            chartBars: [
+                { label: 'Hutan Alami', pct: 60, color: '#2d6a4f' },
+                { label: 'Perkebunan', pct: 30, color: '#52b788' },
+                { label: 'Permukiman', pct: 10, color: '#f39c12' },
+            ],
+        },
     ],
 
+    // ================================================================
+    //  5 PETA TEMATIK (2026)
+    // ================================================================
     petaTematik: [
-        { id: 't-1', name: 'Peta Sektor Pekerjaan Penduduk', icon: 'fa-briefcase', desc: 'Klasifikasi 4 sektor ekonomi per bangunan di masing-masing RT.', dataReady: true },
-        { id: 't-2', name: 'Peta Potensi Desa', icon: 'fa-star', desc: 'Identifikasi potensi unggulan: wisata melon, usus ayam, kerajinan, hutan.', dataReady: true },
-        { id: 't-3', name: 'Peta Komoditas Usaha', icon: 'fa-store', desc: 'Sebaran 16 unit UMKM berdasarkan jenis komoditas di Dusun Kasuran.', dataReady: true },
-        { id: 't-4', name: 'Peta Pendidikan Formal per-RT', icon: 'fa-graduation-cap', desc: 'Jumlah penduduk menempuh pendidikan formal (SD, SMP, SMA, PT) per RT.', dataReady: false, pendingNote: 'Data akan diisi setelah survei pendidikan selesai. Tampilan akhir: peta choropleth per-RT.' },
-        { id: 't-5', name: 'Peta Akses Internet Masyarakat', icon: 'fa-wifi', desc: 'Tingkat akses dan jenis koneksi internet (fiber, mobile data, WiFi umum) per RT.', dataReady: false, pendingNote: 'Data akan diisi setelah survei akses internet selesai.' },
+        {
+            id: 't-1', tabId: 't-1',
+            name: 'Peta Jenis Usaha',
+            icon: 'fa-store',
+            filePDF: 'Peta Jenis Usaha.pdf',
+            tahun: 2026,
+            desc: 'Peta komposisi jenis usaha rumah tangga di Dusun Kasuran berdasarkan survei 6–9 Juli 2026. Mengklasifikasikan usaha ke dalam 4 kategori: Perdagangan, Jasa, Industri Rumah Tangga, dan Pertanian/Perkebunan/Peternakan.',
+            stats: [
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Survei', value: '6–9 Juli 2026' },
+                { label: 'Tim', value: 'Kelompok C5' },
+                { label: 'Kategori', value: '4 Jenis' },
+            ],
+            jenisUsaha: [
+                { icon: 'fa-shopping-basket', nama: 'Perdagangan', warna: '#e74c3c', contoh: 'Warung, toko kelontong' },
+                { icon: 'fa-handshake', nama: 'Jasa', warna: '#3498db', contoh: 'Jahit, bengkel, layanan' },
+                { icon: 'fa-industry', nama: 'Industri Rumah Tangga', warna: '#f39c12', contoh: 'Usus ayam, kerajinan' },
+                { icon: 'fa-seedling', nama: 'Pertanian/Perkebunan/Peternakan', warna: '#2ecc71', contoh: 'Melon, kambing, kebun' },
+            ],
+        },
+        {
+            id: 't-2', tabId: 't-2',
+            name: 'Peta Persebaran Fungsi Bangunan',
+            icon: 'fa-home',
+            filePDF: 'Peta Persebaran Fungsi Bangunan.pdf',
+            tahun: 2026,
+            desc: 'Peta yang menunjukkan klasifikasi fungsi setiap bangunan di Dusun Kasuran — membedakan bangunan tempat tinggal dari bangunan dengan fungsi khusus lainnya (usaha, fasilitas umum, dll).',
+            stats: [
+                { label: 'Bangunan', value: '119' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Survei', value: '6–9 Juli 2026' },
+                { label: 'Tim', value: 'Kelompok C5' },
+            ],
+            fungsiList: [
+                { fungsi: 'Tempat Tinggal', jumlah: 101, warna: '#e74c3c' },
+                { fungsi: 'Usaha/UMKM', jumlah: 16, warna: '#f39c12' },
+                { fungsi: 'Fasilitas Umum', jumlah: 2, warna: '#3498db' },
+                { fungsi: 'Lainnya', jumlah: '—', warna: '#95a5a6' },
+            ],
+        },
+        {
+            id: 't-3', tabId: 't-3',
+            name: 'Peta Persebaran Jumlah Penduduk',
+            icon: 'fa-users',
+            filePDF: 'Peta Persebaran Jumlah Penduduk.pdf',
+            tahun: 2026,
+            desc: 'Peta sebaran jumlah penduduk berdasarkan RT di Dusun Kasuran. Data hasil survei 6–9 Juli 2026, ditampilkan per RT untuk mendukung perencanaan pelayanan publik dan pembangunan.',
+            stats: [
+                { label: 'RT', value: '3 (01-03)' },
+                { label: 'Survei', value: '6–9 Juli 2026' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Total Jiwa', value: '—' },
+            ],
+            populasiPerRT: {
+                rt01: null, rt02: null, rt03: null,
+                note: 'Data jumlah jiwa per RT dari peta — isi setelah konfirmasi',
+            },
+        },
+        {
+            id: 't-4', tabId: 't-4',
+            name: 'Peta Tingkat Akses Internet',
+            icon: 'fa-wifi',
+            filePDF: 'Peta Tingkat Akses Internet.pdf',
+            tahun: 2026,
+            desc: 'Peta tingkat akses internet rumah tangga di Dusun Kasuran berdasarkan survei 2026. Mengklasifikasikan akses internet per rumah tangga di masing-masing RT.',
+            stats: [
+                { label: 'RT', value: '3 (01-03)' },
+                { label: 'Survei', value: '6–9 Juli 2026' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Kategori', value: 'Bertingkat' },
+            ],
+            kategoriAkses: [
+                { level: 'Akses Tinggi (Fiber/4G)', warna: '#2ecc71' },
+                { level: 'Akses Sedang (Mobile Data)', warna: '#f39c12' },
+                { level: 'Akses Rendah (Terbatas)', warna: '#e74c3c' },
+                { level: 'Tidak Ada Akses', warna: '#95a5a6' },
+            ],
+            dataPerRT: {
+                rt01: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
+                rt02: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
+                rt03: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
+            },
+        },
+        {
+            id: 't-5', tabId: 't-5',
+            name: 'Peta Tingkat Pendidikan',
+            icon: 'fa-graduation-cap',
+            filePDF: 'Peta Tingkat Pendidikan.pdf',
+            tahun: 2026,
+            desc: 'Peta komposisi tingkat pendidikan penduduk berdasarkan RT di Dusun Kasuran. Data hasil survei 6–9 Juli 2026, mengklasifikasikan jenjang pendidikan dari tidak sekolah hingga perguruan tinggi.',
+            stats: [
+                { label: 'RT', value: '3 (01-03)' },
+                { label: 'Survei', value: '6–9 Juli 2026' },
+                { label: 'Skala', value: '1:3.500' },
+                { label: 'Jenjang', value: 'Bertingkat' },
+            ],
+            jenjangPendidikan: ['Tidak/Belum Sekolah', 'SD/Sederajat', 'SMP/Sederajat', 'SMA/Sederajat', 'Perguruan Tinggi'],
+            dataPerRT: {
+                rt01: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
+                rt02: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
+                rt03: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
+            },
+        },
     ],
-
-    // ==================== DATA PENDIDIKAN (placeholder) ====================
-    pendidikan: {
-        rt01: { sd: null, smp: null, sma: null, pt: null },
-        rt02: { sd: null, smp: null, sma: null, pt: null },
-        rt03: { sd: null, smp: null, sma: null, pt: null },
-    },
-
-    // ==================== DATA AKSES INTERNET (placeholder) ====================
-    internet: {
-        rt01: { fiber: null, mobile: null, wifiUmum: null, tidakAda: null },
-        rt02: { fiber: null, mobile: null, wifiUmum: null, tidakAda: null },
-        rt03: { fiber: null, mobile: null, wifiUmum: null, tidakAda: null },
-    },
 
     // ==================== LAYER PETA INTERAKTIF ====================
     mapLayers: [
-        // Peta Dasar
         { id: 'batas', group: 'dasar', name: 'Batas Administrasi', color: '#e74c3c', weight: 3, fillOpacity: 0.08, visible: true },
-        { id: 'bangunan', group: 'dasar', name: 'Persil/Bangunan', color: '#2d6a4f', weight: 1.5, fillOpacity: 0.3, visible: false },
+        { id: 'bangunan', group: 'dasar', name: 'Bangunan', color: '#2d6a4f', weight: 1.5, fillOpacity: 0.3, visible: false },
         { id: 'jalan', group: 'dasar', name: 'Jaringan Jalan', color: '#7f8c8d', weight: 2.5, fillOpacity: 0, visible: false },
         { id: 'sungai', group: 'dasar', name: 'Sungai', color: '#3498db', weight: 2, fillOpacity: 0.2, visible: false },
-        // Peta Tematik
-        { id: 'sektor', group: 'tematik', name: 'Sektor Pekerjaan', color: '#e67e22', weight: 1, fillOpacity: 0.35, visible: false },
-        { id: 'umkmLayer', group: 'tematik', name: 'Komoditas UMKM', color: '#e91e63', weight: 1, fillOpacity: 0.4, visible: false },
-        { id: 'pendidikan', group: 'tematik', name: 'Pendidikan', color: '#9b59b6', weight: 1, fillOpacity: 0.35, visible: false },
+        { id: 'jenisUsaha', group: 'tematik', name: 'Jenis Usaha', color: '#e67e22', weight: 1, fillOpacity: 0.35, visible: false },
+        { id: 'fungsiBangunan', group: 'tematik', name: 'Fungsi Bangunan', color: '#8e44ad', weight: 1, fillOpacity: 0.35, visible: false },
+        { id: 'populasiLayer', group: 'tematik', name: 'Jumlah Penduduk', color: '#e91e63', weight: 1, fillOpacity: 0.35, visible: false },
         { id: 'internet', group: 'tematik', name: 'Akses Internet', color: '#1abc9c', weight: 1, fillOpacity: 0.35, visible: false },
+        { id: 'pendidikan', group: 'tematik', name: 'Pendidikan', color: '#9b59b6', weight: 1, fillOpacity: 0.35, visible: false },
     ],
 
-    // GeoJSON data (null = belum di-export dari ArcGIS, isi dengan fetch/import nanti)
-    batas: null,
-    pertanian: null,
-    pemukiman: null,
-    sungai: null,
-    fasilitas: null,
-    rt: null,
-    jalan: null,
-    umkmLayer: null,
+    // GeoJSON data (null = belum di-export, isi nanti)
+    batas: null, bangunan: null, jalan: null, sungai: null,
+    jenisUsaha: null, fungsiBangunan: null, populasiLayer: null, internet: null, pendidikan: null,
 
     // ==================== GALERI ====================
     galeri: [
@@ -227,17 +336,11 @@ const DUSUN_DATA = {
         { src: 'assets/images/galeri/masjid.jpg', caption: 'Masjid', category: 'PERIBADATAN' },
         { src: 'assets/images/galeri/mushola.jpg', caption: 'Mushola', category: 'PERIBADATAN' },
         { src: 'assets/images/galeri/pos-ronda.jpg', caption: 'Pos Ronda', category: 'KEAMANAN' },
-        { src: 'assets/images/galeri/sumber-air.jpg', caption: 'Sumber Air', category: 'SUMBER AIR' },
-        { src: 'assets/images/galeri/dokumentasi-pkl.jpg', caption: 'Dokumentasi Lapangan', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/sumber-air.jpg', caption: 'Sungai Progo', category: 'SUMBER AIR' },
+        { src: 'assets/images/galeri/dokumentasi-pkl.jpg', caption: 'Dokumentasi PKL 2026', category: 'DOKUMENTASI' },
         { src: 'assets/images/galeri/umkm-usus.jpg', caption: 'UMKM Usus Ayam', category: 'UMKM' },
         { src: 'assets/images/galeri/wisata-melon.jpg', caption: 'Wisata Melon', category: 'UMKM' },
         { src: 'assets/images/galeri/pengrajin-miniatur.jpg', caption: 'Pengrajin Miniatur', category: 'UMKM' },
-        { src: 'assets/images/galeri/batas-dusun.jpg', caption: 'Pengukuran Batas Dusun', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/batas-dusun.jpg', caption: 'Pengukuran Batas 2026', category: 'DOKUMENTASI' },
     ],
-
-    // ==================== VIDEO ====================
-    video: {
-        title: "DUSUN KASURAN - GEOSPATIAL SIDE",
-        url: null, // Isi dengan YouTube embed URL
-    },
 };

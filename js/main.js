@@ -1,8 +1,6 @@
 /**
- * WebGIS Dusun Kasuran - Main JavaScript v2
- * 
- * Tab system untuk 5 Peta Dasar + 5 Peta Tematik,
- * galeri dinamis, slider, lightbox, counter, dll.
+ * WebGIS Dusun Kasuran — Main JS v3 (2026)
+ * Dynamic rendering dari data.js untuk 10 peta + interaktivitas
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initActiveNavOnScroll();
     initStatCounters();
+    renderPetaTabs('dasar');
+    renderPetaTabs('tematik');
     initTabSystem();
     initCompareSlider();
     initGallery();
@@ -24,83 +24,148 @@ document.addEventListener('DOMContentLoaded', () => {
 function initAOS() { if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true, offset: 100, easing: 'ease-out-cubic' }); }
 
 // ==================== NAVBAR ====================
-function initNavbar() {
-    const navbar = document.getElementById('navbar');
-    if (!navbar) return;
-    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 50));
-}
-
+function initNavbar() { const n = document.getElementById('navbar'); if (n) window.addEventListener('scroll', () => n.classList.toggle('scrolled', window.scrollY > 50)); }
 function initMobileMenu() {
-    const hamburger = document.getElementById('hamburger');
-    const navMenu = document.getElementById('navMenu');
-    if (!hamburger || !navMenu) return;
-    hamburger.addEventListener('click', () => { hamburger.classList.toggle('active'); navMenu.classList.toggle('active'); });
-    navMenu.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => { hamburger.classList.remove('active'); navMenu.classList.remove('active'); }));
+    const h = document.getElementById('hamburger'), m = document.getElementById('navMenu');
+    if (!h || !m) return;
+    h.addEventListener('click', () => { h.classList.toggle('active'); m.classList.toggle('active'); });
+    m.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => { h.classList.remove('active'); m.classList.remove('active'); }));
 }
-
 function initActiveNavOnScroll() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section[id]'), links = document.querySelectorAll('.nav-link');
     window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(s => { if (window.scrollY + 120 >= s.offsetTop && window.scrollY + 120 < s.offsetTop + s.offsetHeight) current = s.id; });
-        navLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + current));
+        let cur = '';
+        sections.forEach(s => { if (window.scrollY + 120 >= s.offsetTop && window.scrollY + 120 < s.offsetTop + s.offsetHeight) cur = s.id; });
+        links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
     });
 }
 
 // ==================== STAT COUNTERS ====================
 function initStatCounters() {
     document.querySelectorAll('.stat-number[data-target]').forEach(el => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { animateCounter(e.target, parseInt(e.target.dataset.target)); observer.unobserve(e.target); } });
-        }, { threshold: 0.5 });
-        observer.observe(el);
+        const obs = new IntersectionObserver((e) => { e.forEach(x => { if (x.isIntersecting) { animateCounter(x.target, parseInt(x.target.dataset.target)); obs.unobserve(x.target); } }); }, { threshold: 0.5 });
+        obs.observe(el);
+    });
+}
+function animateCounter(el, tgt) {
+    if (!tgt) { el.textContent = '0'; return; }
+    const d = 2000, s = performance.now();
+    function up(ts) { const p = Math.min((ts - s) / d, 1), v = Math.floor((1 - Math.pow(1 - p, 3)) * tgt); el.textContent = v.toLocaleString('id-ID'); if (p < 1) requestAnimationFrame(up); else el.textContent = tgt.toLocaleString('id-ID'); }
+    requestAnimationFrame(up);
+}
+function updateDemografiDisplay() {
+    const d = DUSUN_DATA.demografi;
+    ['populasi','bangunan','luas','umkmCount'].forEach((id,i) => { const el = document.getElementById(id); if (el) el.setAttribute('data-target', [d.populasi_2026||0, d.bangunan_2026||119, Math.round(d.luasHektar), DUSUN_DATA.bangunan2026.total||119][i]); });
+}
+
+// ==================== DYNAMIC RENDER PETA TABS ====================
+function renderPetaTabs(type) {
+    const data = type === 'dasar' ? DUSUN_DATA.petaDasar : DUSUN_DATA.petaTematik;
+    const tabsContainer = document.getElementById(type === 'dasar' ? 'tabsDasar' : 'tabsTematik');
+    const contentContainer = document.getElementById(type === 'dasar' ? 'contentDasar' : 'contentTematik');
+    if (!tabsContainer || !contentContainer) return;
+
+    tabsContainer.innerHTML = '';
+    contentContainer.innerHTML = '';
+
+    data.forEach((peta, idx) => {
+        // Tab button
+        const btn = document.createElement('button');
+        btn.className = 'map-tab' + (idx === 0 ? ' active' : '');
+        btn.dataset.tab = peta.tabId;
+        const ico = peta.icon || 'fa-map';
+        btn.innerHTML = `<i class="fas ${ico}"></i><span>${peta.name}</span>`;
+        tabsContainer.appendChild(btn);
+
+        // Panel content
+        const panel = document.createElement('div');
+        panel.className = 'map-panel' + (idx === 0 ? ' active' : '');
+        panel.id = peta.tabId;
+        panel.innerHTML = buildPanelHTML(peta, type);
+        contentContainer.appendChild(panel);
     });
 }
 
-function animateCounter(el, target) {
-    if (!target) { el.textContent = '0'; return; }
-    const duration = 2000, start = performance.now();
-    function update(t) { const p = Math.min((t - start) / duration, 1), v = Math.floor((1 - Math.pow(1 - p, 3)) * target); el.textContent = v.toLocaleString('id-ID'); if (p < 1) requestAnimationFrame(update); else el.textContent = target.toLocaleString('id-ID'); }
-    requestAnimationFrame(update);
-}
+function buildPanelHTML(peta, type) {
+    const statsHTML = peta.stats ? peta.stats.map(s => `<div class="map-stat"><span class="map-stat-num">${s.value}</span><span>${s.label}</span></div>`).join('') : '';
+    const legendHTML = peta.legend ? `<div class="map-legend-inline"><h4>Legenda:</h4>${peta.legend.map(l => `<span class="legend-dot" style="background:${l.color}"></span> ${l.label}`).join(' ')}</div>` : '';
 
-function updateDemografiDisplay() {
-    const d = DUSUN_DATA.demografi;
-    const setTarget = (id, val) => { const el = document.getElementById(id); if (el) el.setAttribute('data-target', val); };
-    setTarget('populasi', d.populasi);
-    setTarget('bangunan', d.bangunan);
-    setTarget('luas', Math.round(d.luasHektar));
-    setTarget('umkmCount', DUSUN_DATA.umkm.total);
+    // Chart bars (Penggunaan Lahan)
+    const chartHTML = peta.chartBars ? `<div class="map-chart-bars">${peta.chartBars.map(b => `<div class="chart-bar-item"><span class="chart-bar-label">${b.label}</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${b.pct}%;background:${b.color}"></div></div><span class="chart-bar-pct">${b.pct}%</span></div>`).join('')}</div>` : '';
+
+    // RT cards
+    const rtHTML = peta.rtDetail ? `<div class="rt-cards">${peta.rtDetail.map(r => `<div class="rt-card"><span class="rt-badge" style="background:${r.warna}">${r.nama}</span><p>${r.deskripsi}</p></div>`).join('')}</div>` : '';
+
+    // Jenis Usaha
+    const jenisHTML = peta.jenisUsaha ? `<div class="sektor-grid">${peta.jenisUsaha.map(j => `<div class="sektor-card" style="border-left-color:${j.warna};background:${j.warna}11"><i class="fas ${j.icon}" style="color:${j.warna}"></i><strong>${j.nama}</strong><span>${j.contoh}</span></div>`).join('')}</div>` : '';
+
+    // Fungsi Bangunan
+    const fungsiHTML = peta.fungsiList ? `<div class="map-chart-bars">${peta.fungsiList.map(f => `<div class="chart-bar-item"><span class="chart-bar-label">${f.fungsi}</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.min((f.jumlah/119)*100, 100)}%;background:${f.warna}"></div></div><span class="chart-bar-pct">${f.jumlah}</span></div>`).join('')}</div>` : '';
+
+    // Populasi per RT
+    const popHTML = peta.populasiPerRT ? `<div class="internet-grid">
+        ${['rt01','rt02','rt03'].map(rt => `<div class="internet-card"><i class="fas fa-users"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:${peta.populasiPerRT[rt] ? '50%' : '0%'}"></div></div><span class="data-pending">${peta.populasiPerRT[rt] || 'Data dari peta'}</span></div>`).join('')}
+    </div>${peta.populasiPerRT.note ? `<p class="map-note">📋 ${peta.populasiPerRT.note}</p>` : ''}` : '';
+
+    // Akses Internet
+    const inetHTML = peta.kategoriAkses ? `<div class="map-legend-inline" style="margin-bottom:14px;"><h4>Kategori:</h4>${peta.kategoriAkses.map(k => `<span class="legend-dot" style="background:${k.warna}"></span> ${k.level}`).join(' ')}</div><div class="internet-grid">${['rt01','rt02','rt03'].map(rt => `<div class="internet-card"><i class="fas fa-wifi"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:0%"></div></div><span class="data-pending">Data dari peta</span></div>`).join('')}</div>` : '';
+
+    // Pendidikan
+    const pendHTML = peta.jenjangPendidikan ? `<div class="pendidikan-table-wrapper"><table class="pendidikan-table">
+        <thead><tr><th>Jenjang</th><th>RT 01</th><th>RT 02</th><th>RT 03</th><th>Total</th></tr></thead>
+        <tbody>${peta.jenjangPendidikan.map(j => `<tr><td>${j}</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>`).join('')}
+        <tr class="total-row"><td><strong>Total</strong></td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr></tbody>
+    </table></div><p class="map-note">📋 Data jenjang pendidikan per RT — dari Peta Tingkat Pendidikan (2026)</p>` : '';
+
+    // Tahun badge
+    const tahunBadge = peta.tahun ? `<span style="display:inline-block;background:var(--primary);color:#fff;padding:2px 10px;border-radius:12px;font-size:0.7rem;margin-left:8px;vertical-align:middle;">${peta.tahun}</span>` : '';
+    const pdfBadge = peta.filePDF ? `<p class="map-note" style="margin-top:4px;">📄 Sumber: ${peta.filePDF} • Skala ${DUSUN_DATA.skalaPeta} • Survei ${DUSUN_DATA.tanggalSurvei}</p>` : '';
+
+    // Gambar peta (JPG hasil konversi dari PDF)
+    const imgPath = `assets/images/peta/${peta.tabId}`;
+    // Mapping tabId ke nama file JPG
+    const imgMap = {
+        'd-1': 'd-1-foto-udara.jpg', 'd-2': 'd-2-bangunan.jpg', 'd-3': 'd-3-batas-admin.jpg',
+        'd-4': 'd-4-sarpras.jpg', 'd-5': 'd-5-penggunaan-lahan.jpg',
+        't-1': 't-1-jenis-usaha.jpg', 't-2': 't-2-fungsi-bangunan.jpg', 't-3': 't-3-jumlah-penduduk.jpg',
+        't-4': 't-4-akses-internet.jpg', 't-5': 't-5-pendidikan.jpg',
+    };
+    const imgFile = imgMap[peta.tabId] || `${peta.tabId}.jpg`;
+    const imgFullPath = `assets/images/peta/${imgFile}`;
+
+    return `<div class="map-panel-grid">
+        <div class="map-panel-info">
+            <h3><i class="fas ${peta.icon || 'fa-map'}"></i> ${peta.name}${tahunBadge}</h3>
+            <p>${peta.desc}</p>
+            ${statsHTML ? `<div class="map-stats-row">${statsHTML}</div>` : ''}
+            ${chartHTML}${jenisHTML}${fungsiHTML}${rtHTML}${popHTML}${inetHTML}${pendHTML}
+            ${legendHTML}
+            ${pdfBadge}
+        </div>
+        <div class="map-panel-map">
+            <img src="${imgFullPath}" alt="${peta.name}" class="peta-image"
+                 onerror="this.parentElement.innerHTML='<div class=\\'map-panel-placeholder\\'><i class=\\'fas fa-map\\'></i><p>Gambar peta belum tersedia</p></div>'"
+                 onclick="this.classList.toggle('zoomed')" title="Klik untuk zoom">
+        </div>
+    </div>`;
 }
 
 // ==================== TAB SYSTEM ====================
 function initTabSystem() {
-    document.querySelectorAll('.map-tab').forEach(tab => {
-        tab.addEventListener('click', function () {
-            const tabGroup = this.parentElement;
-            const tabContent = tabGroup.nextElementSibling;
-            if (!tabContent || !tabContent.classList.contains('map-tab-content')) return;
+    document.querySelectorAll('.map-tabs').forEach(tabGroup => {
+        tabGroup.addEventListener('click', function (e) {
+            const tab = e.target.closest('.map-tab');
+            if (!tab) return;
+            const contentContainer = this.nextElementSibling;
+            if (!contentContainer) return;
 
-            // Deactivate all tabs in group
-            tabGroup.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+            this.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            contentContainer.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
 
-            // Hide all panels
-            tabContent.querySelectorAll('.map-panel').forEach(p => p.classList.remove('active'));
-
-            // Show target panel
-            const targetId = this.dataset.tab;
-            const targetPanel = tabContent.querySelector('#' + targetId);
+            const targetPanel = contentContainer.querySelector('#' + tab.dataset.tab);
             if (targetPanel) {
                 targetPanel.classList.add('active');
-                // Init mini map if needed
-                const mapEl = targetPanel.querySelector('.map-panel-map');
-                if (mapEl && mapEl.id && !miniMaps[mapEl.id]) {
-                    initMiniMap(mapEl.id);
-                } else if (mapEl && mapEl.id) {
-                    refreshMiniMap(mapEl.id);
-                }
             }
         });
     });
@@ -108,97 +173,63 @@ function initTabSystem() {
 
 // ==================== COMPARE SLIDER ====================
 function initCompareSlider() {
-    const container = document.getElementById('compareContainer');
-    const slider = document.getElementById('compareSlider');
-    const after = document.querySelector('.compare-after');
-    if (!container || !slider || !after) return;
-
-    let dragging = false;
-    function setPos(x) {
-        const rect = container.getBoundingClientRect();
-        let pos = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
-        after.style.width = (pos * 100) + '%';
-        slider.style.left = (pos * 100) + '%';
-        const img = after.querySelector('img');
-        if (img) img.style.transform = `translateX(-${(100 - pos * 100)}%)`;
-    }
-
-    slider.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
-    slider.addEventListener('touchstart', e => { dragging = true; e.preventDefault(); });
-    container.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
-    container.addEventListener('touchmove', e => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
-    document.addEventListener('mouseup', () => dragging = false);
-    document.addEventListener('touchend', () => dragging = false);
-    container.addEventListener('click', e => { if (!e.target.closest('.compare-slider')) setPos(e.clientX); });
+    const c = document.getElementById('compareContainer'), s = document.getElementById('compareSlider'), a = document.querySelector('.compare-after');
+    if (!c || !s || !a) return;
+    let d = false;
+    function pos(x) { const r = c.getBoundingClientRect(), p = Math.max(0, Math.min(1, (x - r.left) / r.width)); a.style.width = (p * 100) + '%'; s.style.left = (p * 100) + '%'; const im = a.querySelector('img'); if (im) im.style.transform = `translateX(-${(100 - p * 100)}%)`; }
+    s.addEventListener('mousedown', e => { d = true; e.preventDefault(); });
+    s.addEventListener('touchstart', e => { d = true; e.preventDefault(); });
+    c.addEventListener('mousemove', e => { if (d) pos(e.clientX); });
+    c.addEventListener('touchmove', e => { if (d) pos(e.touches[0].clientX); }, { passive: true });
+    document.addEventListener('mouseup', () => d = false);
+    document.addEventListener('touchend', () => d = false);
+    c.addEventListener('click', e => { if (!e.target.closest('.compare-slider')) pos(e.clientX); });
 }
 
-// ==================== GALLERY ====================
+// ==================== GALLERY & LIGHTBOX ====================
 function initGallery() {
-    const grid = document.getElementById('galeriGrid');
-    const placeholder = document.getElementById('galeriPlaceholder');
+    const grid = document.getElementById('galeriGrid'), ph = document.getElementById('galeriPlaceholder');
     if (!grid) return;
-
     grid.innerHTML = '';
     DUSUN_DATA.galeri.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'galeri-item';
-        div.innerHTML = `
-            <img src="${item.src}" alt="${item.caption}" loading="lazy" onerror="this.parentElement.style.display='none'">
-            <div class="galeri-overlay"><span class="galeri-category">${item.category}</span><h4>${item.caption}</h4></div>
-        `;
+        const div = document.createElement('div'); div.className = 'galeri-item';
+        div.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" onerror="this.parentElement.style.display='none'"><div class="galeri-overlay"><span class="galeri-category">${item.category}</span><h4>${item.caption}</h4></div>`;
         grid.appendChild(div);
     });
-
-    // Show/hide placeholder
-    const hasImages = grid.querySelectorAll('img:not([style*="display:none"])').length > 0;
-    if (placeholder) placeholder.style.display = hasImages ? 'none' : 'block';
+    if (ph) ph.style.display = grid.querySelectorAll('img:not([style*="display:none"])').length > 0 ? 'none' : 'block';
 }
 
 function initLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    if (!lightbox) return;
-    const img = document.getElementById('lightboxImg');
-    const caption = document.getElementById('lightboxCaption');
-
+    const lb = document.getElementById('lightbox'); if (!lb) return;
+    const im = document.getElementById('lightboxImg'), cap = document.getElementById('lightboxCaption');
     document.addEventListener('click', e => {
-        const item = e.target.closest('.galeri-item');
-        if (!item) return;
-        const el = item.querySelector('img');
-        if (!el || el.style.display === 'none') return;
-        lightbox.classList.add('active'); img.src = el.src; img.alt = el.alt;
-        const h4 = item.querySelector('h4'); if (h4) caption.textContent = h4.textContent;
+        const item = e.target.closest('.galeri-item'); if (!item) return;
+        const el = item.querySelector('img'); if (!el || el.style.display === 'none') return;
+        lb.classList.add('active'); im.src = el.src; im.alt = el.alt;
+        const h4 = item.querySelector('h4'); if (h4) cap.textContent = h4.textContent;
         document.body.style.overflow = 'hidden';
     });
-
-    document.getElementById('lightboxClose')?.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    document.getElementById('lightboxClose')?.addEventListener('click', closeLb);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 }
-
-function closeLightbox() {
-    const lb = document.getElementById('lightbox');
-    if (lb) { lb.classList.remove('active'); document.body.style.overflow = ''; }
-}
+function closeLb() { const lb = document.getElementById('lightbox'); if (lb) { lb.classList.remove('active'); document.body.style.overflow = ''; } }
 
 // ==================== SCROLL TO TOP ====================
 function initScrollToTop() {
-    const btn = document.createElement('button');
-    btn.className = 'scroll-top'; btn.innerHTML = '<i class="fas fa-arrow-up"></i>'; btn.setAttribute('aria-label', 'Kembali ke atas');
-    document.body.appendChild(btn);
-    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 500));
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    const b = document.createElement('button'); b.className = 'scroll-top'; b.innerHTML = '<i class="fas fa-arrow-up"></i>'; b.setAttribute('aria-label', 'Kembali ke atas');
+    document.body.appendChild(b);
+    window.addEventListener('scroll', () => b.classList.toggle('visible', window.scrollY > 500));
+    b.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 }
 
-// ==================== SMOOTH SCROLL ====================
 function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-        a.addEventListener('click', function (e) {
-            const id = this.getAttribute('href');
-            if (id === '#') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
-            const target = document.querySelector(id);
-            if (target) { e.preventDefault(); window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' }); }
-        });
-    });
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function (e) {
+        const id = this.getAttribute('href');
+        if (id === '#') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+        const t = document.querySelector(id);
+        if (t) { e.preventDefault(); window.scrollTo({ top: t.offsetTop - 70, behavior: 'smooth' }); }
+    }));
 }
 
-console.log('🌍 WebGIS Dusun Kasuran v2 — 5 Peta Dasar + 5 Peta Tematik — Ready');
+console.log('🌍 WebGIS Dusun Kasuran v3 (2026) — 5 Peta Dasar + 5 Peta Tematik — Ready');

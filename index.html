@@ -40,7 +40,7 @@
 <section id="beranda" class="hero">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-        <div class="hero-badge" data-aos="fade-down"><span>Dusun Penuh Kisah dan Warna</span></div>
+        <div class="hero-badge" data-aos="fade-down"><span>Survei Lapangan 6–9 Juli 2026 • Kelompok C5</span></div>
         <h1 class="hero-title" data-aos="fade-up" data-aos-delay="200">Dusun Kasuran</h1>
         <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="400">Desa Sumberarum, Kecamatan Tempuran, Kabupaten Magelang</p>
         <div class="hero-buttons" data-aos="fade-up" data-aos-delay="600">
@@ -59,7 +59,7 @@
             <div class="dyk-content">
                 <span class="dyk-label">TAHUKAH KAMU?</span>
                 <h2 class="dyk-title">Dusun Kasuran</h2>
-                <p class="dyk-text">Dusun Kasuran (RW 17) terdiri dari RT 01, 02, 03 dengan luas ±29,17 Ha. WebGIS ini menyajikan <strong>5 Peta Dasar</strong> dan <strong>5 Peta Tematik</strong> sebagai sistem informasi geospasial terintegrasi untuk masyarakat dan perangkat dusun.</p>
+                <p class="dyk-text">Dusun Kasuran (RW 17) terdiri dari RT 01, 02, 03 dengan luas ±29,17 Ha. WebGIS ini menyajikan <strong>5 Peta Dasar</strong> dan <strong>5 Peta Tematik</strong> hasil <strong>survei lapangan 6–9 Juli 2026</strong> oleh Kelompok C5, PKL 2 SIG, SV UGM — sebagai sistem informasi geospasial terintegrasi.</p>
             </div>
         </div>
     </div>
@@ -114,251 +114,43 @@
 </section>
 
 <!-- ====================================================================== -->
-<!--                       5 PETA DASAR                                     -->
+<!--                       5 PETA DASAR (2026)                              -->
 <!-- ====================================================================== -->
 <section id="peta-dasar" class="section peta-section">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge section-badge-primary">5 Peta Dasar</span>
             <h2 class="section-title">Peta Dasar Dusun Kasuran</h2>
-            <p class="section-desc">Lima peta dasar hasil survei dan pemetaan lapangan tahun 2025 sebagai fondasi informasi geospasial dusun</p>
+            <p class="section-desc">Lima peta dasar hasil survei lapangan 6–9 Juli 2026 dan kompilasi foto udara drone 2025 — skala 1:3.500</p>
         </div>
 
-        <div class="map-tabs" data-aos="fade-up">
-            <button class="map-tab active" data-tab="d-1"><i class="fas fa-building"></i><span>Persil/Bangunan</span></button>
-            <button class="map-tab" data-tab="d-2"><i class="fas fa-drone"></i><span>Citra Foto Udara</span></button>
-            <button class="map-tab" data-tab="d-3"><i class="fas fa-tree"></i><span>Penggunaan Lahan</span></button>
-            <button class="map-tab" data-tab="d-4"><i class="fas fa-landmark"></i><span>Sarpras</span></button>
-            <button class="map-tab" data-tab="d-5"><i class="fas fa-border-all"></i><span>Batas RT/RW</span></button>
+        <div class="map-tabs" data-aos="fade-up" id="tabsDasar">
+            <!-- Diisi dinamis oleh JS -->
         </div>
 
-        <div class="map-tab-content" data-aos="fade-up">
-
-            <!-- D-1: Persil/Bangunan -->
-            <div class="map-panel active" id="d-1">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-building"></i> Peta Persil & Bangunan</h3>
-                        <p>Peta persil dan bangunan menampilkan sebaran bidang tanah dan bangunan di Dusun Kasuran berdasarkan hasil survei lapangan dan digitasi citra drone tahun 2025. Mencakup informasi material bangunan, jenis lantai, dan fungsi bangunan.</p>
-                        <div class="map-stats-row">
-                            <div class="map-stat"><span class="map-stat-num">119</span><span>Total Bangunan</span></div>
-                            <div class="map-stat"><span class="map-stat-num">101</span><span>Rumah Tinggal</span></div>
-                            <div class="map-stat"><span class="map-stat-num">97</span><span>Material Tembok</span></div>
-                            <div class="map-stat"><span class="map-stat-num">71</span><span>Lantai Keramik</span></div>
-                        </div>
-                        <div class="map-legend-inline">
-                            <h4>Material:</h4>
-                            <span class="legend-dot" style="background:#2d6a4f"></span> Tembok (97)
-                            <span class="legend-dot" style="background:#d4a373"></span> Kayu (8)
-                            <span class="legend-dot" style="background:#e76f51"></span> Bambu (4)
-                            <span class="legend-dot" style="background:#adb5bd"></span> Lainnya (10)
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-d-1"></div>
-                </div>
-            </div>
-
-            <!-- D-2: Citra Foto Udara -->
-            <div class="map-panel" id="d-2">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-drone"></i> Peta Citra Foto Udara 2025</h3>
-                        <p>Peta citra udara dalam skala <strong>1:5.000</strong> berdasarkan akuisisi foto udara menggunakan wahana <strong>Drone UAV tahun 2025</strong>. Mencakup visualisasi jaringan jalan, permukiman, vegetasi, lahan pertanian, dan fitur hidrografi utama (sungai).</p>
-                        <div class="map-stats-row">
-                            <div class="map-stat"><span class="map-stat-num">1:5.000</span><span>Skala Peta</span></div>
-                            <div class="map-stat"><span class="map-stat-num">UAV</span><span>Wahana Drone</span></div>
-                            <div class="map-stat"><span class="map-stat-num">2025</span><span>Tahun Akuisisi</span></div>
-                            <div class="map-stat"><span class="map-stat-num">±29</span><span>Ha Cakupan</span></div>
-                        </div>
-                        <p class="map-note">Dilengkapi inset peta untuk konteks wilayah, simbol fasilitas umum, batas administrasi, dan informasi lokasi.</p>
-                    </div>
-                    <div class="map-panel-map" id="map-d-2"></div>
-                </div>
-            </div>
-
-            <!-- D-3: Penggunaan Lahan -->
-            <div class="map-panel" id="d-3">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-tree"></i> Peta Penggunaan Lahan</h3>
-                        <p>Peta tematik distribusi fungsi lahan berdasarkan interpretasi citra satelit resolusi tinggi dan verifikasi lapangan. Diklasifikasikan berdasarkan jenis aktivitas dan penutup lahan.</p>
-                        <div class="map-chart-bars">
-                            <div class="chart-bar-item"><span class="chart-bar-label">Hutan Alami</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:60%;background:#2d6a4f"></div></div><span class="chart-bar-pct">60%</span></div>
-                            <div class="chart-bar-item"><span class="chart-bar-label">Perkebunan</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:30%;background:#52b788"></div></div><span class="chart-bar-pct">30%</span></div>
-                            <div class="chart-bar-item"><span class="chart-bar-label">Permukiman</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:10%;background:#f39c12"></div></div><span class="chart-bar-pct">10%</span></div>
-                        </div>
-                        <p class="map-note">Didominasi hutan dan perkebunan — mencerminkan karakter agraris dan potensi vegetasi lokal.</p>
-                    </div>
-                    <div class="map-panel-map" id="map-d-3"></div>
-                </div>
-            </div>
-
-            <!-- D-4: Sarana & Prasarana -->
-            <div class="map-panel" id="d-4">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-landmark"></i> Peta Sarana & Prasarana</h3>
-                        <p>Peta tematik persebaran, bentuk, dan fungsi berbagai bangunan — penting untuk tata ruang, perencanaan pembangunan, dan inventarisasi aset fisik dusun.</p>
-                        <div class="map-stats-row">
-                            <div class="map-stat"><span class="map-stat-num">101</span><span>Tempat Tinggal</span></div>
-                            <div class="map-stat"><span class="map-stat-num">16</span><span>UMKM</span></div>
-                            <div class="map-stat"><span class="map-stat-num">1</span><span>Masjid</span></div>
-                            <div class="map-stat"><span class="map-stat-num">2</span><span>Pos Ronda</span></div>
-                        </div>
-                        <div class="map-legend-inline">
-                            <h4>Klasifikasi:</h4>
-                            <span class="legend-dot" style="background:#e74c3c"></span> Tempat Tinggal
-                            <span class="legend-dot" style="background:#f39c12"></span> UMKM
-                            <span class="legend-dot" style="background:#3498db"></span> Fasum
-                            <span class="legend-dot" style="background:#9b59b6"></span> Ibadah
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-d-4"></div>
-                </div>
-            </div>
-
-            <!-- D-5: Batas Administrasi -->
-            <div class="map-panel" id="d-5">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-border-all"></i> Peta Batas Administrasi RT/RW</h3>
-                        <p>Peta pembagian wilayah administratif tingkat Rukun Tetangga di RW 17. Tiga RT dengan batas jelas — penting untuk pendataan, musyawarah, distribusi bantuan, dan perencanaan partisipatif.</p>
-                        <div class="rt-cards">
-                            <div class="rt-card"><span class="rt-badge" style="background:#e67e22">RT 01</span><p>Barat laut — terbuka, berbatasan Dimajar 3, dominan sektor tersier</p></div>
-                            <div class="rt-card"><span class="rt-badge" style="background:#f1c40f">RT 02</span><p>Tengah — zona transisi, pusat mobilitas, akses Jl. Kyai Zainudin, ekonomi paling beragam</p></div>
-                            <div class="rt-card"><span class="rt-badge" style="background:#2ecc71">RT 03</span><p>Tenggara — dekat pertanian & perbukitan, zona rendah rawan banjir, dominan sektor primer</p></div>
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-d-5"></div>
-                </div>
-            </div>
-
+        <div class="map-tab-content" data-aos="fade-up" id="contentDasar">
+            <!-- Diisi dinamis oleh JS -->
         </div>
     </div>
 </section>
 
 <!-- ====================================================================== -->
-<!--                       5 PETA TEMATIK                                   -->
+<!--                       5 PETA TEMATIK (2026)                            -->
 <!-- ====================================================================== -->
 <section id="peta-tematik" class="section peta-section bg-light">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge section-badge-accent">5 Peta Tematik</span>
             <h2 class="section-title">Peta Tematik Dusun Kasuran</h2>
-            <p class="section-desc">Lima peta tematik hasil analisis data survei sosial-ekonomi dan demografi per-RT untuk perencanaan pembangunan berbasis data</p>
+            <p class="section-desc">Lima peta tematik hasil analisis data survei sosial-ekonomi dan demografi per-RT (6–9 Juli 2026)</p>
         </div>
 
-        <div class="map-tabs" data-aos="fade-up">
-            <button class="map-tab active" data-tab="t-1"><i class="fas fa-briefcase"></i><span>Sektor Pekerjaan</span></button>
-            <button class="map-tab" data-tab="t-2"><i class="fas fa-star"></i><span>Potensi Desa</span></button>
-            <button class="map-tab" data-tab="t-3"><i class="fas fa-store"></i><span>Komoditas Usaha</span></button>
-            <button class="map-tab" data-tab="t-4"><i class="fas fa-graduation-cap"></i><span>Pendidikan</span></button>
-            <button class="map-tab" data-tab="t-5"><i class="fas fa-wifi"></i><span>Akses Internet</span></button>
+        <div class="map-tabs" data-aos="fade-up" id="tabsTematik">
+            <!-- Diisi dinamis oleh JS -->
         </div>
 
-        <div class="map-tab-content" data-aos="fade-up">
-
-            <!-- T-1: Sektor Pekerjaan -->
-            <div class="map-panel active" id="t-1">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-briefcase"></i> Peta Sektor Pekerjaan Penduduk per-RT</h3>
-                        <p>Menggambarkan sumber pendapatan utama warga berdasarkan klasifikasi empat sektor ekonomi per bangunan di masing-masing RT. Setiap bangunan diwarnai sesuai sektor dominan kepala keluarga.</p>
-                        <div class="sektor-grid">
-                            <div class="sektor-card primer"><i class="fas fa-seedling"></i><strong>Primer</strong><span>Pertanian, peternakan, pekebun</span><small>Dominan di RT 03</small></div>
-                            <div class="sektor-card sekunder"><i class="fas fa-tools"></i><strong>Sekunder</strong><span>Pengolahan, tukang kayu, penjahit</span><small>Terbatas</small></div>
-                            <div class="sektor-card tersier"><i class="fas fa-handshake"></i><strong>Tersier ⭐</strong><span>Jasa, perdagangan, warung</span><small>PALING DOMINAN (RT 01 & 02)</small></div>
-                            <div class="sektor-card kuartener"><i class="fas fa-chalkboard-teacher"></i><strong>Kuartener</strong><span>Profesional, pengajar</span><small>Sangat minim</small></div>
-                        </div>
-                        <p class="map-note">Pola menunjukkan pergeseran dari ekonomi agraris menuju berbasis layanan. Strategi: penguatan sektor tersier + peningkatan akses pendidikan lanjut.</p>
-                    </div>
-                    <div class="map-panel-map" id="map-t-1"></div>
-                </div>
-            </div>
-
-            <!-- T-2: Potensi Desa -->
-            <div class="map-panel" id="t-2">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-star"></i> Peta Potensi Desa Dusun Kasuran</h3>
-                        <p>Peta yang mengidentifikasi dan memetakan potensi unggulan sebagai dasar pengembangan ekonomi dan pariwisata berbasis lokal.</p>
-                        <div class="potensi-list">
-                            <div class="potensi-item"><i class="fas fa-apple-alt"></i><div><strong>Wisata Melon Greenhouse</strong><p>Agrowisata petik melon langsung dari kebun — daya tarik wisatawan lokal dan luar daerah</p></div></div>
-                            <div class="potensi-item"><i class="fas fa-drumstick-bite"></i><div><strong>Produksi Usus Ayam</strong><p>Komoditas camilan khas Kasuran yang digemari konsumen lintas daerah</p></div></div>
-                            <div class="potensi-item"><i class="fas fa-paint-brush"></i><div><strong>Kerajinan Miniatur & Candi</strong><p>Produk bernilai seni dan budaya tinggi, potensi sebagai cendera mata khas</p></div></div>
-                            <div class="potensi-item"><i class="fas fa-tree"></i><div><strong>Hutan & Perkebunan</strong><p>60% hutan + 30% perkebunan = potensi ekowisata & pertanian berkelanjutan</p></div></div>
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-t-2"></div>
-                </div>
-            </div>
-
-            <!-- T-3: Komoditas Usaha -->
-            <div class="map-panel" id="t-3">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-store"></i> Peta Komoditas Usaha Dusun Kasuran</h3>
-                        <p>Peta sebaran <strong>16 unit UMKM</strong> berdasarkan jenis komoditas usaha — mencerminkan semangat kewirausahaan dan kearifan lokal.</p>
-                        <div class="komoditas-grid">
-                            <div class="komoditas-card"><i class="fas fa-drumstick-bite"></i><span>Usus Ayam</span><small>Produksi</small></div>
-                            <div class="komoditas-card"><i class="fas fa-apple-alt"></i><span>Wisata Melon</span><small>Agrowisata</small></div>
-                            <div class="komoditas-card"><i class="fas fa-paint-brush"></i><span>Miniatur</span><small>Kerajinan</small></div>
-                            <div class="komoditas-card"><i class="fas fa-landmark"></i><span>Replika Candi</span><small>Kerajinan</small></div>
-                            <div class="komoditas-card"><i class="fas fa-shopping-basket"></i><span>Warung</span><small>Perdagangan</small></div>
-                            <div class="komoditas-card"><i class="fas fa-ellipsis-h"></i><span>Lainnya</span><small>UMKM</small></div>
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-t-3"></div>
-                </div>
-            </div>
-
-            <!-- T-4: Pendidikan Formal -->
-            <div class="map-panel" id="t-4">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-graduation-cap"></i> Peta Jumlah Penduduk Menempuh Pendidikan Formal per-RT</h3>
-                        <p>Peta sebaran tingkat pendidikan formal penduduk di masing-masing RT — dasar penting untuk perencanaan program pendidikan dan peningkatan kualitas SDM.</p>
-                        <div class="pendidikan-table-wrapper">
-                            <table class="pendidikan-table">
-                                <thead><tr><th>Jenjang Pendidikan</th><th>RT 01</th><th>RT 02</th><th>RT 03</th><th>Total</th></tr></thead>
-                                <tbody>
-                                    <tr><td>SD / Sederajat</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>
-                                    <tr><td>SMP / Sederajat</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>
-                                    <tr><td>SMA / Sederajat</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>
-                                    <tr><td>Perguruan Tinggi</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>
-                                    <tr class="total-row"><td><strong>Total</strong></td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <p class="map-note">📋 Data akan diisi setelah survei pendidikan selesai. Tampilan akhir berupa peta choropleth per-RT.</p>
-                    </div>
-                    <div class="map-panel-map" id="map-t-4"></div>
-                </div>
-            </div>
-
-            <!-- T-5: Akses Internet -->
-            <div class="map-panel" id="t-5">
-                <div class="map-panel-grid">
-                    <div class="map-panel-info">
-                        <h3><i class="fas fa-wifi"></i> Peta Akses Internet Masyarakat per-RT</h3>
-                        <p>Peta yang menunjukkan tingkat akses dan jenis koneksi internet di masing-masing RT — penting untuk perencanaan infrastruktur digital dan program literasi digital desa.</p>
-                        <div class="internet-grid">
-                            <div class="internet-card"><i class="fas fa-wifi"></i><strong>RT 01</strong><div class="internet-bar"><div class="internet-fill" style="width:0%"></div></div><span class="data-pending">Data survei pending</span></div>
-                            <div class="internet-card"><i class="fas fa-wifi"></i><strong>RT 02</strong><div class="internet-bar"><div class="internet-fill" style="width:0%"></div></div><span class="data-pending">Data survei pending</span></div>
-                            <div class="internet-card"><i class="fas fa-wifi"></i><strong>RT 03</strong><div class="internet-bar"><div class="internet-fill" style="width:0%"></div></div><span class="data-pending">Data survei pending</span></div>
-                        </div>
-                        <div class="map-legend-inline">
-                            <h4>Kategori Akses:</h4>
-                            <span class="legend-dot" style="background:#2ecc71"></span> Fiber Optik
-                            <span class="legend-dot" style="background:#3498db"></span> Mobile Data (4G/5G)
-                            <span class="legend-dot" style="background:#f39c12"></span> WiFi Umum
-                            <span class="legend-dot" style="background:#e74c3c"></span> Tidak Ada Akses
-                        </div>
-                    </div>
-                    <div class="map-panel-map" id="map-t-5"></div>
-                </div>
-            </div>
-
+        <div class="map-tab-content" data-aos="fade-up" id="contentTematik">
+            <!-- Diisi dinamis oleh JS -->
         </div>
     </div>
 </section>
@@ -375,17 +167,18 @@
             <div id="map-interaktif"></div>
             <div class="map-legend-interactive" id="mapLegend">
                 <h4><i class="fas fa-layer-group"></i> Layer Peta</h4>
-                <div class="legend-section"><strong>Peta Dasar</strong>
+                <div class="legend-section"><strong>Peta Dasar (2026)</strong>
                     <label class="legend-check"><input type="checkbox" checked data-layer="batas"> <span class="legend-dot" style="background:#e74c3c"></span> Batas Administrasi</label>
-                    <label class="legend-check"><input type="checkbox" data-layer="bangunan"> <span class="legend-dot" style="background:#2d6a4f"></span> Persil/Bangunan</label>
+                    <label class="legend-check"><input type="checkbox" data-layer="bangunan"> <span class="legend-dot" style="background:#2d6a4f"></span> Bangunan</label>
                     <label class="legend-check"><input type="checkbox" data-layer="jalan"> <span class="legend-dot" style="background:#7f8c8d"></span> Jaringan Jalan</label>
-                    <label class="legend-check"><input type="checkbox" data-layer="sungai"> <span class="legend-dot" style="background:#3498db"></span> Sungai</label>
+                    <label class="legend-check"><input type="checkbox" data-layer="sungai"> <span class="legend-dot" style="background:#3498db"></span> Sungai Progo</label>
                 </div>
-                <div class="legend-section"><strong>Peta Tematik</strong>
-                    <label class="legend-check"><input type="checkbox" data-layer="sektor"> <span class="legend-dot" style="background:#e67e22"></span> Sektor Pekerjaan</label>
-                    <label class="legend-check"><input type="checkbox" data-layer="umkmLayer"> <span class="legend-dot" style="background:#e91e63"></span> Komoditas UMKM</label>
-                    <label class="legend-check"><input type="checkbox" data-layer="pendidikan"> <span class="legend-dot" style="background:#9b59b6"></span> Pendidikan</label>
+                <div class="legend-section"><strong>Peta Tematik (2026)</strong>
+                    <label class="legend-check"><input type="checkbox" data-layer="jenisUsaha"> <span class="legend-dot" style="background:#e67e22"></span> Jenis Usaha</label>
+                    <label class="legend-check"><input type="checkbox" data-layer="fungsiBangunan"> <span class="legend-dot" style="background:#8e44ad"></span> Fungsi Bangunan</label>
+                    <label class="legend-check"><input type="checkbox" data-layer="populasiLayer"> <span class="legend-dot" style="background:#e91e63"></span> Jumlah Penduduk</label>
                     <label class="legend-check"><input type="checkbox" data-layer="internet"> <span class="legend-dot" style="background:#1abc9c"></span> Akses Internet</label>
+                    <label class="legend-check"><input type="checkbox" data-layer="pendidikan"> <span class="legend-dot" style="background:#9b59b6"></span> Pendidikan</label>
                 </div>
             </div>
         </div>
@@ -470,7 +263,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <h3>WebGIS Dusun Kasuran</h3>
-                <p>5 Peta Dasar & 5 Peta Tematik — Sistem Informasi Geospasial Terintegrasi RW 17, Desa Sumberarum</p>
+                <p>5 Peta Dasar & 5 Peta Tematik • Survei 6–9 Juli 2026<br>Kelompok C5 — PKL 2 SIG, SV UGM</p>
             </div>
             <div class="footer-links">
                 <h4>Navigasi</h4>
