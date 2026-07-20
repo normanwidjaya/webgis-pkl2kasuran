@@ -27,7 +27,6 @@
             <li><a href="#peta-dasar" class="nav-link">Peta Dasar</a></li>
             <li><a href="#peta-tematik" class="nav-link">Peta Tematik</a></li>
             <li><a href="#peta-interaktif" class="nav-link">Peta Interaktif</a></li>
-            <li><a href="peta-interaktif.html" class="nav-link" style="color:var(--accent);">🗺️ Shapefile</a></li>
             <li><a href="#galeri" class="nav-link">Galeri</a></li>
             <li><a href="#kontak" class="nav-link">Kontak</a></li>
         </ul>
@@ -39,6 +38,9 @@
 
 <!-- ==================== HERO ==================== -->
 <section id="beranda" class="hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="assets/images/galeri/DJI_20260707110921_0007_D.MP4.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay"></div>
     <div class="hero-content">
         <div class="hero-badge" data-aos="fade-down"><span>Survei Lapangan 6–9 Juli 2026 • Kelompok C5</span></div>
@@ -49,18 +51,93 @@
             <a href="#peta-dasar" class="btn btn-outline"><i class="fas fa-layer-group"></i> 10 Peta</a>
         </div>
     </div>
-    <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1000"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
-</section>
-
-<!-- ==================== TAHUKAH KAMU ==================== -->
-<section class="tahukah-kamu">
-    <div class="container">
-        <div class="dyk-card" data-aos="fade-up">
+    <div class="hero-dyk-wrapper" data-aos="fade-up" data-aos-delay="800">
+        <div class="dyk-card">
             <div class="dyk-icon"><i class="fas fa-lightbulb"></i></div>
             <div class="dyk-content">
                 <span class="dyk-label">TAHUKAH KAMU?</span>
                 <h2 class="dyk-title">Dusun Kasuran</h2>
-                <p class="dyk-text">Dusun Kasuran (RW 17) terdiri dari RT 01, 02, 03 dengan luas ±29,17 Ha. WebGIS ini menyajikan <strong>5 Peta Dasar</strong> dan <strong>5 Peta Tematik</strong> hasil <strong>survei lapangan 6–9 Juli 2026</strong> oleh Kelompok C5, PKL 2 SIG, SV UGM — sebagai sistem informasi geospasial terintegrasi.</p>
+                <p class="dyk-text">Dusun Kasuran (RW 17) terdiri dari RT 01, 02, 03 dengan luas ±29,17 Ha. WebGIS ini menyajikan <strong>5 Peta Dasar</strong> dan <strong>5 Peta Tematik</strong> hasil <strong>survei lapangan 6–9 Juli 2026</strong> oleh Kelompok C5, PKL 2 SIG, SV UGM sebagai sistem informasi geospasial terintegrasi.</p>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-indicator" data-aos="fade-up" data-aos-delay="1000"><span>Scroll</span><i class="fas fa-chevron-down"></i></div>
+</section>
+
+<!-- ==================== VIDEO RUTE ==================== -->
+<section class="section video-rute bg-green">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge">Video Rute</span>
+            <h2 class="section-title">Perjalanan Menuju Dusun Kasuran</h2>
+            <p class="section-desc">Dari pusat Kecamatan Tempuran menuju Dusun Kasuran, Desa Sumberarum</p>
+        </div>
+        <div class="rute-grid" data-aos="fade-up">
+            <div class="rute-video-col">
+                <div class="video-container rute-video">
+                    <video controls>
+                        <source src="assets/images/galeri/video-rute.mp4" type="video/mp4">
+                        Browser Anda tidak mendukung video.
+                    </video>
+                </div>
+            </div>
+            <div class="rute-info-col">
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-route"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Estimasi Jarak</span>
+                        <span class="rute-info-value">± 4,5 km</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-clock"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Waktu Tempuh</span>
+                        <span class="rute-info-value">± 15–20 menit</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Kecepatan Rata-rata</span>
+                        <span class="rute-info-value">± 20–30 km/jam</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-road"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Kondisi Jalan</span>
+                        <span class="rute-info-value">Aspal & Beton (80%), Tanah (20%)</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-shuttle-van"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Transportasi</span>
+                        <span class="rute-info-value">Motor / Mobil (akses roda 4)</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-map-pin"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Titik Awal → Akhir</span>
+                        <span class="rute-info-value">Kantor Kec. Tempuran → Dusun Kasuran</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-mountain"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Medan & Elevasi</span>
+                        <span class="rute-info-value">Datar → Berbukit ringan (naik ±50m)</span>
+                    </div>
+                </div>
+                <div class="rute-info-card">
+                    <div class="rute-info-icon"><i class="fas fa-info-circle"></i></div>
+                    <div class="rute-info-body">
+                        <span class="rute-info-label">Tips Perjalanan</span>
+                        <span class="rute-info-value">Gunakan kendaraan prima, hati-hati tikungan</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -84,7 +161,7 @@
 </section>
 
 <!-- ==================== TOPONIMI ==================== -->
-<section class="section toponimi bg-light">
+<section class="section toponimi bg-green">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge">Toponimi</span>
@@ -100,8 +177,27 @@
     </div>
 </section>
 
+<!-- ==================== PETA LOKASI INTERAKTIF ==================== -->
+<section id="peta-lokasi" class="section peta-lokasi-section">
+    <div class="container">
+        <div class="section-header" data-aos="fade-up">
+            <span class="section-badge">Peta Lokasi</span>
+            <h2 class="section-title">Peta Lokasi Dusun Kasuran</h2>
+            <p class="section-desc">Peta interaktif menampilkan batas administrasi dan jaringan jalan Dusun Kasuran</p>
+        </div>
+        <div class="peta-lokasi-wrapper" data-aos="fade-up">
+            <div id="mapLokasi" class="map-lokasi-container"></div>
+            <div class="map-lokasi-legend">
+                <span class="legend-item"><span class="legend-color" style="background:#52b788;border:2px solid #2d6a4f;"></span> Batas Kasuran</span>
+                <span class="legend-item"><span class="legend-color" style="background:#f39c12;border:2px solid #e67e22;"></span> Batas Dusun Sumberarum</span>
+                <span class="legend-item"><span class="legend-color" style="background:#e74c3c;height:3px;border:none;"></span> Jalan Desa</span>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ==================== LETAK GEOGRAFIS ==================== -->
-<section id="geografis" class="section geografis">
+<section id="geografis" class="section geografis bg-green">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge">Geografis</span>
@@ -138,7 +234,7 @@
 <!-- ====================================================================== -->
 <!--                       5 PETA TEMATIK (2026)                            -->
 <!-- ====================================================================== -->
-<section id="peta-tematik" class="section peta-section bg-light">
+<section id="peta-tematik" class="section peta-section bg-green">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge section-badge-accent">5 Peta Tematik</span>
@@ -164,7 +260,7 @@
             <h2 class="section-title">Peta Interaktif Dusun Kasuran</h2>
             <p class="section-desc">Layer interaktif yang dapat diaktifkan/dinonaktifkan — menggabungkan seluruh peta dasar dan tematik</p>
             <a href="peta-interaktif.html" class="btn btn-primary" style="display:inline-block;margin-top:12px;" data-aos="fade-up">
-                <i class="fas fa-external-link-alt"></i> Buka Peta Interaktif Fullscreen (Shapefile)
+                <i class="fas fa-external-link-alt"></i> Buka Peta Interaktif Fullscreen
             </a>
         </div>
         <div class="map-wrapper" data-aos="fade-up">
@@ -189,33 +285,8 @@
     </div>
 </section>
 
-<!-- ==================== PERBANDINGAN CITRA ==================== -->
-<section class="section perbandingan-citra bg-light">
-    <div class="container">
-        <div class="section-header" data-aos="fade-up">
-            <span class="section-badge">Citra</span>
-            <h2 class="section-title">Perbandingan Citra Satelit & Foto Udara</h2>
-            <p class="section-desc">Geser slider untuk melihat perbedaan antara citra satelit dan foto udara drone 2025</p>
-        </div>
-        <div class="compare-wrapper" data-aos="fade-up">
-            <div class="compare-container" id="compareContainer">
-                <div class="compare-before">
-                    <img src="assets/images/citra-satelit.jpg" alt="Citra Satelit" onerror="this.src='https://placehold.co/800x500/2c3e50/white?text=Citra+Satelit'">
-                    <span class="compare-label left">Citra Satelit</span>
-                </div>
-                <div class="compare-after">
-                    <img src="assets/images/foto-udara.jpg" alt="Foto Udara Drone" onerror="this.src='https://placehold.co/800x500/27ae60/white?text=Foto+Udara+Drone'">
-                    <span class="compare-label right">Foto Udara Drone</span>
-                </div>
-                <div class="compare-slider" id="compareSlider"><div class="slider-handle"><i class="fas fa-arrows-left-right"></i></div></div>
-            </div>
-            <p class="compare-caption">↔ Kiri: Citra Satelit | Kanan: Foto Udara Drone UAV 2025</p>
-        </div>
-    </div>
-</section>
-
 <!-- ==================== GALERI ==================== -->
-<section id="galeri" class="section galeri">
+<section id="galeri" class="section galeri bg-green">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge">Galeri</span>
@@ -236,21 +307,25 @@
 </div>
 
 <!-- ==================== VIDEO ==================== -->
-<section class="section video-profil bg-light">
+<section class="section video-profil">
     <div class="container">
         <div class="section-header" data-aos="fade-up">
             <span class="section-badge">Video</span>
             <h2 class="section-title">Video Profil Dusun Kasuran</h2>
-            <p class="section-desc">DUSUN KASURAN - GEOSPATIAL SIDE</p>
         </div>
         <div class="video-wrapper" data-aos="fade-up">
-            <div class="video-container"><div class="video-placeholder"><i class="fas fa-play-circle"></i><p>Video profil akan ditambahkan setelah proses editing selesai</p></div></div>
+            <div class="video-container">
+                <video controls>
+                    <source src="assets/images/galeri/Update_Kasuran.mov" type="video/mp4">
+                    Browser Anda tidak mendukung video.
+                </video>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- ==================== KONTAK ==================== -->
-<section id="kontak" class="section kontak">
+<section id="kontak" class="section kontak bg-green">
     <div class="container">
         <div class="section-header" data-aos="fade-up"><span class="section-badge">Kontak</span><h2 class="section-title">Hubungi Kami</h2></div>
         <div class="kontak-grid" data-aos="fade-up">
@@ -267,7 +342,7 @@
         <div class="footer-content">
             <div class="footer-brand">
                 <h3>WebGIS Dusun Kasuran</h3>
-                <p>5 Peta Dasar & 5 Peta Tematik • Survei 6–9 Juli 2026<br>Kelompok C5 — PKL 2 SIG, SV UGM</p>
+                <p>5 Peta Dasar & 5 Peta Tematik • Survei 6–9 Juli 2026<br>Kelompok C5 PKL 2 SIG, SV UGM</p>
             </div>
             <div class="footer-links">
                 <h4>Navigasi</h4>
@@ -277,14 +352,13 @@
                     <li><a href="#peta-dasar">5 Peta Dasar</a></li>
                     <li><a href="#peta-tematik">5 Peta Tematik</a></li>
                     <li><a href="#peta-interaktif">Peta Interaktif</a></li>
-                    <li><a href="peta-interaktif.html">🗺️ Peta Shapefile</a></li>
                     <li><a href="#galeri">Galeri</a></li>
                     <li><a href="#kontak">Kontak</a></li>
                 </ul>
             </div>
             <div class="footer-credit">
                 <p>&copy; 2026 WebGIS Dusun Kasuran</p>
-                <p>Tim PKL 2 — Sistem Informasi Geografis</p>
+                <p>Tim PKL 2 Sistem Informasi Geografis</p>
                 <p>Sekolah Vokasi Universitas Gadjah Mada</p>
             </div>
         </div>

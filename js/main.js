@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderPetaTabs('dasar');
     renderPetaTabs('tematik');
     initTabSystem();
-    initCompareSlider();
+    initPetaLokasi();
     initGallery();
     initLightbox();
     initScrollToTop();
@@ -184,6 +184,102 @@ function initCompareSlider() {
     document.addEventListener('mouseup', () => d = false);
     document.addEventListener('touchend', () => d = false);
     c.addEventListener('click', e => { if (!e.target.closest('.compare-slider')) pos(e.clientX); });
+}
+
+// ==================== PETA LOKASI (BERANDA) ====================
+function initPetaLokasi() {
+    const mapEl = document.getElementById('mapLokasi');
+    if (!mapEl) return;
+
+    const map = L.map('mapLokasi', {
+        center: DUSUN_DATA.center,
+        zoom: 14,
+        zoomControl: true,
+        scrollWheelZoom: true,
+        dragging: true,
+        doubleClickZoom: true,
+        touchZoom: true,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://osm.org">OSM</a> | WebGIS Dusun Kasuran',
+        maxZoom: 19,
+    }).addTo(map);
+
+    L.control.scale({ imperial: false, metric: true, position: 'bottomright' }).addTo(map);
+
+    // Ensure map renders correctly when container becomes visible
+    map.whenReady(function() {
+        setTimeout(function() { map.invalidateSize(); }, 200);
+    });
+
+    // IntersectionObserver: invalidate size when section scrolls into view
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    setTimeout(function() { map.invalidateSize(); }, 100);
+                }
+            });
+        }, { threshold: [0, 0.5, 1] });
+        obs.observe(mapEl);
+    }
+
+    // Also on window resize and tab visibility
+    window.addEventListener('resize', function() { map.invalidateSize(); });
+
+    // Marker pusat dusun
+    L.marker(DUSUN_DATA.center, {
+        icon: L.divIcon({
+            className: '',
+            html: '<div style="width:24px;height:24px;background:#e74c3c;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>',
+            iconSize: [24, 24], iconAnchor: [12, 12],
+        })
+    }).addTo(map).bindPopup('<strong>Dusun Kasuran</strong><br>RW 17, Desa Sumberarum');
+
+    // Load GeoJSON layers
+    var layers = [
+        { file: 'data/batas_kasuran.geojson', style: { color: '#2d6a4f', weight: 3, fillColor: '#52b788', fillOpacity: 0.2 } },
+        { file: 'data/batas_sumberarum.geojson', style: { color: '#e67e22', weight: 2, fillColor: '#f39c12', fillOpacity: 0.1, dashArray: '6 3' } },
+        { file: 'data/jalan_desa.geojson', styleFn: function(f) {
+            var k = f.properties.Kelas;
+            if (k === '1') return { color: '#e74c3c', weight: 3, opacity: 0.9 };
+            if (k === '2') return { color: '#f39c12', weight: 2.5, opacity: 0.85 };
+            return { color: '#95a5a6', weight: 1.5, opacity: 0.7, dashArray: '5 3' };
+        }},
+    ];
+
+    var allBounds = null;
+    var loadedCount = 0;
+
+    layers.forEach(function(layerCfg) {
+        fetch(layerCfg.file)
+            .then(function(r) { return r.json(); })
+            .then(function(geojson) {
+                var opts = {
+                    onEachFeature: function(f, l) {
+                        if (f.properties) {
+                            var h = '<div style="min-width:120px;">';
+                            Object.entries(f.properties).slice(0, 5).forEach(function(e) { h += '<b>' + e[0] + ':</b> ' + e[1] + '<br>'; });
+                            h += '</div>'; l.bindPopup(h);
+                        }
+                    }
+                };
+                if (layerCfg.styleFn) opts.style = layerCfg.styleFn;
+                else opts.style = layerCfg.style;
+
+                var lg = L.geoJSON(geojson, opts).addTo(map);
+                var b = lg.getBounds();
+                if (b.isValid()) {
+                    if (!allBounds) allBounds = b; else allBounds.extend(b);
+                }
+                loadedCount++;
+                if (loadedCount === layers.length && allBounds) {
+                    map.fitBounds(allBounds, { padding: [40, 40] });
+                }
+            })
+            .catch(function(e) { console.warn('Peta lokasi gagal load:', layerCfg.file, e); });
+    });
 }
 
 // ==================== GALLERY & LIGHTBOX ====================

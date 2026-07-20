@@ -24,10 +24,10 @@ const DUSUN_DATA = {
     tanggalSurvei: "6–9 Juli 2026",
     skalaPeta: "1:3.500",
     sumberCitra: "Foto Udara Drone skala 1:5.000 (2025)",
-    koordinatTengah: "7°34' LS, 110°11' BT",
+    koordinatTengah: "7°34'26.6\"LS, 110°11'13.4\"BT",
 
     // Koordinat pusat untuk Leaflet
-    center: [-7.5694, 110.1903],
+    center: [-7.57406, 110.18705],
     zoom: 16,
 
     // ==================== DEMOGRAFI ====================
@@ -345,7 +345,5 @@ const DUSUN_DATA = {
         // Dokumentasi Survei Juli 2026
         { src: 'assets/images/galeri/IMG_20260707_151057.jpg', caption: 'Survei Lapangan Dusun Kasuran', category: 'DOKUMENTASI' },
         { src: 'assets/images/galeri/IMG_20260708_100719.jpg', caption: 'Dokumentasi Wilayah Kasuran', category: 'DOKUMENTASI' },
-        { src: 'assets/images/galeri/DJI_20260707110921_0007_D.MP4.mp4', caption: 'Drone Udara Dusun Kasuran (7 Juli 2026)', category: 'VIDEO', type: 'video' },
-        { src: 'assets/images/galeri/Update_Kasuran.mov', caption: 'Update Dusun Kasuran', category: 'VIDEO', type: 'video' },
     ],
 };
