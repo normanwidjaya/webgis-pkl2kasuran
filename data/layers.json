@@ -46,5 +46,221 @@
     "type": "Polygon",
     "file": "batas_magelang_sekitar.geojson",
     "featureCount": 16
+  },
+  {
+    "name": "nama_topografi",
+    "label": "Nama Topografi",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_topografi.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_prov",
+    "label": "Nama Prov",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_prov.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_perairan",
+    "label": "Nama Perairan",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_perairan.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_kec",
+    "label": "Nama Kec",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_kec.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_kab_kota",
+    "label": "Nama Kab Kota",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_kab_kota.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_jalan",
+    "label": "Nama Jalan",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_jalan.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_fasum_sosial",
+    "label": "Nama Fasum Sosial",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_fasum_sosial.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "nama_dusun",
+    "label": "Nama Dusun",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "nama_dusun.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "batas_wilayah_administrasi",
+    "label": "Batas Wilayah Administrasi",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "batas_wilayah_administrasi.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "jaringan_infrastruktur_transportasi",
+    "label": "Jaringan Infrastruktur Transportasi",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Multi Line String",
+    "file": "jaringan_infrastruktur_transportasi.geojson",
+    "featureCount": 21
+  },
+  {
+    "name": "sarana_prasarana",
+    "label": "Sarana Prasarana",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Point",
+    "file": "sarana_prasarana.geojson",
+    "featureCount": 7
+  },
+  {
+    "name": "pl_kasuran_revisi",
+    "label": "Pl Kasuran Revisi",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Measured Multi Polygon",
+    "file": "pl_kasuran_revisi.geojson",
+    "featureCount": 217
+  },
+  {
+    "name": "perairan_area",
+    "label": "Perairan Area",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Measured Multi Polygon",
+    "file": "perairan_area.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "t_3_dirtyareas",
+    "label": "T 3 Dirtyareas",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_3_dirtyareas.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "t_3_pointerrors",
+    "label": "T 3 Pointerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "t_3_pointerrors.geojson",
+    "featureCount": 5
+  },
+  {
+    "name": "t_3_lineerrors",
+    "label": "T 3 Lineerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Line String",
+    "file": "t_3_lineerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "t_3_polyerrors",
+    "label": "T 3 Polyerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_3_polyerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "persil_kasuran_revisi",
+    "label": "Persil Kasuran Revisi",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Measured Multi Polygon",
+    "file": "persil_kasuran_revisi.geojson",
+    "featureCount": 103
+  },
+  {
+    "name": "t_4_dirtyareas",
+    "label": "T 4 Dirtyareas",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_4_dirtyareas.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "t_4_pointerrors",
+    "label": "T 4 Pointerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "t_4_pointerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "t_4_lineerrors",
+    "label": "T 4 Lineerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Line String",
+    "file": "t_4_lineerrors.geojson",
+    "featureCount": 3
+  },
+  {
+    "name": "t_4_polyerrors",
+    "label": "T 4 Polyerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_4_polyerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "t_5_dirtyareas",
+    "label": "T 5 Dirtyareas",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_5_dirtyareas.geojson",
+    "featureCount": 1
+  },
+  {
+    "name": "t_5_pointerrors",
+    "label": "T 5 Pointerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Point",
+    "file": "t_5_pointerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "t_5_lineerrors",
+    "label": "T 5 Lineerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Line String",
+    "file": "t_5_lineerrors.geojson",
+    "featureCount": 3
+  },
+  {
+    "name": "t_5_polyerrors",
+    "label": "T 5 Polyerrors",
+    "group": "Peta Dusun Kasuran",
+    "type": "Multi Polygon",
+    "file": "t_5_polyerrors.geojson",
+    "featureCount": 0
+  },
+  {
+    "name": "batas_rt_kasuran",
+    "label": "Batas Rt Kasuran",
+    "group": "Peta Dusun Kasuran",
+    "type": "3D Measured Multi Polygon",
+    "file": "batas_rt_kasuran.geojson",
+    "featureCount": 3
   }
 ]

@@ -375,6 +375,90 @@
                 return '<strong>' + label + '</strong>' + (f.properties.Toponimi ? '<br>' + f.properties.Toponimi : '');
             },
         },
+        // --- NEW: Geodatabase layers ---
+        batas_rt_kasuran: {
+            styleFn: function(f) {
+                var rt = f.properties.RT || '';
+                var colors = { 'RT 01': '#27ae60', 'RT 02': '#2980b9', 'RT 03': '#e67e22' };
+                var c = colors[rt] || '#8e44ad';
+                return { color: c, weight: 2.5, fillColor: c, fillOpacity: 0.12, opacity: 0.85 };
+            },
+            legendLabel: 'Batas RT Kasuran',
+            legendSwatch: '<div class="legend-swatch" style="background:transparent;border:2px dashed #8e44ad;"></div>',
+            popupFn: function(f) {
+                return '<strong>' + (f.properties.RT || f.properties.NAMOBJ || 'Dusun Kasuran') + '</strong>';
+            },
+        },
+        pl_kasuran_revisi: {
+            styleFn: function(f) {
+                var jenis = f.properties.Jenis || f.properties.PENGGUNAAN || '';
+                if (jenis.toLowerCase().indexOf('hutan') >= 0) return { color: '#1b5e20', weight: 0.5, fillColor: '#2e7d32', fillOpacity: 0.35 };
+                if (jenis.toLowerCase().indexOf('kebun') >= 0 || jenis.toLowerCase().indexOf('perkebunan') >= 0) return { color: '#558b2f', weight: 0.5, fillColor: '#7cb342', fillOpacity: 0.35 };
+                if (jenis.toLowerCase().indexOf('sawah') >= 0 || jenis.toLowerCase().indexOf('pertanian') >= 0) return { color: '#f9a825', weight: 0.5, fillColor: '#fdd835', fillOpacity: 0.3 };
+                if (jenis.toLowerCase().indexOf('permukiman') >= 0 || jenis.toLowerCase().indexOf('bangunan') >= 0) return { color: '#bf360c', weight: 0.5, fillColor: '#e64a19', fillOpacity: 0.3 };
+                return { color: '#78909c', weight: 0.5, fillColor: '#90a4ae', fillOpacity: 0.2 };
+            },
+            legendLabel: 'Penggunaan Lahan',
+            legendSwatch: '<div class="legend-swatch" style="background:#7cb342;border-color:#558b2f;"></div>',
+            popupFn: function(f) {
+                return '<strong>Penggunaan Lahan</strong><br>' + (f.properties.Jenis || f.properties.PENGGUNAAN || 'Tidak teridentifikasi');
+            },
+        },
+        persil_kasuran_revisi: {
+            style: { color: '#6d4c41', weight: 1, fillColor: '#8d6e63', fillOpacity: 0.15, opacity: 0.6 },
+            legendLabel: 'Persil Tanah',
+            legendSwatch: '<div class="legend-swatch" style="background:#8d6e63;border-color:#6d4c41;"></div>',
+            popupFn: function(f) {
+                return '<strong>Persil</strong>' + (f.properties.NIB ? '<br>NIB: ' + f.properties.NIB : '') + (f.properties.NoPersil ? '<br>No: ' + f.properties.NoPersil : '');
+            },
+        },
+        sarana_prasarana: {
+            style: { color: '#e91e63', weight: 1, fillColor: '#f06292', fillOpacity: 0.8, radius: 6 },
+            pointToLayer: function(f, latlng) { return L.circleMarker(latlng, { radius: 7, color: '#c62828', weight: 2, fillColor: '#ef5350', fillOpacity: 0.8 }); },
+            legendLabel: 'Sarana Prasarana',
+            legendSwatch: '<div class="legend-swatch circle" style="background:#ef5350;border-color:#c62828;"></div>',
+            popupFn: function(f) {
+                var h = '<strong>Sarana Prasarana</strong>';
+                if (f.properties.Nama) h += '<br>' + f.properties.Nama;
+                if (f.properties.Jenis) h += '<br>Jenis: ' + f.properties.Jenis;
+                return h;
+            },
+        },
+        jaringan_infrastruktur_transportasi: {
+            styleFn: function(f) {
+                var t = f.properties.Jenis || f.properties.TIPE || '';
+                if (t.toLowerCase().indexOf('jalan') >= 0) return { color: '#ff6f00', weight: 2.5, opacity: 0.85 };
+                if (t.toLowerCase().indexOf('setapak') >= 0) return { color: '#795548', weight: 1.5, opacity: 0.7, dashArray: '4 4' };
+                return { color: '#5d4037', weight: 2, opacity: 0.75 };
+            },
+            legendLabel: 'Jaringan Transportasi',
+            legendSwatch: '<div class="legend-swatch line" style="background:#ff6f00;height:3px;"></div>',
+            popupFn: function(f) {
+                return '<strong>Transportasi</strong>' + (f.properties.Jenis ? '<br>' + f.properties.Jenis : '') + (f.properties.Nama ? '<br>' + f.properties.Nama : '');
+            },
+        },
+        perairan_area: {
+            style: { color: '#0277bd', weight: 1.5, fillColor: '#29b6f6', fillOpacity: 0.4, opacity: 0.8 },
+            legendLabel: 'Area Perairan',
+            legendSwatch: '<div class="legend-swatch" style="background:#29b6f6;border-color:#0277bd;"></div>',
+            popupFn: function(f) {
+                return '<strong>Perairan</strong>' + (f.properties.Nama ? '<br>' + f.properties.Nama : '') + (f.properties.Jenis ? '<br>' + f.properties.Jenis : '');
+            },
+        },
+        nama_dusun: {
+            style: { color: '#4a148c', weight: 1, fillColor: '#ce93d8', fillOpacity: 0.9, radius: 5 },
+            pointToLayer: function(f, latlng) {
+                return L.marker(latlng, {
+                    icon: L.divIcon({
+                        className: '',
+                        html: '<div style="background:#4a148c;color:#fff;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);">📍 ' + (f.properties.Nama || 'Dusun') + '</div>',
+                        iconAnchor: [30, 12]
+                    })
+                });
+            },
+            legendLabel: 'Nama Dusun',
+            legendSwatch: '<div class="legend-swatch circle" style="background:#4a148c;"></div>',
+        },
     };
 
     var roadLegend = [
@@ -384,17 +468,26 @@
     ];
 
     var layerConfigs = [
-        { name: 'batas_kasuran', label: 'Batas Dusun Kasuran', group: 'Batas' },
-        { name: 'batas_sumberarum', label: 'Batas Dusun Sumberarum', group: 'Batas' },
-        { name: 'batas_desa_magelang', label: 'Batas Desa Magelang', group: 'Batas' },
-        { name: 'batas_magelang', label: 'Batas Kab. Magelang', group: 'Batas' },
-        { name: 'batas_magelang_sekitar', label: 'Batas Wilayah Sekitar', group: 'Batas' },
+        { name: 'batas_kasuran', label: 'Batas Dusun Kasuran', group: 'Batas Administrasi' },
+        { name: 'batas_rt_kasuran', label: 'Batas RT Kasuran', group: 'Batas Administrasi' },
+        { name: 'batas_sumberarum', label: 'Batas Dusun Sumberarum', group: 'Batas Administrasi' },
+        { name: 'batas_desa_magelang', label: 'Batas Desa Magelang', group: 'Batas Administrasi' },
+        { name: 'batas_magelang', label: 'Batas Kab. Magelang', group: 'Batas Administrasi' },
+        { name: 'batas_magelang_sekitar', label: 'Batas Wilayah Sekitar', group: 'Batas Administrasi' },
         { name: 'jalan_desa', label: 'Jalan Desa', group: 'Transportasi' },
+        { name: 'jaringan_infrastruktur_transportasi', label: 'Jaringan Transportasi', group: 'Transportasi' },
+        { name: 'pl_kasuran_revisi', label: 'Penggunaan Lahan', group: 'Tata Guna Lahan' },
+        { name: 'persil_kasuran_revisi', label: 'Persil Tanah', group: 'Tata Guna Lahan' },
+        { name: 'sarana_prasarana', label: 'Sarana Prasarana', group: 'Fasilitas' },
+        { name: 'perairan_area', label: 'Area Perairan', group: 'Alam' },
+        { name: 'nama_dusun', label: 'Label Dusun', group: 'Label' },
     ];
 
     var layerMeta = {
-        batas_kasuran:1, batas_sumberarum:15, batas_desa_magelang:372,
+        batas_kasuran:1, batas_rt_kasuran:3, batas_sumberarum:15, batas_desa_magelang:372,
         batas_magelang:1, batas_magelang_sekitar:16, jalan_desa:282,
+        jaringan_infrastruktur_transportasi:21, pl_kasuran_revisi:217,
+        persil_kasuran_revisi:103, sarana_prasarana:7, perairan_area:1, nama_dusun:1,
     };
 
     // ---- Build Layer Panel ----
@@ -442,14 +535,24 @@
     function buildLegend() {
         var c = document.getElementById('legendContent');
         var h = '<div style="margin-bottom:10px;"><strong style="font-size:0.7rem;color:#666;">BATAS WILAYAH</strong></div>';
-        ['batas_kasuran','batas_magelang','batas_sumberarum','batas_desa_magelang'].forEach(function(n) {
+        ['batas_kasuran','batas_rt_kasuran','batas_magelang','batas_sumberarum','batas_desa_magelang'].forEach(function(n) {
             var s = symbology[n];
             if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
         });
-        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">JARINGAN JALAN</strong></div>';
+        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">JARINGAN TRANSPORTASI</strong></div>';
         roadLegend.forEach(function(r) {
             var ds = r.dash ? 'border:none;border-top:' + r.width + 'px dashed ' + r.color + ';height:0;width:20px;' : '';
             h += '<div class="legend-row"><div class="legend-swatch line" style="background:' + r.color + ';height:' + r.width + 'px;' + ds + '"></div> ' + r.label + '</div>';
+        });
+        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">TATA GUNA LAHAN</strong></div>';
+        ['pl_kasuran_revisi','persil_kasuran_revisi'].forEach(function(n) {
+            var s = symbology[n];
+            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
+        });
+        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">FASILITAS & ALAM</strong></div>';
+        ['sarana_prasarana','perairan_area','nama_dusun'].forEach(function(n) {
+            var s = symbology[n];
+            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
         });
         c.innerHTML = h;
     }
@@ -462,12 +565,17 @@
                 return resp.json();
             })
             .then(function(geojson) {
+                if (!geojson.features || geojson.features.length === 0) {
+                    console.log('SKIP (empty): ' + config.label);
+                    return;
+                }
                 var sym = symbology[config.name];
                 var options = {
                     onEachFeature: function(feature, layer) {
                         if (sym && sym.popupFn) layer.bindPopup(sym.popupFn(feature), { offset: [0, -5] });
                     }
                 };
+                if (sym && sym.pointToLayer) options.pointToLayer = sym.pointToLayer;
                 if (sym && sym.styleFn) options.style = sym.styleFn;
                 else if (sym && sym.style) options.style = sym.style;
 
@@ -484,7 +592,7 @@
                 console.log('OK: ' + config.label + ' (' + geojson.features.length + ')');
             })
             .catch(function(err) {
-                console.error('FAIL: ' + config.name + ' - ' + err.message);
+                console.warn('FAIL: ' + config.name + ' - ' + err.message);
             });
     }
 

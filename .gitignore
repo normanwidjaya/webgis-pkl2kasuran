@@ -1,2 +1,5 @@
 node_modules
 data/shapefile-data.js
+*.py
+!convert-shp.js
+!reproject-shp.js

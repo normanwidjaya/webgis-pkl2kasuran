@@ -342,5 +342,10 @@ const DUSUN_DATA = {
         { src: 'assets/images/galeri/wisata-melon.jpg', caption: 'Wisata Melon', category: 'UMKM' },
         { src: 'assets/images/galeri/pengrajin-miniatur.jpg', caption: 'Pengrajin Miniatur', category: 'UMKM' },
         { src: 'assets/images/galeri/batas-dusun.jpg', caption: 'Pengukuran Batas 2026', category: 'DOKUMENTASI' },
+        // Dokumentasi Survei Juli 2026
+        { src: 'assets/images/galeri/IMG_20260707_151057.jpg', caption: 'Survei Lapangan Dusun Kasuran', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/IMG_20260708_100719.jpg', caption: 'Dokumentasi Wilayah Kasuran', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/DJI_20260707110921_0007_D.MP4.mp4', caption: 'Drone Udara Dusun Kasuran (7 Juli 2026)', category: 'VIDEO', type: 'video' },
+        { src: 'assets/images/galeri/Update_Kasuran.mov', caption: 'Update Dusun Kasuran', category: 'VIDEO', type: 'video' },
     ],
 };

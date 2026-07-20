@@ -193,10 +193,14 @@ function initGallery() {
     grid.innerHTML = '';
     DUSUN_DATA.galeri.forEach(item => {
         const div = document.createElement('div'); div.className = 'galeri-item';
-        div.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" onerror="this.parentElement.style.display='none'"><div class="galeri-overlay"><span class="galeri-category">${item.category}</span><h4>${item.caption}</h4></div>`;
+        if (item.type === 'video') {
+            div.innerHTML = `<video src="${item.src}" controls preload="metadata" style="width:100%;height:100%;object-fit:cover;border-radius:12px;" onerror="this.parentElement.style.display='none'"></video><div class="galeri-overlay"><span class="galeri-category">${item.category}</span><h4>${item.caption}</h4></div>`;
+        } else {
+            div.innerHTML = `<img src="${item.src}" alt="${item.caption}" loading="lazy" onerror="this.parentElement.style.display='none'"><div class="galeri-overlay"><span class="galeri-category">${item.category}</span><h4>${item.caption}</h4></div>`;
+        }
         grid.appendChild(div);
     });
-    if (ph) ph.style.display = grid.querySelectorAll('img:not([style*="display:none"])').length > 0 ? 'none' : 'block';
+    if (ph) ph.style.display = grid.querySelectorAll('img:not([style*="display:none"]), video:not([style*="display:none"])').length > 0 ? 'none' : 'block';
 }
 
 function initLightbox() {
@@ -204,6 +208,7 @@ function initLightbox() {
     const im = document.getElementById('lightboxImg'), cap = document.getElementById('lightboxCaption');
     document.addEventListener('click', e => {
         const item = e.target.closest('.galeri-item'); if (!item) return;
+        const vid = item.querySelector('video'); if (vid) return; // Don't open lightbox for videos
         const el = item.querySelector('img'); if (!el || el.style.display === 'none') return;
         lb.classList.add('active'); im.src = el.src; im.alt = el.alt;
         const h4 = item.querySelector('h4'); if (h4) cap.textContent = h4.textContent;
