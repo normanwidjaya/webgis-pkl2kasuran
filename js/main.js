@@ -240,25 +240,10 @@ function initPetaLokasi() {
     // Also on window resize and tab visibility
     window.addEventListener('resize', function() { map.invalidateSize(); });
 
-    // Marker pusat dusun
-    L.marker(DUSUN_DATA.center, {
-        icon: L.divIcon({
-            className: '',
-            html: '<div style="width:24px;height:24px;background:#e74c3c;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>',
-            iconSize: [24, 24], iconAnchor: [12, 12],
-        })
-    }).addTo(map).bindPopup('<strong>Dusun Kasuran</strong><br>RW 17, Desa Sumberarum');
-
     // Load GeoJSON layers
     var layers = [
         { file: 'data/batas_kasuran.geojson', style: { color: '#2d6a4f', weight: 3, fillColor: '#52b788', fillOpacity: 0.2 } },
         { file: 'data/batas_sumberarum.geojson', style: { color: '#e67e22', weight: 2, fillColor: '#f39c12', fillOpacity: 0.1, dashArray: '6 3' } },
-        { file: 'data/jalan_desa.geojson', styleFn: function(f) {
-            var k = f.properties.Kelas;
-            if (k === '1') return { color: '#e74c3c', weight: 3, opacity: 0.9 };
-            if (k === '2') return { color: '#f39c12', weight: 2.5, opacity: 0.85 };
-            return { color: '#95a5a6', weight: 1.5, opacity: 0.7, dashArray: '5 3' };
-        }},
     ];
 
     var allBounds = null;
@@ -344,10 +329,16 @@ function initScrollToTop() {
 
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', function (e) {
+        if (this.closest('.leaflet-control') || this.classList.contains('leaflet-control-zoom-in') || this.classList.contains('leaflet-control-zoom-out')) {
+            return;
+        }
         const id = this.getAttribute('href');
-        if (id === '#') { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+        if (!id || id === '#') return;
         const t = document.querySelector(id);
-        if (t) { e.preventDefault(); window.scrollTo({ top: t.offsetTop - 70, behavior: 'smooth' }); }
+        if (t) {
+            e.preventDefault();
+            window.scrollTo({ top: t.offsetTop - 70, behavior: 'smooth' });
+        }
     }));
 }
 
