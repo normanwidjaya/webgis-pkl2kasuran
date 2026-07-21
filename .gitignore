@@ -3,3 +3,7 @@ data/shapefile-data.js
 *.py
 !convert-shp.js
 !reproject-shp.js
+
+# Large video files (>100MB GitHub limit)
+assets/images/galeri/DJI_20260707110921_0007_D.MP4.mp4
+assets/images/galeri/Update_Kasuran.mov

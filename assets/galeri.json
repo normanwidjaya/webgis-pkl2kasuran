@@ -1,22 +1,17 @@
 [
   {
-    "file": "DJI_20260707110921_0007_D.MP4.mp4",
-    "type": "video",
-    "caption": "DJI 20260707110921 0007 D.MP4"
-  },
-  {
     "file": "IMG_20260707_151057.jpg",
     "type": "image",
-    "caption": "IMG 20260707 151057"
+    "caption": "Survei Lapangan Dusun Kasuran"
   },
   {
     "file": "IMG_20260708_100719.jpg",
     "type": "image",
-    "caption": "IMG 20260708 100719"
+    "caption": "Dokumentasi Wilayah Kasuran"
   },
   {
-    "file": "Update_Kasuran.mov",
+    "file": "video-rute.mp4",
     "type": "video",
-    "caption": "Update Kasuran"
+    "caption": "Video Rute"
   }
 ]

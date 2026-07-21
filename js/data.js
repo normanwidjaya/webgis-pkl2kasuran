@@ -335,18 +335,6 @@ const DUSUN_DATA = {
 
     // ==================== GALERI ====================
     galeri: [
-        { src: 'assets/images/galeri/kantor-desa.jpg', caption: 'Kantor Desa', category: 'PEMERINTAHAN' },
-        { src: 'assets/images/galeri/rumah-kadus.jpg', caption: 'Rumah Kepala Dusun', category: 'PEMERINTAHAN' },
-        { src: 'assets/images/galeri/lahan-pertanian.jpg', caption: 'Lahan Pertanian', category: 'PERTANIAN' },
-        { src: 'assets/images/galeri/masjid.jpg', caption: 'Masjid', category: 'PERIBADATAN' },
-        { src: 'assets/images/galeri/mushola.jpg', caption: 'Mushola', category: 'PERIBADATAN' },
-        { src: 'assets/images/galeri/pos-ronda.jpg', caption: 'Pos Ronda', category: 'KEAMANAN' },
-        { src: 'assets/images/galeri/sumber-air.jpg', caption: 'Sungai Progo', category: 'SUMBER AIR' },
-        { src: 'assets/images/galeri/dokumentasi-pkl.jpg', caption: 'Dokumentasi PKL 2026', category: 'DOKUMENTASI' },
-        { src: 'assets/images/galeri/umkm-usus.jpg', caption: 'UMKM Usus Ayam', category: 'UMKM' },
-        { src: 'assets/images/galeri/wisata-melon.jpg', caption: 'Wisata Melon', category: 'UMKM' },
-        { src: 'assets/images/galeri/pengrajin-miniatur.jpg', caption: 'Pengrajin Miniatur', category: 'UMKM' },
-        { src: 'assets/images/galeri/batas-dusun.jpg', caption: 'Pengukuran Batas 2026', category: 'DOKUMENTASI' },
         // Dokumentasi Survei Juli 2026
         { src: 'assets/images/galeri/IMG_20260707_151057.jpg', caption: 'Survei Lapangan Dusun Kasuran', category: 'DOKUMENTASI' },
         { src: 'assets/images/galeri/IMG_20260708_100719.jpg', caption: 'Dokumentasi Wilayah Kasuran', category: 'DOKUMENTASI' },
