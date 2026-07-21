@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta 3D Interaktif — Dusun Kasuran</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary: #2d6a4f;
+            --primary-dark: #1b4332;
+            --accent: #52b788;
+            --dark: #1a1a2e;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-500: #adb5bd;
+            --gray-700: #495057;
+            --white: #ffffff;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            height: 100vh; display: flex; flex-direction: column;
+            overflow: hidden; background: var(--dark);
+        }
+
+        /* TOP BAR */
+        .topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; height: 52px; background: var(--white);
+            border-bottom: 1px solid var(--gray-300); z-index: 1001; flex-shrink: 0;
+        }
+        .topbar-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-weight: 700; font-size: 1rem; color: var(--primary-dark);
+            text-decoration: none;
+        }
+        .topbar-actions { display: flex; gap: 8px; }
+        .topbar-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 7px 14px; border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm); background: var(--white);
+            color: var(--gray-700); cursor: pointer; font-size: 0.82rem;
+            font-weight: 600; transition: var(--transition); text-decoration: none;
+        }
+        .topbar-btn:hover { background: var(--gray-100); border-color: var(--primary); color: var(--primary); }
+        .topbar-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+
+        /* MAP */
+        #map { flex: 1; width: 100%; }
+
+        /* LAYER PANEL */
+        .layer-panel {
+            position: absolute; top: 68px; right: 16px; z-index: 1000;
+            background: var(--white); border-radius: var(--radius);
+            box-shadow: var(--shadow-lg); width: 310px;
+            max-height: calc(100vh - 140px); display: flex; flex-direction: column;
+            overflow: hidden; border: 1px solid var(--gray-300); backdrop-filter: blur(8px);
+        }
+        .layer-panel.collapsed .layer-body { display: none; }
+        .layer-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--white);
+            cursor: pointer; user-select: none; flex-shrink: 0;
+        }
+        .layer-header h3 { font-size: 0.92rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .layer-body { overflow-y: auto; flex: 1; padding: 8px 0; }
+        .layer-group { border-bottom: 1px solid var(--gray-200); padding: 6px 0; }
+        .layer-group:last-child { border-bottom: none; }
+        .layer-group-title {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.2px; color: var(--primary); background: rgba(45,106,79,0.06);
+            padding: 6px 16px; border-left: 3px solid var(--primary); margin: 4px 0 6px;
+        }
+        .layer-item {
+            display: flex; align-items: center; gap: 10px; padding: 8px 16px;
+            cursor: pointer; font-size: 0.83rem; color: var(--gray-700);
+            transition: all 0.2s ease; user-select: none;
+        }
+        .layer-item:hover { background: rgba(45,106,79,0.06); color: var(--primary-dark); }
+        .layer-item input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 17px; height: 17px;
+            border: 2px solid #b0bec5; border-radius: 5px; outline: none; cursor: pointer;
+            display: inline-grid; place-content: center; transition: all 0.2s ease;
+            background-color: #fff; flex-shrink: 0; margin: 0; position: relative;
+        }
+        .layer-item input[type="checkbox"]:checked {
+            background-color: var(--primary); border-color: var(--primary);
+            box-shadow: 0 2px 6px rgba(45,106,79,0.25);
+        }
+        .layer-item input[type="checkbox"]:checked::before {
+            content: ""; width: 8px; height: 5px; border-left: 2px solid #fff;
+            border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(0.5px, -0.5px);
+        }
+        .layer-item input[type="checkbox"]:hover { border-color: var(--primary); }
+        .layer-swatch {
+            width: 18px; height: 12px; border-radius: 4px; flex-shrink: 0;
+            border: 1px solid rgba(0,0,0,0.15); box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+        }
+        .layer-label { flex: 1; font-weight: 600; font-size: 0.82rem; }
+        .layer-count {
+            font-size: 0.68rem; font-weight: 700; color: var(--primary-dark);
+            background: rgba(82,183,136,0.18); padding: 2px 8px; border-radius: 12px;
+            border: 1px solid rgba(45,106,79,0.15);
+        }
+
+        /* 3D CONTROLS */
+        .controls-3d {
+            position: absolute; bottom: 80px; left: 16px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .ctrl-btn {
+            width: 40px; height: 40px; border-radius: 8px; border: none;
+            background: var(--white); box-shadow: var(--shadow);
+            cursor: pointer; font-size: 1.1rem; color: var(--gray-700);
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .ctrl-btn:hover { background: var(--gray-100); color: var(--primary); }
+        .ctrl-btn.active { background: var(--primary); color: var(--white); }
+        .ctrl-label {
+            position: absolute; left: 48px; top: 50%; transform: translateY(-50%);
+            background: var(--dark); color: var(--white); padding: 2px 8px;
+            border-radius: 4px; font-size: 0.7rem; white-space: nowrap; opacity: 0;
+            pointer-events: none; transition: opacity 0.2s;
+        }
+        .ctrl-btn:hover .ctrl-label { opacity: 1; }
+
+        /* POPUP */
+        .mapboxgl-popup-content {
+            border-radius: 8px; padding: 10px 14px; font-size: 0.82rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .layer-panel { width: 260px; top: 62px; right: 8px; }
+            .topbar { padding: 0 12px; }
+            .topbar-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+    <a href="index.html" class="topbar-brand">
+        <i class="fas fa-cube" style="color:var(--primary);font-size:1.2rem;"></i>
+        Peta 3D Interaktif — Dusun Kasuran
+    </a>
+    <div class="topbar-actions">
+        <button class="topbar-btn" onclick="resetView()" title="Reset tampilan">
+            <i class="fas fa-sync-alt"></i> <span>Reset</span>
+        </button>
+        <a href="peta-interaktif.html" class="topbar-btn">
+            <i class="fas fa-map"></i> <span>Peta 2D</span>
+        </a>
+        <a href="index.html" class="topbar-btn">
+            <i class="fas fa-home"></i> <span>Beranda</span>
+        </a>
+    </div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- LAYER PANEL -->
+<div class="layer-panel" id="layerPanel">
+    <div class="layer-header" onclick="togglePanel()">
+        <h3><i class="fas fa-layer-group"></i> Layer 3D</h3>
+        <i class="fas fa-chevron-up toggle-icon" id="toggleIcon"></i>
+    </div>
+    <div class="layer-body" id="layerBody"></div>
+</div>
+
+<!-- 3D CONTROLS -->
+<div class="controls-3d">
+    <button class="ctrl-btn" onclick="toggle3D()" id="btn3D" title="Toggle 3D Terrain">
+        <i class="fas fa-mountain"></i><span class="ctrl-label">3D ON/OFF</span>
+    </button>
+    <button class="ctrl-btn" onclick="rotateLeft()" title="Rotate Left">
+        <i class="fas fa-undo"></i><span class="ctrl-label">Rotate ↺</span>
+    </button>
+    <button class="ctrl-btn" onclick="rotateRight()" title="Rotate Right">
+        <i class="fas fa-redo"></i><span class="ctrl-label">Rotate ↻</span>
+    </button>
+    <button class="ctrl-btn" onclick="tiltUp()" title="Tilt Up">
+        <i class="fas fa-arrow-up"></i><span class="ctrl-label">Tilt</span>
+    </button>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.js"></script>
+<script>
+// ==================== MAP INIT ====================
+const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+        version: 8,
+        sources: {
+            osm: {
+                type: 'raster',
+                tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+                tileSize: 256,
+                attribution: '&copy; OpenStreetMap contributors',
+                maxzoom: 19,
+            },
+            terrain: {
+                type: 'raster-dem',
+                tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+                tileSize: 256,
+                encoding: 'terrarium',
+                maxzoom: 15,
+            }
+        },
+        layers: [
+            { id: 'osm-tiles', type: 'raster', source: 'osm', paint: { 'raster-opacity': 1 } }
+        ],
+        terrain: { source: 'terrain', exaggeration: 1.5 },
+    },
+    center: [110.18705, -7.57406],
+    zoom: 14.5,
+    pitch: 45,
+    bearing: -20,
+    antialias: true,
+});
+
+// Navigation controls
+map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
+map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
+
+// ==================== LAYER CONFIG ====================
+const layerConfigs = [
+    {
+        id: 'batas_kasuran', label: 'Batas Dusun Kasuran', group: 'Batas', count: 1,
+        color: '#2d6a4f', fillColor: '#52b788', fillOpacity: 0.15, weight: 3, type: 'fill',
+    },
+    {
+        id: 'batas_rt_kasuran', label: 'Batas RT Kasuran', group: 'Batas', count: 3,
+        color: '#8e44ad', fillColor: '#9b59b6', fillOpacity: 0.1, weight: 2, type: 'fill',
+    },
+    {
+        id: 'batas_sumberarum', label: 'Batas Dusun Sumberarum', group: 'Batas', count: 15,
+        color: '#e67e22', fillColor: '#f39c12', fillOpacity: 0.08, weight: 2, type: 'fill', dash: [4, 3],
+    },
+    {
+        id: 'batas_magelang', label: 'Batas Kab. Magelang', group: 'Batas', count: 1,
+        color: '#2980b9', fillColor: '#3498db', fillOpacity: 0.06, weight: 3, type: 'fill',
+    },
+    {
+        id: 'jalan_desa', label: 'Jalan Desa', group: 'Transportasi', count: 282,
+        color: '#e74c3c', weight: 2.5, type: 'line',
+    },
+    {
+        id: 'jaringan_infrastruktur_transportasi', label: 'Jaringan Transportasi', group: 'Transportasi', count: 21,
+        color: '#ff6f00', weight: 2, type: 'line',
+    },
+    {
+        id: 'pl_kasuran_revisi', label: '🏗️ Penggunaan Lahan (3D)', group: '3D Bangunan', count: 217,
+        color: '#2e7d32', fillColor: '#4caf50', type: 'fill-extrusion',
+        extrude: true, height: 8, baseHeight: 0,
+    },
+    {
+        id: 'persil_kasuran_revisi', label: 'Persil Tanah', group: 'Tata Guna', count: 103,
+        color: '#6d4c41', fillColor: '#8d6e63', fillOpacity: 0.12, weight: 1, type: 'fill',
+    },
+    {
+        id: 'sarana_prasarana', label: 'Sarana Prasarana', group: 'Fasilitas', count: 7,
+        circleColor: '#ef5350', circleRadius: 5, type: 'circle',
+    },
+    {
+        id: 'perairan_area', label: 'Area Perairan', group: 'Alam', count: 1,
+        color: '#0277bd', fillColor: '#29b6f6', fillOpacity: 0.35, weight: 1.5, type: 'fill',
+    },
+    {
+        id: 'nama_dusun', label: 'Label Dusun', group: 'Label', count: 1,
+        color: '#4a148c', type: 'symbol', textField: 'Dusun Kasuran',
+    },
+];
+
+// ==================== BUILD PANEL ====================
+function buildLayerPanel() {
+    const body = document.getElementById('layerBody');
+    const groups = {};
+    layerConfigs.forEach(c => {
+        if (!groups[c.group]) groups[c.group] = [];
+        groups[c.group].push(c);
+    });
+    let html = '';
+    Object.keys(groups).forEach(g => {
+        html += `<div class="layer-group"><div class="layer-group-title">${g}</div>`;
+        groups[g].forEach(item => {
+            const swatch = item.type === 'line'
+                ? `<div class="layer-swatch" style="background:${item.color};height:3px;border:none;"></div>`
+                : item.type === 'circle'
+                ? `<div class="layer-swatch" style="background:${item.circleColor};border-radius:50%;width:12px;height:12px;"></div>`
+                : `<div class="layer-swatch" style="background:${item.fillColor||item.color};border-color:${item.color};"></div>`;
+            html += `<label class="layer-item"><input type="checkbox" checked data-layer="${item.id}">${swatch}<span class="layer-label">${item.label}</span><span class="layer-count">${item.count}</span></label>`;
+        });
+        html += '</div>';
+    });
+    body.innerHTML = html;
+
+    body.querySelectorAll('input').forEach(cb => {
+        cb.addEventListener('change', function() {
+            const id = this.dataset.layer;
+            const visibility = this.checked ? 'visible' : 'none';
+            // Handle extrusions separately
+            if (id === 'pl_kasuran_revisi') {
+                map.setLayoutProperty(id + '-extrusion', 'visibility', visibility);
+            } else {
+                const layer = map.getLayer(id);
+                if (layer) map.setLayoutProperty(id, 'visibility', visibility);
+            }
+        });
+    });
+}
+
+// ==================== LOAD GEOJSON LAYERS ====================
+async function loadLayers() {
+    for (const cfg of layerConfigs) {
+        try {
+            const resp = await fetch('data/' + cfg.id + '.geojson');
+            if (!resp.ok) { console.warn('Skip:', cfg.id); continue; }
+            const geojson = await resp.json();
+            if (!geojson.features || geojson.features.length === 0) continue;
+
+            // Add source
+            const sourceId = cfg.id + '-src';
+            if (map.getSource(sourceId)) map.removeSource(sourceId);
+            map.addSource(sourceId, { type: 'geojson', data: geojson });
+
+            if (cfg.type === 'fill') {
+                map.addLayer({
+                    id: cfg.id, source: sourceId, type: 'fill',
+                    paint: {
+                        'fill-color': cfg.fillColor || cfg.color,
+                        'fill-opacity': cfg.fillOpacity || 0.15,
+                        'fill-outline-color': cfg.color,
+                    },
+                });
+                if (cfg.dash) {
+                    map.setPaintProperty(cfg.id, 'fill-outline-width', 2);
+                }
+            } else if (cfg.type === 'fill-extrusion') {
+                // 3D Extrusion layer
+                map.addLayer({
+                    id: cfg.id + '-extrusion', source: sourceId, type: 'fill-extrusion',
+                    paint: {
+                        'fill-extrusion-color': cfg.fillColor || '#4caf50',
+                        'fill-extrusion-height': cfg.height || 8,
+                        'fill-extrusion-base': cfg.baseHeight || 0,
+                        'fill-extrusion-opacity': 0.7,
+                    },
+                });
+                // Also add outline
+                map.addLayer({
+                    id: cfg.id, source: sourceId, type: 'line',
+                    paint: { 'line-color': cfg.color, 'line-width': 0.5, 'line-opacity': 0.5 },
+                });
+            } else if (cfg.type === 'line') {
+                map.addLayer({
+                    id: cfg.id, source: sourceId, type: 'line',
+                    paint: { 'line-color': cfg.color, 'line-width': cfg.weight || 2, 'line-opacity': 0.85 },
+                });
+            } else if (cfg.type === 'circle') {
+                map.addLayer({
+                    id: cfg.id, source: sourceId, type: 'circle',
+                    paint: {
+                        'circle-color': cfg.circleColor,
+                        'circle-radius': cfg.circleRadius || 5,
+                        'circle-stroke-color': '#fff',
+                        'circle-stroke-width': 2,
+                    },
+                });
+            } else if (cfg.type === 'symbol') {
+                map.addLayer({
+                    id: cfg.id, source: sourceId, type: 'symbol',
+                    layout: {
+                        'text-field': cfg.textField || '•',
+                        'text-size': 14,
+                        'text-offset': [0, -1.5],
+                        'text-anchor': 'top',
+                    },
+                    paint: { 'text-color': cfg.color, 'text-halo-color': '#fff', 'text-halo-width': 2 },
+                });
+            }
+
+            // Popup
+            map.on('click', cfg.id, (e) => {
+                if (!e.features.length) return;
+                const props = e.features[0].properties;
+                let html = '<div style="min-width:140px;max-width:300px;">';
+                html += `<strong>${cfg.label}</strong><br>`;
+                Object.entries(props).slice(0, 8).forEach(([k, v]) => {
+                    html += `<small><b>${k}:</b> ${v}</small><br>`;
+                });
+                html += '</div>';
+                new maplibregl.Popup({ offset: [0, -10] })
+                    .setLngLat(e.lngLat).setHTML(html).addTo(map);
+            });
+
+            // Cursor
+            map.on('mouseenter', cfg.id, () => { map.getCanvas().style.cursor = 'pointer'; });
+            map.on('mouseleave', cfg.id, () => { map.getCanvas().style.cursor = ''; });
+
+            console.log('OK:', cfg.label, '(' + geojson.features.length + ')');
+        } catch (err) {
+            console.warn('FAIL:', cfg.id, err.message);
+        }
+    }
+}
+
+// ==================== 3D CONTROLS ====================
+let is3D = true;
+function toggle3D() {
+    is3D = !is3D;
+    const btn = document.getElementById('btn3D');
+    if (is3D) {
+        map.setTerrain({ source: 'terrain', exaggeration: 1.5 });
+        map.setPitch(45);
+        btn.classList.add('active');
+    } else {
+        map.setTerrain(null);
+        map.setPitch(0);
+        btn.classList.remove('active');
+    }
+}
+
+function rotateLeft() { map.easeTo({ bearing: map.getBearing() - 45, duration: 1000 }); }
+function rotateRight() { map.easeTo({ bearing: map.getBearing() + 45, duration: 1000 }); }
+function tiltUp() {
+    const pitch = map.getPitch() > 30 ? 0 : 60;
+    map.easeTo({ pitch, duration: 800 });
+}
+function resetView() {
+    map.easeTo({ center: [110.18705, -7.57406], zoom: 14.5, pitch: 45, bearing: -20, duration: 1500 });
+}
+
+function togglePanel() {
+    document.getElementById('layerPanel').classList.toggle('collapsed');
+    const icon = document.getElementById('toggleIcon');
+    icon.classList.toggle('fa-chevron-up');
+    icon.classList.toggle('fa-chevron-down');
+    setTimeout(() => map.resize(), 300);
+}
+
+// ==================== INIT ====================
+map.on('load', async () => {
+    buildLayerPanel();
+    await loadLayers();
+    document.getElementById('btn3D').classList.add('active');
+    console.log('🗺️ Peta 3D Dusun Kasuran siap!');
+    console.log('   🖱️ Klik kanan + drag = rotate | Ctrl + drag = tilt');
+    console.log('   📱 Touch: dua jari putar = rotate | dua jari geser = tilt');
+});
+</script>
+</body>
+</html>

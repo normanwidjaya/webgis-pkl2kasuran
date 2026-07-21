@@ -88,7 +88,6 @@ function renderPetaTabs(type) {
 
 function buildPanelHTML(peta, type) {
     const statsHTML = peta.stats ? peta.stats.map(s => `<div class="map-stat"><span class="map-stat-num">${s.value}</span><span>${s.label}</span></div>`).join('') : '';
-    const legendHTML = peta.legend ? `<div class="map-legend-inline"><h4>Legenda:</h4>${peta.legend.map(l => `<span class="legend-dot" style="background:${l.color}"></span> ${l.label}`).join(' ')}</div>` : '';
 
     // Chart bars (Penggunaan Lahan)
     const chartHTML = peta.chartBars ? `<div class="map-chart-bars">${peta.chartBars.map(b => `<div class="chart-bar-item"><span class="chart-bar-label">${b.label}</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${b.pct}%;background:${b.color}"></div></div><span class="chart-bar-pct">${b.pct}%</span></div>`).join('')}</div>` : '';
@@ -102,24 +101,39 @@ function buildPanelHTML(peta, type) {
     // Fungsi Bangunan
     const fungsiHTML = peta.fungsiList ? `<div class="map-chart-bars">${peta.fungsiList.map(f => `<div class="chart-bar-item"><span class="chart-bar-label">${f.fungsi}</span><div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.min((f.jumlah/119)*100, 100)}%;background:${f.warna}"></div></div><span class="chart-bar-pct">${f.jumlah}</span></div>`).join('')}</div>` : '';
 
-    // Populasi per RT
+    // Populasi per RT + Gender
+    const totalPop = peta.populasiPerRT ? parseInt(peta.populasiPerRT.rt01)+parseInt(peta.populasiPerRT.rt02)+parseInt(peta.populasiPerRT.rt03) : 0;
     const popHTML = peta.populasiPerRT ? `<div class="internet-grid">
-        ${['rt01','rt02','rt03'].map(rt => `<div class="internet-card"><i class="fas fa-users"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:${peta.populasiPerRT[rt] ? '50%' : '0%'}"></div></div><span class="data-pending">${peta.populasiPerRT[rt] || 'Data dari peta'}</span></div>`).join('')}
+        ${['rt01','rt02','rt03'].map(rt => {
+            const pop = peta.populasiPerRT[rt] || '0';
+            const g = peta.genderPerRT?.[rt] || {laki:0,perempuan:0};
+            return `<div class="internet-card"><i class="fas fa-users"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:${Math.min((parseInt(pop)/totalPop)*100,100)}%"></div></div><span class="data-pending">${pop}</span><span style="font-size:.7rem;color:var(--gray-500);">♂ ${g.laki} | ♀ ${g.perempuan}</span></div>`;
+        }).join('')}
     </div>${peta.populasiPerRT.note ? `<p class="map-note">📋 ${peta.populasiPerRT.note}</p>` : ''}` : '';
 
     // Akses Internet
-    const inetHTML = peta.kategoriAkses ? `<div class="map-legend-inline" style="margin-bottom:14px;"><h4>Kategori:</h4>${peta.kategoriAkses.map(k => `<span class="legend-dot" style="background:${k.warna}"></span> ${k.level}`).join(' ')}</div><div class="internet-grid">${['rt01','rt02','rt03'].map(rt => `<div class="internet-card"><i class="fas fa-wifi"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:0%"></div></div><span class="data-pending">Data dari peta</span></div>`).join('')}</div>` : '';
+    const inetHTML = peta.kategoriAkses ? `<div style="margin-bottom:14px;"><h4 style="font-size:.8rem;color:var(--gray-700);">Kategori Akses:</h4>${peta.kategoriAkses.map(k => `<span class="legend-dot" style="background:${k.warna};display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;"></span> ${k.level}`).join(' &nbsp;|&nbsp; ')}</div><div class="internet-grid">${['rt01','rt02','rt03'].map(rt => {
+        const d = peta.dataPerRT?.[rt] || {};
+        const pct = parseFloat(d.persen) || 0;
+        const warna = pct >= 70 ? '#2ecc71' : pct >= 50 ? '#f39c12' : '#e74c3c';
+        return `<div class="internet-card"><i class="fas fa-wifi"></i><strong>${rt.toUpperCase().replace('RT0','RT 0')}</strong><div class="internet-bar"><div class="internet-fill" style="width:${pct}%;background:${warna}"></div></div><span style="font-weight:700;color:${warna};">${d.fiber || '—'}</span><span style="font-size:.7rem;color:var(--gray-500);">${d.mobile || ''}</span></div>`;
+    }).join('')}</div>` : '';
 
     // Pendidikan
     const pendHTML = peta.jenjangPendidikan ? `<div class="pendidikan-table-wrapper"><table class="pendidikan-table">
         <thead><tr><th>Jenjang</th><th>RT 01</th><th>RT 02</th><th>RT 03</th><th>Total</th></tr></thead>
-        <tbody>${peta.jenjangPendidikan.map(j => `<tr><td>${j}</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr>`).join('')}
-        <tr class="total-row"><td><strong>Total</strong></td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td><td class="data-pending">—</td></tr></tbody>
+        <tbody>${['tidakSekolah','sd','smp','sma','pt'].map((k,i) => {
+            const label = peta.jenjangPendidikan[i];
+            const d = peta.dataPerRT || {};
+            const v1 = d.rt01?.[k] ?? '—', v2 = d.rt02?.[k] ?? '—', v3 = d.rt03?.[k] ?? '—';
+            const total = (typeof v1==='number'&&typeof v2==='number'&&typeof v3==='number') ? v1+v2+v3 : '—';
+            return `<tr><td>${label}</td><td>${v1 !== null ? v1 : '—'}</td><td>${v2 !== null ? v2 : '—'}</td><td>${v3 !== null ? v3 : '—'}</td><td><strong>${total}</strong></td></tr>`;
+        }).join('')}
+        <tr class="total-row"><td><strong>Total Populasi</strong></td><td><strong>124</strong></td><td><strong>70</strong></td><td><strong>126</strong></td><td><strong>320</strong></td></tr></tbody>
     </table></div><p class="map-note">📋 Data jenjang pendidikan per RT — dari Peta Tingkat Pendidikan (2026)</p>` : '';
 
     // Tahun badge
     const tahunBadge = peta.tahun ? `<span style="display:inline-block;background:var(--primary);color:#fff;padding:2px 10px;border-radius:12px;font-size:0.7rem;margin-left:8px;vertical-align:middle;">${peta.tahun}</span>` : '';
-    const pdfBadge = peta.filePDF ? `<p class="map-note" style="margin-top:4px;">📄 Sumber: ${peta.filePDF} • Skala ${DUSUN_DATA.skalaPeta} • Survei ${DUSUN_DATA.tanggalSurvei}</p>` : '';
 
     // Gambar peta (JPG hasil konversi dari PDF)
     const imgPath = `assets/images/peta/${peta.tabId}`;
@@ -139,8 +153,6 @@ function buildPanelHTML(peta, type) {
             <p>${peta.desc}</p>
             ${statsHTML ? `<div class="map-stats-row">${statsHTML}</div>` : ''}
             ${chartHTML}${jenisHTML}${fungsiHTML}${rtHTML}${popHTML}${inetHTML}${pendHTML}
-            ${legendHTML}
-            ${pdfBadge}
         </div>
         <div class="map-panel-map">
             <img src="${imgFullPath}" alt="${peta.name}" class="peta-image"
@@ -259,9 +271,15 @@ function initPetaLokasi() {
                 var opts = {
                     onEachFeature: function(f, l) {
                         if (f.properties) {
-                            var h = '<div style="min-width:120px;">';
-                            Object.entries(f.properties).slice(0, 5).forEach(function(e) { h += '<b>' + e[0] + ':</b> ' + e[1] + '<br>'; });
-                            h += '</div>'; l.bindPopup(h);
+                            var map={NAMOBJ:'Nama',WADMKD:'Desa',WADMKC:'Kecamatan',WADMKK:'Kabupaten',WADMPR:'Provinsi',DUSUN:'Dusun',Toponimi:'Toponimi',Kelas:'Kelas Jalan',RT:'RT',Jenis:'Jenis',Nama:'Nama',Shape_Area:'Luas',Shape_Length:'Panjang'};
+                            var skip=['SRS_ID','METADATA','KDCPUM','KDPPUM','FCODE','KDEPUM','KDPKAB','KDPPUM','Shape_Le_1','Shape_Leng','KET_DETAIL','KET_PL'];
+                            var h='<div class="popup-card"><div class="popup-title" style="font-weight:700;color:#2d6a4f;font-size:.85rem;padding-bottom:5px;margin-bottom:5px;border-bottom:2px solid rgba(45,106,79,.15)">Info</div><table style="width:100%">';
+                            Object.entries(f.properties).slice(0,10).forEach(function(e){
+                                if(skip.includes(e[0])||e[1]===null||e[1]==='')return;
+                                var label=map[e[0]]||e[0].replace(/_/g,' ');
+                                h+='<tr><td style="color:#999;font-size:.7rem;padding-right:8px;white-space:nowrap">'+label+'</td><td style="font-weight:600">'+e[1]+'</td></tr>';
+                            });
+                            h+='</table></div>';l.bindPopup(h,{maxWidth:260});
                         }
                     }
                 };

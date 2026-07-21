@@ -4,630 +4,325 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peta Interaktif — Dusun Kasuran</title>
-
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
     <style>
-        :root {
-            --primary: #2d6a4f;
-            --primary-dark: #1b4332;
-            --primary-light: #40916c;
-            --accent: #52b788;
-            --accent-light: #95d5b2;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --info: #3498db;
-            --dark: #1a1a2e;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-500: #adb5bd;
-            --gray-700: #495057;
-            --white: #ffffff;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 4px 20px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: var(--dark);
-        }
-
-        /* ==================== TOP BAR ==================== */
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            height: 56px;
-            background: var(--white);
-            border-bottom: 1px solid var(--gray-300);
-            z-index: 1001;
-            flex-shrink: 0;
-        }
-        .topbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--primary-dark);
-            text-decoration: none;
-        }
-        .topbar-brand img { height: 32px; }
-        .topbar-actions { display: flex; gap: 8px; }
-        .topbar-btn {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-sm);
-            background: var(--white);
-            color: var(--gray-700);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-        .topbar-btn:hover { background: var(--gray-100); border-color: var(--primary); color: var(--primary); }
-        .topbar-btn.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
-
-        /* ==================== MAP CONTAINER ==================== */
-        .map-container { flex: 1; position: relative; }
-
-        #map-container {
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* ==================== LAYER PANEL ==================== */
-        .layer-panel {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            z-index: 1000;
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            width: 300px;
-            max-height: calc(100vh - 120px);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: var(--transition);
-        }
-        .layer-panel.collapsed .layer-body { display: none; }
-        .layer-panel.collapsed { width: auto; }
-
-        .layer-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            background: var(--primary);
-            color: var(--white);
-            cursor: pointer;
-            user-select: none;
-            flex-shrink: 0;
-        }
-        .layer-header h3 {
-            font-size: 0.95rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .layer-header .toggle-icon { transition: transform 0.3s; }
-        .layer-panel.collapsed .toggle-icon { transform: rotate(180deg); }
-
-        .layer-body {
-            overflow-y: auto;
-            flex: 1;
-            padding: 8px 0;
-        }
-        .layer-group {
-            border-bottom: 1px solid var(--gray-200);
-            padding: 6px 0;
-        }
-        .layer-group:last-child { border-bottom: none; }
-        .layer-group-title {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray-500);
-            padding: 4px 16px;
-        }
-
-        .layer-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background 0.15s;
-            font-size: 0.85rem;
-            color: var(--gray-700);
-        }
-        .layer-item:hover { background: var(--gray-100); }
-        .layer-item input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
-
-        .layer-swatch {
-            width: 20px;
-            height: 14px;
-            border-radius: 3px;
-            flex-shrink: 0;
-            border: 1px solid rgba(0,0,0,0.15);
-        }
-        .layer-swatch.line {
-            height: 3px;
-            border-radius: 2px;
-            border: none;
-        }
-        .layer-label {
-            flex: 1;
-            font-weight: 500;
-        }
-        .layer-count {
-            font-size: 0.7rem;
-            color: var(--gray-500);
-            background: var(--gray-200);
-            padding: 1px 6px;
-            border-radius: 10px;
-        }
-
-        /* ==================== LEGEND ==================== */
-        .legend-box {
-            position: absolute;
-            bottom: 28px;
-            left: 16px;
-            z-index: 1000;
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow);
-            padding: 14px 16px;
-            font-size: 0.8rem;
-            max-width: 220px;
-            transition: var(--transition);
-        }
-        .legend-box h4 {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--gray-700);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .legend-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 5px;
-            color: var(--gray-700);
-        }
-        .legend-row:last-child { margin-bottom: 0; }
-        .legend-swatch {
-            width: 16px;
-            height: 12px;
-            border-radius: 2px;
-            flex-shrink: 0;
-            border: 1px solid rgba(0,0,0,0.2);
-        }
-        .legend-swatch.circle { border-radius: 50%; width: 10px; height: 10px; }
-        .legend-swatch.line {
-            height: 3px;
-            width: 20px;
-            border: none;
-            border-radius: 2px;
-        }
-
-        /* ==================== MOBILE ==================== */
-        @media (max-width: 768px) {
-            .layer-panel {
-                width: 260px;
-                top: 10px;
-                right: 10px;
-            }
-            .topbar { padding: 0 12px; }
-            .topbar-btn span { display: none; }
-        }
-        @media (max-width: 480px) {
-            .layer-panel {
-                width: calc(100vw - 20px);
-                top: auto;
-                bottom: 10px;
-                right: 10px;
-                max-height: 45vh;
-            }
-            .legend-box { bottom: 50vh; left: 10px; }
-        }
+        :root{--p:#2d6a4f;--pd:#1b4332;--pl:#40916c;--a:#52b788;--al:#95d5b2;--d:#e74c3c;--w:#f39c12;--i:#3498db;--dk:#1a1a2e;--g1:#f8f9fa;--g2:#e9ecef;--g3:#dee2e6;--g5:#adb5bd;--g7:#495057;--wt:#fff;--r:12px;--rs:8px;--sh:0 4px 20px rgba(0,0,0,.1);--shl:0 10px 40px rgba(0,0,0,.15);--tr:all .3s ease}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--dk)}
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:52px;background:var(--wt);border-bottom:1px solid var(--g3);z-index:1001;flex-shrink:0}
+        .topbar-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1rem;color:var(--pd);text-decoration:none}
+        .topbar-actions{display:flex;gap:8px;align-items:center}
+        .topbar-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--g3);border-radius:var(--rs);background:var(--wt);color:var(--g7);cursor:pointer;font-size:.82rem;font-weight:600;transition:var(--tr);text-decoration:none}
+        .topbar-btn:hover{background:var(--g1);border-color:var(--p);color:var(--p)}
+        .mode-toggle{display:flex;background:var(--g2);border-radius:20px;overflow:hidden}
+        .mode-btn{padding:7px 18px;border:none;cursor:pointer;font-size:.82rem;font-weight:600;transition:var(--tr);background:transparent;color:var(--g7)}
+        .mode-btn.active{background:var(--p);color:var(--wt)}
+        .map-container{flex:1;position:relative}
+        #map2d,#map3d{position:absolute;inset:0;width:100%;height:100%}
+        #map3d{display:none}
+        .layer-panel{position:absolute;top:16px;right:16px;z-index:1000;background:var(--wt);border-radius:var(--r);box-shadow:var(--shl);width:310px;max-height:calc(100vh - 120px);display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--g3);backdrop-filter:blur(8px)}
+        .layer-panel.collapsed .layer-body{display:none}
+        .layer-panel.collapsed{width:auto}
+        .layer-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(135deg,var(--p),var(--pd));color:var(--wt);cursor:pointer;user-select:none;flex-shrink:0}
+        .layer-header h3{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:8px}
+        .layer-body{overflow-y:auto;flex:1;padding:8px 0}
+        .layer-group{border-bottom:1px solid var(--g2);padding:6px 0}.layer-group:last-child{border-bottom:none}
+        .layer-group-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--p);background:rgba(45,106,79,.06);padding:6px 16px;border-left:3px solid var(--p);margin:4px 0 6px}
+        .layer-item,.pl-sub-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;font-size:.83rem;color:var(--g7);transition:all .2s ease;user-select:none}
+        .layer-item:hover,.pl-sub-item:hover{background:rgba(45,106,79,.06);color:var(--pd)}
+        .layer-item input[type="checkbox"],.pl-sub-item input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:17px;height:17px;border:2px solid #b0bec5;border-radius:5px;outline:none;cursor:pointer;display:inline-grid;place-content:center;transition:all .2s ease;background-color:#fff;flex-shrink:0;margin:0;position:relative}
+        .layer-item input[type="checkbox"]:checked{background-color:var(--p);border-color:var(--p);box-shadow:0 2px 6px rgba(45,106,79,.25)}
+        .pl-sub-item input[type="checkbox"]:checked{background-color:var(--sub-color,var(--p));border-color:var(--sub-color,var(--p));box-shadow:0 2px 6px rgba(0,0,0,.15)}
+        .layer-item input[type="checkbox"]:checked::before,.pl-sub-item input[type="checkbox"]:checked::before{content:"";width:8px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translate(0.5px,-0.5px)}
+        .layer-item input[type="checkbox"]:hover,.pl-sub-item input[type="checkbox"]:hover{border-color:var(--p)}
+        .layer-swatch{width:18px;height:12px;border-radius:4px;flex-shrink:0;border:1px solid rgba(0,0,0,.15);box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
+        .layer-label{flex:1;font-weight:600;font-size:.82rem}
+        .layer-count{font-size:.68rem;font-weight:700;color:var(--pd);background:rgba(82,183,136,.18);padding:2px 8px;border-radius:12px;border:1px solid rgba(45,106,79,.15)}
+        .pl-sub-container{display:flex;flex-direction:column;gap:3px;padding:6px 8px 6px 12px;margin:2px 12px 8px 32px;border-left:2.5px solid rgba(45,106,79,.25);background:linear-gradient(135deg,rgba(45,106,79,.03) 0%,rgba(82,183,136,.05) 100%);border-radius:0 10px 10px 0;transition:all .25s ease}
+        .pl-sub-item{font-size:.78rem;padding:5px 8px;gap:8px;border-radius:6px;font-weight:500}
+        .pl-sub-item .layer-swatch{width:14px;height:10px;border-radius:3px}
+        .maplibregl-popup-content{border-radius:8px;padding:10px 14px;font-size:.8rem;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+        /* Popup styling */
+        .popup-card{min-width:180px;font-size:.8rem}
+        .popup-title{font-weight:700;color:var(--p);font-size:.85rem;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid rgba(45,106,79,.15)}
+        .popup-table{width:100%;border-collapse:collapse}
+        .popup-table td{padding:3px 6px;vertical-align:top;font-size:.78rem}
+        .popup-table td:first-child{color:var(--g5);white-space:nowrap;padding-right:10px;font-size:.7rem;text-transform:uppercase;letter-spacing:.3px}
+        .popup-table td:last-child{color:var(--dk);font-weight:500}
+        .leaflet-popup-content-wrapper{border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+        .leaflet-popup-content{margin:10px 12px;font-size:.8rem}
+        .leaflet-popup-content .popup-card{min-width:180px}
+        .leaflet-popup-content .popup-title{font-weight:700;color:var(--p);font-size:.85rem;padding-bottom:6px;margin-bottom:6px;border-bottom:2px solid rgba(45,106,79,.15)}
+        .leaflet-popup-content .popup-table{width:100%;border-collapse:collapse}
+        .leaflet-popup-content .popup-table td{padding:3px 6px;vertical-align:top;font-size:.78rem}
+        .leaflet-popup-content .popup-table td:first-child{color:var(--g5);white-space:nowrap;padding-right:10px;font-size:.7rem;text-transform:uppercase;letter-spacing:.3px}
+        .leaflet-popup-content .popup-table td:last-child{color:var(--dk);font-weight:500}
+        /* Basemap switcher */
+        .basemap-switcher{position:absolute;top:16px;left:16px;z-index:1000;display:flex;gap:4px;background:var(--wt);border-radius:8px;padding:4px;box-shadow:var(--sh);}
+        .basemap-btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.72rem;font-weight:600;background:transparent;color:var(--g7);transition:var(--tr);}
+        .basemap-btn.active{background:var(--p);color:var(--wt);}
+        .basemap-btn:hover:not(.active){background:var(--g2);}
+        @media(max-width:768px){.layer-panel{width:270px;top:10px;right:10px}.topbar{padding:0 12px}.topbar-btn span{display:none}.basemap-switcher{top:60px;left:8px;}}
     </style>
 </head>
 <body>
-
-    <!-- ==================== TOP BAR ==================== -->
-    <div class="topbar">
-        <a href="index.html" class="topbar-brand">
-            <i class="fas fa-map-marked-alt" style="color:var(--primary);font-size:1.3rem;"></i>
-            Peta Interaktif Dusun Kasuran
-        </a>
-        <div class="topbar-actions">
-            <button class="topbar-btn" onclick="mainMap.fitBounds(fullExtent);" title="Zoom ke semua layer">
-                <i class="fas fa-expand-arrows-alt"></i> <span>Zoom Semua</span>
-            </button>
-            <a href="index.html" class="topbar-btn">
-                <i class="fas fa-home"></i> <span>Beranda</span>
-            </a>
-        </div>
+<div class="topbar">
+    <a href="index.html" class="topbar-brand"><i class="fas fa-map-marked-alt" style="color:var(--p);font-size:1.2rem;"></i> Peta Interaktif Dusun Kasuran</a>
+    <div class="topbar-actions">
+        <div class="mode-toggle"><button class="mode-btn active" onclick="switchMode('2d')" id="btn2d">🗺️ 2D</button><button class="mode-btn" onclick="switchMode('3d')" id="btn3d">🧊 3D</button></div>
+        <button class="topbar-btn" onclick="zoomAll()"><i class="fas fa-expand-arrows-alt"></i> <span>Zoom</span></button>
+        <a href="index.html" class="topbar-btn"><i class="fas fa-home"></i> <span>Beranda</span></a>
     </div>
-
-    <!-- ==================== MAP ==================== -->
-    <div class="map-container">
-        <div id="map-container"></div>
-
-        <!-- Layer Panel -->
-        <div class="layer-panel" id="layerPanel">
-            <div class="layer-header" onclick="togglePanel()">
-                <h3><i class="fas fa-layer-group"></i> Layer Peta</h3>
-                <i class="fas fa-chevron-up toggle-icon"></i>
-            </div>
-            <div class="layer-body" id="layerBody">
-                <!-- Generated by JS -->
-            </div>
-        </div>
-
-        <!-- Legend -->
-        <div class="legend-box" id="legendBox">
-            <h4><i class="fas fa-list-ul"></i> Legenda</h4>
-            <div id="legendContent">
-                <!-- Generated by JS -->
-            </div>
-        </div>
+</div>
+<div class="map-container">
+    <div id="map2d"></div>
+    <div id="map3d"></div>
+    <div class="basemap-switcher" id="basemapSwitcher">
+        <button class="basemap-btn active" onclick="switchBasemap('satellite')">🛰️ Satelit</button>
+        <button class="basemap-btn" onclick="switchBasemap('osm')">🗺️ OSM</button>
+        <button class="basemap-btn" onclick="switchBasemap('topo')">🏔️ Topografi</button>
     </div>
+    <div class="layer-panel" id="layerPanel"><div class="layer-header" onclick="togglePanel()"><h3><i class="fas fa-layer-group"></i> Peta & Legenda</h3><i class="fas fa-chevron-up" id="toggleIcon"></i></div><div class="layer-body" id="layerBody"></div></div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.js"></script>
+<script>
+const C=[-7.57406,110.18705],Z=14;
+const LAYERS=[
+    {id:'batas_kasuran',label:'Batas Dusun Kasuran',g:'Batas',f:'batas_kasuran.geojson',t:'polygon',n:1,c:'#2d6a4f',fc:'#52b788',fo:.15,w:3},
+    {id:'batas_rt_kasuran',label:'Batas RT Kasuran',g:'Batas',f:'batas_rt_kasuran.geojson',t:'polygon',n:3,c:'#999',fc:'#ccc',fo:.12,w:2,byRT:true},
+    {id:'batas_sumberarum',label:'Batas Dusun Sumberarum',g:'Batas',f:'batas_sumberarum.geojson',t:'polygon',n:15,c:'#e67e22',fc:'#f39c12',fo:.08,w:2,d:'6 3'},
+    {id:'batas_desa_magelang',label:'Batas Desa Magelang',g:'Batas',f:'batas_desa_magelang.geojson',t:'polygon',n:372,c:'#bdc3c7',fc:'#ecf0f1',fo:.04,w:1},
+    {id:'batas_magelang',label:'Batas Kab.Magelang',g:'Batas',f:'batas_magelang.geojson',t:'polygon',n:1,c:'#2980b9',fc:'#3498db',fo:.06,w:3},
+    {id:'batas_magelang_sekitar',label:'Batas Wilayah Sekitar',g:'Batas',f:'batas_magelang_sekitar.geojson',t:'polygon',n:16,c:'#95a5a6',fc:'#bdc3c7',fo:.04,w:1.5},
+    {id:'jalan_desa',label:'Jalan Desa',g:'Transportasi',f:'jalan_desa.geojson',t:'line',n:282,c:'#e74c3c',w:2.5},
+    {id:'jaringan_infrastruktur_transportasi',label:'Jaringan Transportasi',g:'Transportasi',f:'jaringan_infrastruktur_transportasi.geojson',t:'line',n:21,c:'#ff6f00',w:2},
+    {id:'pl_kasuran_revisi',label:'Penggunaan Lahan',g:'Penggunaan Lahan',f:'pl_kasuran_revisi.geojson',t:'fill3d',n:217,c:'#999',fc:'#4caf50',eh:4,byPL:true,plLegend:[
+        {label:'Hutan',c:'#1b5e20',pl:'1'},{label:'Permukiman',c:'#e74c3c',pl:'2'},{label:'Kebun Campur',c:'#7cb342',pl:'3'},
+        {label:'Ladang/Tegalan',c:'#cddc39',pl:'19,26,27,29'},{label:'Fasilitas Umum',c:'#2196f3',pl:'6'},{label:'Peribadatan',c:'#9c27b0',pl:'8'},{label:'Perdagangan',c:'#ff9800',pl:'13,28'},
+    ]},
+    {id:'persil_kasuran_revisi',label:'Persil Tanah',g:'Penggunaan Lahan',f:'persil_kasuran_revisi.geojson',t:'polygon',n:103,c:'#6d4c41',fc:'#8d6e63',fo:.12,w:1},
+    {id:'sarana_prasarana',label:'Sarana Prasarana',g:'Fasilitas',f:'sarana_prasarana.geojson',t:'point',n:7,cc:'#ef5350',cr:6},
+    {id:'perairan_area',label:'Area Perairan',g:'Alam',f:'perairan_area.geojson',t:'polygon',n:1,c:'#0277bd',fc:'#29b6f6',fo:.35,w:1.5},
+    {id:'nama_dusun',label:'Label Dusun',g:'Label',f:'nama_dusun.geojson',t:'label',n:1,c:'#4a148c'}
+];
+let mode='2d',m2d=null,m3d=null,ls={},ab=null;
 
-    <!-- ==================== SCRIPTS ==================== -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-    // ================================================================
-    //  PETA INTERAKTIF — Dusun Kasuran
-    //  Data shapefile hardbaked via GeoJSON (data/ folder)
-    // ================================================================
-
-    // ---- Map Init ----
-    var mainMap = L.map('map-container', {
-        center: [-7.57406, 110.18705],
-        zoom: 15,
-        zoomControl: true,
-        scrollWheelZoom: true,
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> | WebGIS Dusun Kasuran',
-        maxZoom: 19,
-    }).addTo(mainMap);
-
-    L.control.scale({ imperial: false, metric: true, position: 'bottomright' }).addTo(mainMap);
-
-    // ---- Globals ----
-    var layerGroups = {};
-    var fullExtent = null;
-    var allLayers = [];
-
-    // ---- Symbology ----
-    var symbology = {
-        batas_kasuran: {
-            style: { color: '#2d6a4f', weight: 3, fillColor: '#52b788', fillOpacity: 0.15, opacity: 1 },
-            legendLabel: 'Batas Dusun Kasuran',
-            legendSwatch: '<div class="legend-swatch" style="background:#52b788;border-color:#2d6a4f;"></div>',
-        },
-        batas_sumberarum: {
-            style: { color: '#e67e22', weight: 2, fillColor: '#f39c12', fillOpacity: 0.1, opacity: 0.8, dashArray: '6 3' },
-            legendLabel: 'Batas Dusun (Sumberarum)',
-            legendSwatch: '<div class="legend-swatch" style="background:#f39c12;border-color:#e67e22;"></div>',
-            popupFn: function(f) { return '<strong>' + (f.properties.Toponimi || f.properties.DUSUN || f.properties.NAMOBJ) + '</strong>'; },
-        },
-        batas_desa_magelang: {
-            style: { color: '#bdc3c7', weight: 1, fillColor: '#ecf0f1', fillOpacity: 0.05, opacity: 0.5 },
-            legendLabel: 'Batas Desa (Magelang)',
-            legendSwatch: '<div class="legend-swatch" style="background:#ecf0f1;border-color:#bdc3c7;"></div>',
-            popupFn: function(f) { return '<strong>Desa ' + f.properties.WADMKD + '</strong><br>Kec. ' + f.properties.WADMKC; },
-        },
-        batas_magelang: {
-            style: { color: '#2980b9', weight: 3, fillColor: '#3498db', fillOpacity: 0.08, opacity: 1 },
-            legendLabel: 'Batas Kab. Magelang',
-            legendSwatch: '<div class="legend-swatch" style="background:#3498db;border-color:#2980b9;"></div>',
-            popupFn: function(f) { return '<strong>' + f.properties.NAME_2 + '</strong><br>' + f.properties.NAME_1; },
-        },
-        batas_magelang_sekitar: {
-            styleFn: function(f) {
-                var name = f.properties.WADMKK || '';
-                var colors = { 'Magelang':'#2980b9','Sleman':'#8e44ad','Bantul':'#16a085','Kulon Progo':'#d35400','Gunungkidul':'#c0392b','Boyolali':'#27ae60','Klaten':'#f39c12','Sukoharjo':'#1abc9c','Semarang':'#e74c3c','Temanggung':'#9b59b6','Wonosobo':'#2ecc71','Purworejo':'#e67e22','Kebumen':'#3498db' };
-                var c = colors[name] || '#95a5a6';
-                return { color: c, weight: 2, fillColor: c, fillOpacity: 0.08, opacity: 0.7 };
-            },
-            legendLabel: 'Batas Wilayah Sekitar',
-            legendSwatch: '<div class="legend-swatch" style="background:transparent;border:2px dashed #95a5a6;"></div>',
-            popupFn: function(f) { return '<strong>' + (f.properties.WADMKK || f.properties.NAMOBJ) + '</strong><br>' + (f.properties.WADMPR || ''); },
-        },
-        jalan_desa: {
-            styleFn: function(f) {
-                var k = f.properties.Kelas;
-                if (k === '1') return { color: '#e74c3c', weight: 3.5, opacity: 0.9 };
-                if (k === '2') return { color: '#f39c12', weight: 2.5, opacity: 0.85 };
-                return { color: '#95a5a6', weight: 1.5, opacity: 0.7, dashArray: '5 3' };
-            },
-            popupFn: function(f) {
-                var k = f.properties.Kelas;
-                var label = k === '1' ? 'Jalan Utama' : k === '2' ? 'Jalan Sekunder' : 'Jalan Lokal/Setapak';
-                return '<strong>' + label + '</strong>' + (f.properties.Toponimi ? '<br>' + f.properties.Toponimi : '');
-            },
-        },
-        // --- NEW: Geodatabase layers ---
-        batas_rt_kasuran: {
-            styleFn: function(f) {
-                var rt = f.properties.RT || '';
-                var colors = { 'RT 01': '#27ae60', 'RT 02': '#2980b9', 'RT 03': '#e67e22' };
-                var c = colors[rt] || '#8e44ad';
-                return { color: c, weight: 2.5, fillColor: c, fillOpacity: 0.12, opacity: 0.85 };
-            },
-            legendLabel: 'Batas RT Kasuran',
-            legendSwatch: '<div class="legend-swatch" style="background:transparent;border:2px dashed #8e44ad;"></div>',
-            popupFn: function(f) {
-                return '<strong>' + (f.properties.RT || f.properties.NAMOBJ || 'Dusun Kasuran') + '</strong>';
-            },
-        },
-        pl_kasuran_revisi: {
-            styleFn: function(f) {
-                var jenis = f.properties.Jenis || f.properties.PENGGUNAAN || '';
-                if (jenis.toLowerCase().indexOf('hutan') >= 0) return { color: '#1b5e20', weight: 0.5, fillColor: '#2e7d32', fillOpacity: 0.35 };
-                if (jenis.toLowerCase().indexOf('kebun') >= 0 || jenis.toLowerCase().indexOf('perkebunan') >= 0) return { color: '#558b2f', weight: 0.5, fillColor: '#7cb342', fillOpacity: 0.35 };
-                if (jenis.toLowerCase().indexOf('sawah') >= 0 || jenis.toLowerCase().indexOf('pertanian') >= 0) return { color: '#f9a825', weight: 0.5, fillColor: '#fdd835', fillOpacity: 0.3 };
-                if (jenis.toLowerCase().indexOf('permukiman') >= 0 || jenis.toLowerCase().indexOf('bangunan') >= 0) return { color: '#bf360c', weight: 0.5, fillColor: '#e64a19', fillOpacity: 0.3 };
-                return { color: '#78909c', weight: 0.5, fillColor: '#90a4ae', fillOpacity: 0.2 };
-            },
-            legendLabel: 'Penggunaan Lahan',
-            legendSwatch: '<div class="legend-swatch" style="background:#7cb342;border-color:#558b2f;"></div>',
-            popupFn: function(f) {
-                return '<strong>Penggunaan Lahan</strong><br>' + (f.properties.Jenis || f.properties.PENGGUNAAN || 'Tidak teridentifikasi');
-            },
-        },
-        persil_kasuran_revisi: {
-            style: { color: '#6d4c41', weight: 1, fillColor: '#8d6e63', fillOpacity: 0.15, opacity: 0.6 },
-            legendLabel: 'Persil Tanah',
-            legendSwatch: '<div class="legend-swatch" style="background:#8d6e63;border-color:#6d4c41;"></div>',
-            popupFn: function(f) {
-                return '<strong>Persil</strong>' + (f.properties.NIB ? '<br>NIB: ' + f.properties.NIB : '') + (f.properties.NoPersil ? '<br>No: ' + f.properties.NoPersil : '');
-            },
-        },
-        sarana_prasarana: {
-            style: { color: '#e91e63', weight: 1, fillColor: '#f06292', fillOpacity: 0.8, radius: 6 },
-            pointToLayer: function(f, latlng) { return L.circleMarker(latlng, { radius: 7, color: '#c62828', weight: 2, fillColor: '#ef5350', fillOpacity: 0.8 }); },
-            legendLabel: 'Sarana Prasarana',
-            legendSwatch: '<div class="legend-swatch circle" style="background:#ef5350;border-color:#c62828;"></div>',
-            popupFn: function(f) {
-                var h = '<strong>Sarana Prasarana</strong>';
-                if (f.properties.Nama) h += '<br>' + f.properties.Nama;
-                if (f.properties.Jenis) h += '<br>Jenis: ' + f.properties.Jenis;
-                return h;
-            },
-        },
-        jaringan_infrastruktur_transportasi: {
-            styleFn: function(f) {
-                var t = f.properties.Jenis || f.properties.TIPE || '';
-                if (t.toLowerCase().indexOf('jalan') >= 0) return { color: '#ff6f00', weight: 2.5, opacity: 0.85 };
-                if (t.toLowerCase().indexOf('setapak') >= 0) return { color: '#795548', weight: 1.5, opacity: 0.7, dashArray: '4 4' };
-                return { color: '#5d4037', weight: 2, opacity: 0.75 };
-            },
-            legendLabel: 'Jaringan Transportasi',
-            legendSwatch: '<div class="legend-swatch line" style="background:#ff6f00;height:3px;"></div>',
-            popupFn: function(f) {
-                return '<strong>Transportasi</strong>' + (f.properties.Jenis ? '<br>' + f.properties.Jenis : '') + (f.properties.Nama ? '<br>' + f.properties.Nama : '');
-            },
-        },
-        perairan_area: {
-            style: { color: '#0277bd', weight: 1.5, fillColor: '#29b6f6', fillOpacity: 0.4, opacity: 0.8 },
-            legendLabel: 'Area Perairan',
-            legendSwatch: '<div class="legend-swatch" style="background:#29b6f6;border-color:#0277bd;"></div>',
-            popupFn: function(f) {
-                return '<strong>Perairan</strong>' + (f.properties.Nama ? '<br>' + f.properties.Nama : '') + (f.properties.Jenis ? '<br>' + f.properties.Jenis : '');
-            },
-        },
-        nama_dusun: {
-            style: { color: '#4a148c', weight: 1, fillColor: '#ce93d8', fillOpacity: 0.9, radius: 5 },
-            pointToLayer: function(f, latlng) {
-                return L.marker(latlng, {
-                    icon: L.divIcon({
-                        className: '',
-                        html: '<div style="background:#4a148c;color:#fff;padding:3px 8px;border-radius:4px;font-size:0.75rem;font-weight:700;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3);">📍 ' + (f.properties.Nama || 'Dusun') + '</div>',
-                        iconAnchor: [30, 12]
-                    })
+function buildPanel(){
+    const b=document.getElementById('layerBody'),gr={};
+    LAYERS.forEach(l=>{if(!gr[l.g])gr[l.g]=[];gr[l.g].push(l);ls[l.id]=true});
+    let h='';
+    Object.keys(gr).forEach(g=>{
+        h+=`<div class="layer-group"><div class="layer-group-title">${g}</div>`;
+        gr[g].forEach(i=>{
+            const sw=i.t==='line'?`<div class="layer-swatch" style="background:${i.c};height:3px;border:none;"></div>`:i.t==='point'?`<div class="layer-swatch" style="background:${i.cc};border-radius:50%;width:12px;height:12px;"></div>`:`<div class="layer-swatch" style="background:${i.fc||i.c};border-color:${i.c};"></div>`;
+            h+=`<label class="layer-item"><input type="checkbox" checked data-layer="${i.id}">${sw}<span class="layer-label">${i.label}</span><span class="layer-count">${i.n}</span></label>`;
+            // PL sub-toggle checkboxes
+            if(i.plLegend){
+                h+='<div class="pl-sub-container" id="plSubContainer">';
+                i.plLegend.forEach(s=>{
+                    h+=`<label class="pl-sub-item"><input type="checkbox" checked data-pl="${s.pl}" data-plsub="1" style="--sub-color:${s.c};"><span class="layer-swatch" style="background:${s.c};"></span><span class="layer-label">${s.label}</span></label>`;
                 });
-            },
-            legendLabel: 'Nama Dusun',
-            legendSwatch: '<div class="legend-swatch circle" style="background:#4a148c;"></div>',
-        },
-    };
-
-    var roadLegend = [
-        { color: '#e74c3c', width: 3.5, label: 'Jalan Utama (Kelas 1)' },
-        { color: '#f39c12', width: 2.5, label: 'Jalan Sekunder (Kelas 2)' },
-        { color: '#95a5a6', width: 1.5, label: 'Jalan Lokal/Setapak (Kelas 3)', dash: '5 3' },
-    ];
-
-    var layerConfigs = [
-        { name: 'batas_kasuran', label: 'Batas Dusun Kasuran', group: 'Batas Administrasi' },
-        { name: 'batas_rt_kasuran', label: 'Batas RT Kasuran', group: 'Batas Administrasi' },
-        { name: 'batas_sumberarum', label: 'Batas Dusun Sumberarum', group: 'Batas Administrasi' },
-        { name: 'batas_desa_magelang', label: 'Batas Desa Magelang', group: 'Batas Administrasi' },
-        { name: 'batas_magelang', label: 'Batas Kab. Magelang', group: 'Batas Administrasi' },
-        { name: 'batas_magelang_sekitar', label: 'Batas Wilayah Sekitar', group: 'Batas Administrasi' },
-        { name: 'jalan_desa', label: 'Jalan Desa', group: 'Transportasi' },
-        { name: 'jaringan_infrastruktur_transportasi', label: 'Jaringan Transportasi', group: 'Transportasi' },
-        { name: 'pl_kasuran_revisi', label: 'Penggunaan Lahan', group: 'Tata Guna Lahan' },
-        { name: 'persil_kasuran_revisi', label: 'Persil Tanah', group: 'Tata Guna Lahan' },
-        { name: 'sarana_prasarana', label: 'Sarana Prasarana', group: 'Fasilitas' },
-        { name: 'perairan_area', label: 'Area Perairan', group: 'Alam' },
-        { name: 'nama_dusun', label: 'Label Dusun', group: 'Label' },
-    ];
-
-    var layerMeta = {
-        batas_kasuran:1, batas_rt_kasuran:3, batas_sumberarum:15, batas_desa_magelang:372,
-        batas_magelang:1, batas_magelang_sekitar:16, jalan_desa:282,
-        jaringan_infrastruktur_transportasi:21, pl_kasuran_revisi:217,
-        persil_kasuran_revisi:103, sarana_prasarana:7, perairan_area:1, nama_dusun:1,
-    };
-
-    // ---- Build Layer Panel ----
-    function buildLayerPanel() {
-        var body = document.getElementById('layerBody');
-        var groups = {};
-        layerConfigs.forEach(function(c) {
-            if (!groups[c.group]) groups[c.group] = [];
-            groups[c.group].push(c);
-        });
-        var html = '';
-        Object.keys(groups).forEach(function(groupName) {
-            html += '<div class="layer-group"><div class="layer-group-title">' + groupName + '</div>';
-            groups[groupName].forEach(function(item) {
-                var sym = symbology[item.name];
-                var swatchHtml = '';
-                if (item.name === 'jalan_desa') {
-                    swatchHtml = '<div class="layer-swatch line" style="background:#e74c3c;"></div>';
-                } else if (sym && sym.style) {
-                    swatchHtml = '<div class="layer-swatch" style="background:' + sym.style.fillColor + ';border-color:' + sym.style.color + ';"></div>';
-                } else {
-                    swatchHtml = '<div class="layer-swatch" style="background:#ccc;"></div>';
-                }
-                var count = layerMeta[item.name] || '';
-                html += '<label class="layer-item"><input type="checkbox" checked data-layer="' + item.name + '">' +
-                    swatchHtml + '<span class="layer-label">' + item.label + '</span>' +
-                    (count ? '<span class="layer-count">' + count + '</span>' : '') + '</label>';
-            });
-            html += '</div>';
-        });
-        body.innerHTML = html;
-
-        body.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
-            cb.addEventListener('change', function() {
-                var name = this.dataset.layer;
-                var lg = layerGroups[name];
-                if (!lg) return;
-                if (this.checked) mainMap.addLayer(lg);
-                else mainMap.removeLayer(lg);
-            });
-        });
-    }
-
-    // ---- Build Legend ----
-    function buildLegend() {
-        var c = document.getElementById('legendContent');
-        var h = '<div style="margin-bottom:10px;"><strong style="font-size:0.7rem;color:#666;">BATAS WILAYAH</strong></div>';
-        ['batas_kasuran','batas_rt_kasuran','batas_magelang','batas_sumberarum','batas_desa_magelang'].forEach(function(n) {
-            var s = symbology[n];
-            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
-        });
-        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">JARINGAN TRANSPORTASI</strong></div>';
-        roadLegend.forEach(function(r) {
-            var ds = r.dash ? 'border:none;border-top:' + r.width + 'px dashed ' + r.color + ';height:0;width:20px;' : '';
-            h += '<div class="legend-row"><div class="legend-swatch line" style="background:' + r.color + ';height:' + r.width + 'px;' + ds + '"></div> ' + r.label + '</div>';
-        });
-        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">TATA GUNA LAHAN</strong></div>';
-        ['pl_kasuran_revisi','persil_kasuran_revisi'].forEach(function(n) {
-            var s = symbology[n];
-            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
-        });
-        h += '<div style="margin:10px 0 6px;"><strong style="font-size:0.7rem;color:#666;">FASILITAS & ALAM</strong></div>';
-        ['sarana_prasarana','perairan_area','nama_dusun'].forEach(function(n) {
-            var s = symbology[n];
-            if (s && s.legendLabel) h += '<div class="legend-row">' + s.legendSwatch + ' ' + s.legendLabel + '</div>';
-        });
-        c.innerHTML = h;
-    }
-
-    // ---- Load GeoJSON ----
-    function loadLayer(config) {
-        return fetch('data/' + config.name + '.geojson')
-            .then(function(resp) {
-                if (!resp.ok) throw new Error('HTTP ' + resp.status);
-                return resp.json();
-            })
-            .then(function(geojson) {
-                if (!geojson.features || geojson.features.length === 0) {
-                    console.log('SKIP (empty): ' + config.label);
-                    return;
-                }
-                var sym = symbology[config.name];
-                var options = {
-                    onEachFeature: function(feature, layer) {
-                        if (sym && sym.popupFn) layer.bindPopup(sym.popupFn(feature), { offset: [0, -5] });
-                    }
-                };
-                if (sym && sym.pointToLayer) options.pointToLayer = sym.pointToLayer;
-                if (sym && sym.styleFn) options.style = sym.styleFn;
-                else if (sym && sym.style) options.style = sym.style;
-
-                var lg = L.geoJSON(geojson, options);
-                layerGroups[config.name] = lg;
-                allLayers.push(lg);
-                mainMap.addLayer(lg);
-
-                var bounds = lg.getBounds();
-                if (bounds.isValid()) {
-                    if (!fullExtent) fullExtent = bounds;
-                    else fullExtent.extend(bounds);
-                }
-                console.log('OK: ' + config.label + ' (' + geojson.features.length + ')');
-            })
-            .catch(function(err) {
-                console.warn('FAIL: ' + config.name + ' - ' + err.message);
-            });
-    }
-
-    // ---- Init ----
-    function init() {
-        buildLayerPanel();
-        buildLegend();
-
-        // Load layers sequentially
-        var promises = layerConfigs.map(function(c) { return loadLayer(c); });
-        Promise.all(promises).then(function() {
-            // Fit to Sumberarum + Kasuran local area first
-            var localExtent = null;
-            ['batas_kasuran','batas_sumberarum','jalan_desa'].forEach(function(name) {
-                var lg = layerGroups[name];
-                if (lg) {
-                    var b = lg.getBounds();
-                    if (b.isValid()) {
-                        if (!localExtent) localExtent = b;
-                        else localExtent.extend(b);
-                    }
-                }
-            });
-            if (localExtent) {
-                mainMap.fitBounds(localExtent, { padding: [40, 40] });
+                h+='</div>';
             }
-            console.log('Peta Interaktif Ready - ' + allLayers.length + ' layers - Fokus: Sumberarum');
         });
-    }
+        h+='</div>';
+    });
+    b.innerHTML=h;
+    b.querySelectorAll('input').forEach(cb=>cb.addEventListener('change',function(){
+        if(this.dataset.plsub){
+            filterPLSub(this.dataset.pl,this.checked);
+            const subCbs = Array.from(b.querySelectorAll('input[data-plsub]'));
+            const masterCb = b.querySelector('input[data-layer="pl_kasuran_revisi"]');
+            if (masterCb) {
+                const anyChecked = subCbs.some(c => c.checked);
+                if (!anyChecked && masterCb.checked) {
+                    masterCb.checked = false;
+                    ls['pl_kasuran_revisi'] = false;
+                    mode === '2d' ? tl2('pl_kasuran_revisi', false) : tl3('pl_kasuran_revisi', false);
+                } else if (anyChecked && !masterCb.checked) {
+                    masterCb.checked = true;
+                    ls['pl_kasuran_revisi'] = true;
+                    mode === '2d' ? tl2('pl_kasuran_revisi', true) : tl3('pl_kasuran_revisi', true);
+                }
+            }
+        }else{
+            const id=this.dataset.layer;ls[id]=this.checked;
+            mode==='2d'?tl2(id,this.checked):tl3(id,this.checked);
+            if(id === 'pl_kasuran_revisi') {
+                const subCbs = b.querySelectorAll('input[data-plsub]');
+                subCbs.forEach(sub => {
+                    sub.checked = this.checked;
+                    filterPLSub(sub.dataset.pl, this.checked);
+                });
+                const subContainer = document.getElementById('plSubContainer');
+                if (subContainer) {
+                    subContainer.style.opacity = this.checked ? '1' : '0.5';
+                    subContainer.style.pointerEvents = this.checked ? 'auto' : 'none';
+                }
+            }
+        }
+    }));
+}
 
-    function togglePanel() {
-        document.getElementById('layerPanel').classList.toggle('collapsed');
-    }
+// Toggle individual PL features by KET_PL code
+function filterPLSub(codes,visible){
+    const lg=layerRefs2D['pl_kasuran_revisi'];if(!lg)return;
+    const codeArr=codes.split(',');
+    lg.eachLayer(ly=>{
+        const pl=ly.feature&&ly.feature.properties?ly.feature.properties.KET_PL:null;
+        if(pl===null)return;
+        if(codeArr.includes(pl)){
+            ly.setStyle(visible?{opacity:1,fillOpacity:.4}:{opacity:0,fillOpacity:0});
+        }
+    });
+}
 
-    init();
-    </script>
+let currentBasemap='satellite', satelliteLayer=null, osmLayer=null, topoLayer=null;
+
+function init2D(){
+    m2d=L.map('map2d',{center:C,zoom:Z,zoomControl:false,scrollWheelZoom:true});
+    L.control.zoom({position:'bottomleft'}).addTo(m2d);
+
+    // Tile layers
+    satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'&copy; Esri | WebGIS Dusun Kasuran',maxZoom:19});
+    osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OSM | WebGIS Dusun Kasuran',maxZoom:19});
+    topoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenTopoMap | WebGIS Dusun Kasuran',maxZoom:17});
+
+    satelliteLayer.addTo(m2d); // Default satellite
+
+    L.control.scale({imperial:false,metric:true,position:'bottomright'}).addTo(m2d);
+    L.marker(C,{icon:L.divIcon({className:'',html:'<div style="width:22px;height:22px;background:#e74c3c;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3);"></div>',iconSize:[22,22],iconAnchor:[11,11]})}).addTo(m2d).bindPopup('<b>Dusun Kasuran</b><br>RW 17, Desa Sumberarum');
+    ab=null;LAYERS.forEach(l=>load2D(l));
+}
+
+function switchBasemap(type){
+    currentBasemap=type;
+    if(m2d.hasLayer(satelliteLayer))m2d.removeLayer(satelliteLayer);
+    if(m2d.hasLayer(osmLayer))m2d.removeLayer(osmLayer);
+    if(m2d.hasLayer(topoLayer))m2d.removeLayer(topoLayer);
+    if(type==='satellite') satelliteLayer.addTo(m2d);
+    else if(type==='osm') osmLayer.addTo(m2d);
+    else if(type==='topo') topoLayer.addTo(m2d);
+    document.querySelectorAll('.basemap-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`.basemap-btn[onclick*="${type}"]`)?.classList.add('active');
+}
+
+function popupHTML(props,label){
+    const map={NAMOBJ:'Nama Objek',WADMKD:'Desa',WADMKC:'Kecamatan',WADMKK:'Kabupaten',WADMPR:'Provinsi',TIPADM:'Tipe Adm',DUSUN:'Dusun',Toponimi:'Toponimi',Toponim:'Toponim',RT:'RT',Kelas:'Kelas Jalan',Sub_Unsur:'Sub Unsur',KET_DETAIL:'Keterangan',KET_PL:'Kode PL',Shape_Leng:'Panjang',Shape_Length:'Panjang',Shape_Area:'Luas',FCODE:'Kode',KDEPUM:'Kode Desa',KDPKAB:'Kode Kab',NAME_1:'Provinsi',NAME_2:'Kabupaten',TYPE_2:'Tipe',Jenis:'Jenis',Nama:'Nama',NoPersil:'No Persil',NIB:'NIB'};
+    const skip=['SRS_ID','METADATA','KDCPUM','KDPPUM','Shape_Le_1'];
+    let h=`<div class="popup-card"><div class="popup-title">${label}</div><table class="popup-table">`;
+    Object.entries(props).slice(0,12).forEach(([k,v])=>{
+        if(skip.includes(k)||v===null||v===undefined||v==='')return;
+        const label=map[k]||k.replace(/_/g,' ');
+        h+=`<tr><td>${label}</td><td><strong>${v}</strong></td></tr>`;
+    });
+    h+='</table></div>';return h;
+}
+
+function load2D(l){
+    fetch('data/'+l.f).then(r=>r.json()).then(gj=>{
+        if(!gj.features||!gj.features.length)return;
+        const o={onEachFeature:(f,ly)=>{if(f.properties)ly.bindPopup(popupHTML(f.properties,l.label),{className:'popup-custom',maxWidth:280})}};
+        if(l.t==='line')o.style={color:l.c,weight:l.w||2,opacity:.85};
+        else if(l.t==='point')o.pointToLayer=(f,ll)=>L.circleMarker(ll,{radius:l.cr||6,color:l.cc,weight:2,fillColor:l.cc,fillOpacity:.8});
+        else if(l.byRT)o.style=f=>{const rt=f.properties.RT;const rtColors={'1':'#e67e22','2':'#2ecc71','3':'#f5e6ca'};const c=rtColors[rt]||l.c;return{color:c,weight:l.w||2,fillColor:c,fillOpacity:l.fo||.12}};
+        else if(l.byPL)o.style=f=>{const pl=f.properties.KET_PL;const plc={'1':'#1b5e20','2':'#e74c3c','3':'#7cb342','6':'#2196f3','7':'#8bc34a','8':'#9c27b0','13':'#ff9800','17':'#689f38','18':'#558b2f','19':'#cddc39','22':'#8bc34a','26':'#fdd835','27':'#ffee58','28':'#ff9800','29':'#f9a825','34':'#aed581'};const c=plc[pl]||'#9e9e9e';return{color:c,weight:.5,fillColor:c,fillOpacity:.4}};
+        else{o.style={color:l.c,weight:l.w||2,fillColor:l.fc,fillOpacity:l.fo||.15};if(l.d)o.style.dashArray=l.d}
+        const lg=L.geoJSON(gj,o);layerRefs2D[l.id]=lg;if(ls[l.id]!==false)lg.addTo(m2d);
+        const b=lg.getBounds();if(b.isValid()){if(!ab)ab=b;else ab.extend(b)}
+    }).catch(e=>console.warn('2D skip:',l.id,e));
+}
+
+let layerRefs2D={};
+
+function tl2(id,v){
+    const lg=layerRefs2D[id];
+    if(!lg)return;
+    if(v){if(!m2d.hasLayer(lg))lg.addTo(m2d)}
+    else{if(m2d.hasLayer(lg))m2d.removeLayer(lg)}
+}
+
+function init3D(){
+    m3d=new maplibregl.Map({container:'map3d',style:{version:8,sources:{osm:{type:'raster',tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],tileSize:256,maxzoom:19},terrain:{type:'raster-dem',tiles:['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],tileSize:256,encoding:'terrarium',maxzoom:15}},layers:[{id:'osm-tiles',type:'raster',source:'osm'}],terrain:{source:'terrain',exaggeration:1.5}},center:[C[1],C[0]],zoom:Z,pitch:45,bearing:-20,antialias:true});
+    m3d.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'bottom-right');
+    m3d.addControl(new maplibregl.ScaleControl({unit:'metric'}),'bottom-right');
+    m3d.on('load',()=>{LAYERS.forEach(l=>load3D(l));});
+}
+
+async function load3D(l){
+    try{
+        const r=await fetch('data/'+l.f);if(!r.ok)return;const gj=await r.json();if(!gj.features||!gj.features.length)return;
+        const sid=l.id+'-s';if(m3d.getSource(sid))m3d.removeSource(sid);m3d.addSource(sid,{type:'geojson',data:gj});
+        const v=()=>ls[l.id]!==false?'visible':'none';
+        if(l.t==='polygon'){
+            const fc=l.byRT?['match',['get','RT'],'1','#e67e22','2','#2ecc71','3','#f5e6ca',l.fc]:l.fc;
+            const oc=l.byRT?['match',['get','RT'],'1','#e67e22','2','#2ecc71','3','#f5e6ca',l.c]:l.c;
+            m3d.addLayer({id:l.id,source:sid,type:'fill',paint:{'fill-color':fc,'fill-opacity':l.fo||.15,'fill-outline-color':oc},layout:{visibility:v()}});
+            m3d.addLayer({id:l.id+'-ln',source:sid,type:'line',paint:{'line-color':oc,'line-width':l.w||1.5,'line-opacity':.4},layout:{visibility:v()}})}
+        else if(l.t==='fill3d'){
+            const ec=l.byPL?['match',['get','KET_PL'],'1','#1b5e20','2','#e74c3c','3','#7cb342','6','#2196f3','7','#8bc34a','8','#9c27b0','13','#ff9800','17','#689f38','18','#558b2f','19','#cddc39','22','#8bc34a','26','#fdd835','27','#ffee58','28','#ff9800','29','#f9a825','34','#aed581',l.fc]:l.fc;
+            m3d.addLayer({id:l.id+'-ext',source:sid,type:'fill-extrusion',paint:{'fill-extrusion-color':ec,'fill-extrusion-height':l.eh||6,'fill-extrusion-opacity':.7},layout:{visibility:v()}});
+            m3d.addLayer({id:l.id,source:sid,type:'line',paint:{'line-color':l.c,'line-width':.5,'line-opacity':.5},layout:{visibility:v()}})}
+        else if(l.t==='line')m3d.addLayer({id:l.id,source:sid,type:'line',paint:{'line-color':l.c,'line-width':l.w||2,'line-opacity':.85},layout:{visibility:v()}});
+        else if(l.t==='point')m3d.addLayer({id:l.id,source:sid,type:'circle',paint:{'circle-color':l.cc,'circle-radius':l.cr||6,'circle-stroke-color':'#fff','circle-stroke-width':2},layout:{visibility:v()}});
+        else if(l.t==='label')m3d.addLayer({id:l.id,source:sid,type:'symbol',layout:{'text-field':'Dusun Kasuran','text-size':14,'text-offset':[0,-1.5],'text-anchor':'top',visibility:v()},paint:{'text-color':l.c,'text-halo-color':'#fff','text-halo-width':2}});
+        const pl=l.t==='fill3d'?l.id+'-ext':l.id;
+        m3d.on('click',pl,(e)=>{if(!e.features.length)return;new maplibregl.Popup({offset:[0,-10],maxWidth:'280'}).setLngLat(e.lngLat).setHTML(popupHTML(e.features[0].properties,l.label)).addTo(m3d)});
+        m3d.on('mouseenter',pl,()=>{m3d.getCanvas().style.cursor='pointer'});m3d.on('mouseleave',pl,()=>{m3d.getCanvas().style.cursor=''});
+    }catch(e){console.warn('3D skip:',l.id,e.message)}
+}
+
+function tl3(id,v){const w=v?'visible':'none';const l=LAYERS.find(x=>x.id===id);if(!l)return;
+    if(l.t==='fill3d'){if(m3d.getLayer(id+'-ext'))m3d.setLayoutProperty(id+'-ext','visibility',w);if(m3d.getLayer(id))m3d.setLayoutProperty(id,'visibility',w)}
+    else{if(m3d.getLayer(id))m3d.setLayoutProperty(id,'visibility',w);if(m3d.getLayer(id+'-ln'))m3d.setLayoutProperty(id+'-ln','visibility',w)}}
+
+function switchMode(m){
+    mode=m;document.getElementById('map2d').style.display=m==='2d'?'block':'none';document.getElementById('map3d').style.display=m==='3d'?'block':'none';
+    document.getElementById('btn2d').classList.toggle('active',m==='2d');document.getElementById('btn3d').classList.toggle('active',m==='3d');
+    if(m==='2d'&&m2d)m2d.invalidateSize();if(m==='3d'&&m3d)m3d.resize();
+}
+function zoomAll(){
+    const c=document.getElementById('legendContent');let h='';
+    if(mode==='2d'){
+        h+='<div style="margin-bottom:6px;"><strong style="font-size:.65rem;color:#666;">BATAS WILAYAH</strong></div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#52b788;border-color:#2d6a4f;"></div> Batas Kasuran</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#f39c12;border-color:#e67e22;"></div> Batas Sumberarum</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#e67e22;"></div> RT 01</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#2ecc71;"></div> RT 02</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#f5e6ca;"></div> RT 03</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#3498db;border-color:#2980b9;"></div> Batas Magelang</div>';
+        h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">TRANSPORTASI</strong></div>';
+        h+='<div class="legend-row"><div class="legend-swatch line" style="background:#e74c3c;height:3px;"></div> Jalan Desa</div>';
+        h+='<div class="legend-row"><div class="legend-swatch line" style="background:#ff6f00;height:2px;"></div> Jaringan Transportasi</div>';
+        h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">PENGGUNAAN LAHAN</strong></div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#1b5e20;"></div> Hutan</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#e74c3c;"></div> Permukiman</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#7cb342;"></div> Kebun Campur</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#cddc39;"></div> Ladang/Tegalan</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#2196f3;"></div> Fasilitas Umum</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#9c27b0;"></div> Peribadatan</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#ff9800;"></div> Perdagangan</div>';
+        h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">LAINNYA</strong></div>';
+        h+='<div class="legend-row"><div class="legend-swatch circle" style="background:#ef5350;"></div> Sarana Prasarana</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#29b6f6;"></div> Perairan</div>';
+    }else{
+        h+='<div style="margin-bottom:6px;"><strong style="font-size:.65rem;color:#666;">🏔️ 3D TERRAIN</strong></div>';
+        h+='<div class="legend-row">Elevasi DEM aktif</div>';
+        h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">🏗️ 3D EXTRUSION</strong></div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#4caf50;"></div> Penggunaan Lahan</div>';
+        h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">🖱️ KONTROL</strong></div>';
+        h+='<div class="legend-row">Klik kanan+drag = Rotate</div>';
+        h+='<div class="legend-row">Ctrl+drag = Tilt miring</div>';
+    }
+    c.innerHTML=h;
+}
+function zoomAll(){if(mode==='2d'&&ab)m2d.fitBounds(ab,{padding:[30,30]});else if(mode==='3d')m3d.flyTo({center:[C[1],C[0]],zoom:14,pitch:45,bearing:-20})}
+function togglePanel(){document.getElementById('layerPanel').classList.toggle('collapsed');const ic=document.getElementById('toggleIcon');ic.classList.toggle('fa-chevron-up');ic.classList.toggle('fa-chevron-down');setTimeout(()=>{if(mode==='2d')m2d.invalidateSize();else m3d.resize()},300)}
+
+buildPanel();init2D();init3D();
+</script>
 </body>
 </html>

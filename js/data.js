@@ -33,8 +33,8 @@ const DUSUN_DATA = {
     // ==================== DEMOGRAFI ====================
     demografi: {
         // 2026: data dari survei lapangan terbaru
-        populasi_2026: 0,           // TODO: isi dari survei 2026
-        bangunan_2026: 119,         // dari Peta Bangunan (2026)
+        populasi_2026: 320,         // hasil survei lapangan 2026
+        bangunan_2026: 102,         // dari Peta Bangunan (2026) — total 102
         kk_2026: 0,                 // TODO: isi
         luasM2: 291699,
         luasHektar: 29.17,
@@ -62,7 +62,7 @@ const DUSUN_DATA = {
     // ==================== BATAS ADMINISTRASI ====================
     batasRT: {
         rt01: { nama: "RT 01", posisi: "Barat laut", tetangga: "Dusun Dimajar 3" },
-        rt02: { nama: "RT 02", posisi: "Tengah", akses: "Jalan Kyai Zainudin" },
+        rt02: { nama: "RT 02", posisi: "Tengah", akses: "Jalan Kasuran" },
         rt03: { nama: "RT 03", posisi: "Tenggara", catatan: "Dekat pertanian & perbukitan" },
     },
 
@@ -71,7 +71,7 @@ const DUSUN_DATA = {
 
     // ==================== JARINGAN JALAN ====================
     infrastruktur: {
-        jalanLokal: "Jalan Kyai Zainudin (jalan utama bernama)",
+        jalanLokal: "Jalan Kasuran (jalan utama)",
         jalanLain: "Jalan lingkungan (tidak bernama resmi)",
         jalanSetapak: "Jalan setapak",
         sungai: "Sungai Progo (batas alam timur)",
@@ -152,13 +152,13 @@ const DUSUN_DATA = {
                 { color: '#e74c3c', label: 'Batas Dusun' },
                 { color: '#c0392b', label: 'Batas Desa' },
                 { color: '#e67e22', label: 'RT 01' },
-                { color: '#f1c40f', label: 'RT 02' },
-                { color: '#2ecc71', label: 'RT 03' },
+                { color: '#2ecc71', label: 'RT 02' },
+                { color: '#f5e6ca', label: 'RT 03' },
             ],
             rtDetail: [
                 { nama: 'RT 01', warna: '#e67e22', deskripsi: 'Barat laut — terbuka, berbatasan Dusun Dimajar 3' },
-                { nama: 'RT 02', warna: '#f1c40f', deskripsi: 'Tengah — pusat mobilitas, akses Jl. Kyai Zainudin' },
-                { nama: 'RT 03', warna: '#2ecc71', deskripsi: 'Tenggara — dekat pertanian & perbukitan' },
+                { nama: 'RT 02', warna: '#2ecc71', deskripsi: 'Tengah — pusat mobilitas, akses Jalan Kasuran' },
+                { nama: 'RT 03', warna: '#f5e6ca', deskripsi: 'Tenggara — dekat pertanian & perbukitan' },
             ],
         },
         {
@@ -257,11 +257,16 @@ const DUSUN_DATA = {
                 { label: 'RT', value: '3 (01-03)' },
                 { label: 'Survei', value: '6–9 Juli 2026' },
                 { label: 'Skala', value: '1:3.500' },
-                { label: 'Total Jiwa', value: '—' },
+                { label: 'Total Jiwa', value: '320' },
             ],
             populasiPerRT: {
-                rt01: null, rt02: null, rt03: null,
-                note: 'Data jumlah jiwa per RT dari peta — isi setelah konfirmasi',
+                rt01: '124 Jiwa', rt02: '70 Jiwa', rt03: '126 Jiwa',
+                note: 'Data jumlah jiwa per RT hasil survei lapangan 6–9 Juli 2026',
+            },
+            genderPerRT: {
+                rt01: { laki: 62, perempuan: 62 },
+                rt02: { laki: 35, perempuan: 35 },
+                rt03: { laki: 69, perempuan: 57 },
             },
         },
         {
@@ -284,9 +289,9 @@ const DUSUN_DATA = {
                 { level: 'Tidak Ada Akses', warna: '#95a5a6' },
             ],
             dataPerRT: {
-                rt01: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
-                rt02: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
-                rt03: { fiber: null, mobile: null, terbatas: null, tidakAda: null },
+                rt01: { fiber: '68,9%', mobile: 'Rendah', terbatas: null, tidakAda: null, persen: 68.9 },
+                rt02: { fiber: '75%', mobile: 'Sedang', terbatas: null, tidakAda: null, persen: 75 },
+                rt03: { fiber: '78,8%', mobile: 'Tinggi', terbatas: null, tidakAda: null, persen: 78.8 },
             },
         },
         {
@@ -304,9 +309,9 @@ const DUSUN_DATA = {
             ],
             jenjangPendidikan: ['Tidak/Belum Sekolah', 'SD/Sederajat', 'SMP/Sederajat', 'SMA/Sederajat', 'Perguruan Tinggi'],
             dataPerRT: {
-                rt01: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
-                rt02: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
-                rt03: { tidakSekolah: null, sd: null, smp: null, sma: null, pt: null },
+                rt01: { tidakSekolah: 93, sd: 21, smp: 5, sma: 5, pt: 0 },
+                rt02: { tidakSekolah: 53, sd: 9, smp: 4, sma: 3, pt: 1 },
+                rt03: { tidakSekolah: 24, sd: 43, smp: 25, sma: 29, pt: 5 },
             },
         },
     ],
