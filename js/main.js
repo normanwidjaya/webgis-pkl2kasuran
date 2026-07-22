@@ -3,6 +3,16 @@
  * Dynamic rendering dari data.js untuk 10 peta + interaktivitas
  */
 
+// ==================== DARK MODE ====================
+function toggleDarkHome(){
+    document.body.classList.toggle('dark');
+    const isDark=document.body.classList.contains('dark');
+    const btn=document.getElementById('btnDark');
+    if(btn)btn.textContent=isDark?'☀️':'🌙';
+    localStorage.setItem('darkMode',isDark?'1':'0');
+}
+if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark');document.addEventListener('DOMContentLoaded',()=>{const b=document.getElementById('btnDark');if(b)b.textContent='☀️'})}
+
 document.addEventListener('DOMContentLoaded', () => {
     initAOS();
     initNavbar();
@@ -55,7 +65,7 @@ function animateCounter(el, tgt) {
 }
 function updateDemografiDisplay() {
     const d = DUSUN_DATA.demografi;
-    ['populasi','bangunan','luas','umkmCount'].forEach((id,i) => { const el = document.getElementById(id); if (el) el.setAttribute('data-target', [d.populasi_2026||0, d.bangunan_2026||119, Math.round(d.luasHektar), DUSUN_DATA.bangunan2026.total||119][i]); });
+    ['populasi','bangunan','luas','umkmCount'].forEach((id,i) => { const el = document.getElementById(id); if (el) el.setAttribute('data-target', [d.populasi_2026||0, d.bangunan_2026||102, Math.round(d.luasHektar), 30][i]); });
 }
 
 // ==================== DYNAMIC RENDER PETA TABS ====================
@@ -154,10 +164,11 @@ function buildPanelHTML(peta, type) {
             ${statsHTML ? `<div class="map-stats-row">${statsHTML}</div>` : ''}
             ${chartHTML}${jenisHTML}${fungsiHTML}${rtHTML}${popHTML}${inetHTML}${pendHTML}
         </div>
-        <div class="map-panel-map">
+        <div class="map-panel-map" style="position:relative;">
             <img src="${imgFullPath}" alt="${peta.name}" class="peta-image"
                  onerror="this.parentElement.innerHTML='<div class=\\'map-panel-placeholder\\'><i class=\\'fas fa-map\\'></i><p>Gambar peta belum tersedia</p></div>'"
                  onclick="this.classList.toggle('zoomed')" title="Klik untuk zoom">
+            <a href="${imgFullPath}" download="${peta.name}.jpg" class="btn-download-peta" title="Unduh Peta"><i class="fas fa-download"></i></a>
         </div>
     </div>`;
 }

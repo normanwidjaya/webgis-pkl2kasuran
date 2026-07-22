@@ -32,6 +32,146 @@
     --max-width: 1200px;
 }
 
+/* ==================== DARK MODE ==================== */
+body.dark{background:#0d0d1a;color:#ccc}
+body.dark .navbar,body.dark .navbar.scrolled{background:#0d0d1a!important;border-bottom-color:#1a1a35!important;box-shadow:0 2px 20px rgba(0,0,0,.5)}
+body.dark .nav-link{color:#ddd!important}
+body.dark .nav-link.active{color:#52b788!important}
+body.dark .logo-text{color:#fff}
+body.dark .hamburger .bar{background:#ddd}
+body.dark .section:not(.hero):not(.peta-section):not(.peta-lokasi-section){background:#12121f}
+body.dark .section.peta-lokasi-section{background:#12121f}
+body.dark .section.peta{background:#12121f}
+body.dark .bg-green,.dark section.bg-green{background:#0d1a12!important}
+body.dark .bg-green p,body.dark .bg-green span,body.dark .bg-green li{color:#bbb!important}
+body.dark .bg-green .section-title{color:#e0e0e0!important}
+body.dark .bg-green .section-desc{color:#bbb!important}
+body.dark .bg-green .section-badge{color:#52b788!important}
+body.dark .stat-card{background:#1a1a30;border-color:#252545}
+body.dark .stat-icon{background:rgba(82,183,136,.2)}
+body.dark .stat-icon i{color:#52b788}
+body.dark .stat-number{color:#fff}
+body.dark .stat-title{color:#bbb}
+body.dark .rute-info-card{background:#1a1a30;border-color:#252545}
+body.dark .rute-info-label{color:#999}
+body.dark .rute-info-value{color:#e0e0e0}
+body.dark .rute-info-icon i{color:#52b788}
+body.dark .struktur-card{background:#1a1a30;border-color:#252545}
+body.dark .struktur-nama,body.dark .sambutan-nama{color:#e0e0e0}
+body.dark .struktur-jabatan{color:#aaa}
+body.dark .tim-card{background:#252540;border-color:#2a2a45}
+body.dark .tim-nama{color:#e0e0e0}
+body.dark .sambutan-quote{background:#252540;border-color:#2a2a45}
+body.dark .sambutan-body{color:#ccc}
+body.dark .visi-misi-box{background:rgba(45,106,79,.08)}
+body.dark .vm-item h4{color:#52b788}
+body.dark .vm-item p,body.dark .vm-item li{color:#ccc}
+body.dark .dyk-card{background:#252540}
+body.dark .dyk-text{color:#ccc}
+body.dark .quote-card{background:#252540}
+body.dark .geografis-content{color:#ccc}
+body.dark .footer{background:#0d0d1a}
+body.dark .footer h4,body.dark .footer h3{color:#e0e0e0}
+body.dark .kontak-card{background:#252540}
+body.dark .galeri-item{background:#252540}
+body.dark .galeri-caption{color:#ccc}
+body.dark .map-tab{background:#252540;color:#ccc}
+body.dark .map-tab.active{background:var(--primary);color:#fff}
+body.dark .map-tab-content{background:#252540;border-color:#2a2a45}
+body.dark .map-stats span{background:#2a2a45}
+body.dark .section-title{color:#e0e0e0}
+body.dark .section-desc{color:#aaa}
+body.dark .legend-section{color:#ccc}
+body.dark .map-legend-interactive{background:#252540}
+body.dark .map-legend-interactive h4{color:#e0e0e0}
+body.dark .map-legend-interactive strong{color:#ccc}
+body.dark .legend-check{color:#ccc}
+body.dark .peta-lokasi-wrapper{background:#252540}
+body.dark .map-lokasi-legend{background:#252540;color:#ccc}
+body.dark .map-panel h3{color:#e0e0e0}
+body.dark .map-panel p{color:#ccc}
+body.dark .map-panel-info h3{color:#e0e0e0}
+body.dark .map-panel-info p{color:#ccc}
+body.dark .map-chart-bars{color:#ccc}
+body.dark .chart-bar-label{color:#aaa}
+body.dark .sektor-card{background:#2a2a45!important;border-color:#333!important}
+body.dark .sektor-card strong{color:#e0e0e0}
+body.dark .sektor-card span{color:#aaa}
+body.dark .rt-card{background:#2a2a45}
+body.dark .rt-card p{color:#ccc}
+body.dark .internet-card{background:#2a2a45}
+body.dark .internet-card strong{color:#e0e0e0}
+body.dark .internet-card .data-pending{color:#e0e0e0}
+body.dark .map-stat{background:#2a2a45}
+body.dark .map-stat-num{color:#e0e0e0}
+body.dark .map-note{color:#aaa}
+body.dark .pendidikan-table{color:#ccc}
+body.dark .pendidikan-table th{background:#2a2a45;color:#aaa}
+body.dark .pendidikan-table td{color:#ccc;border-color:#333}
+body.dark .pendidikan-table .total-row td{background:#2a2a45;color:#e0e0e0}
+body.dark .toponimi-content p{color:#ccc}
+body.dark .quote-source{color:#aaa}
+body.dark .video-container{background:#252540}
+body.dark .kontak-card p{color:#ccc}
+body.dark .kontak-card h4{color:#e0e0e0}
+body.dark .footer p{color:#aaa}
+body.dark .footer li a{color:#aaa}
+body.dark .peta-lokasi-section .section-title{color:#e0e0e0}
+body.dark .map-lokasi-legend .legend-item{color:#ccc}
+body.dark .map-tab span{color:#ccc}
+body.dark .map-tab.active span{color:#fff}
+body.dark .map-tab i{color:inherit}
+body.dark .btn-outline{color:#ccc;border-color:#555}
+body.dark .btn-outline:hover{background:rgba(255,255,255,.1)}
+body.dark .rute-info-icon i{color:#52b788}
+body.dark .section-badge{color:#52b788}
+body.dark .scroll-indicator{color:#aaa}
+body.dark .scroll-indicator i{color:#52b788}
+body.dark .navbar .dark-toggle{color:#fff}
+
+/* Dark mode icon fixes */
+body.dark .stat-icon i{color:#52b788}
+body.dark .struktur-avatar i{color:#aaa}
+body.dark .tim-avatar i{color:#aaa}
+body.dark .tim-jabatan{color:#aaa}
+body.dark .sambutan-badge{color:#52b788}
+body.dark .sambutan-quote::before{color:rgba(82,183,136,.3)}
+body.dark .vm-divider{border-color:rgba(255,255,255,.1)}
+body.dark .connector-line{background:rgba(255,255,255,.2)}
+body.dark .map-stat span{color:#aaa}
+body.dark .hero-subtitle{color:#ccc}
+body.dark .dyk-label{color:#52b788}
+body.dark .dyk-title{color:#e0e0e0}
+body.dark .quote-icon{color:rgba(82,183,136,.3)}
+body.dark .kontak-icon i{color:#52b788}
+body.dark .foto-placeholder i{color:#aaa}
+body.dark .galeri-placeholder h3{color:#ccc}
+body.dark .galeri-placeholder i{color:#aaa}
+body.dark .lightbox{background:rgba(0,0,0,.95)}
+
+/* Peta Interaktif dark mode extras */
+body.dark .topbar-btn{color:#ccc}
+body.dark .topbar-btn.active{color:var(--primary)}
+body.dark .layer-group-title{color:#aaa}
+body.dark .layer-label{color:#e0e0e0}
+body.dark .layer-item:hover{background:rgba(255,255,255,.05)}
+body.dark .popup-card .popup-title{color:#e0e0e0;border-color:rgba(45,106,79,.3)}
+body.dark .popup-table td{color:#ccc}
+body.dark .popup-table td:first-child{color:#aaa}
+body.dark .leaflet-popup-content-wrapper{background:#252540;color:#ccc}
+body.dark .maplibregl-popup-content{background:#252540;color:#ccc}
+
+.dark-toggle{background:none;border:none;font-size:1.2rem;cursor:pointer;padding:4px 8px;border-radius:6px}
+.dark-toggle:hover{background:rgba(255,255,255,.1)}
+
+.nav-right{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.nav-right-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
 /* ==================== RESET & BASE ==================== */
 *, *::before, *::after {
     margin: 0;
@@ -77,7 +217,9 @@ body {
 }
 
 .nav-container {
-    max-width: var(--max-width);
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
     padding: 0 24px;
     display: flex;
     align-items: center;
@@ -91,6 +233,8 @@ body {
     gap: 10px;
     text-decoration: none;
     color: var(--white);
+    flex-shrink: 0;
+    margin-right: auto;
 }
 
 .logo-img {
@@ -107,7 +251,7 @@ body {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 4px;
+    gap: 2px;
 }
 
 .nav-link {
@@ -1217,7 +1361,7 @@ body {
         display: flex;
     }
 
-    .nav-menu {
+    .nav-right-wrap .nav-menu {
         position: fixed;
         top: 64px;
         left: 0;
@@ -2116,17 +2260,7 @@ body {
     font-weight: 600;
     color: var(--dark);
     min-width: 100px;
-    outline: none;
-    border-bottom: 2px dashed var(--gray-300);
     padding: 2px 8px;
-    transition: var(--transition);
-}
-
-.struktur-nama:hover,
-.struktur-nama:focus {
-    border-bottom-color: var(--accent);
-    background: rgba(82,183,136,0.05);
-    border-radius: 4px;
 }
 
 @media (max-width: 768px) {
@@ -2211,14 +2345,23 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
 }
 
 .tim-card.ketua .tim-avatar {
     box-shadow: 0 4px 15px rgba(243,156,18,0.3);
 }
+.tim-card.ketua .tim-avatar img {
+    object-position: 50% 90%;
+    transform: scale(2.1);
+}
 
 .tim-card.sekretaris .tim-avatar {
     box-shadow: 0 4px 15px rgba(52,152,219,0.3);
+}
+.tim-card.sekretaris .tim-avatar img {
+    object-position: 50% 75%;
+    transform: scale(1.35);
 }
 
 .tim-card.teknis .tim-avatar {
@@ -2335,17 +2478,9 @@ body {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--dark);
-    border-bottom: 2px dashed var(--gray-300);
     padding: 0 4px;
-    outline: none;
     display: inline-block;
     max-width: 250px;
-}
-
-.sambutan-nama:hover,
-.sambutan-nama:focus {
-    border-bottom-color: var(--accent);
-    background: rgba(82,183,136,0.05);
 }
 
 .sambutan-body {
@@ -2365,23 +2500,17 @@ body {
 }
 
 .sambutan-visi-misi {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    display: block;
 }
 
-.visi-box, .misi-box {
+.visi-misi-box {
     background: linear-gradient(135deg, rgba(45,106,79,0.04) 0%, rgba(82,183,136,0.06) 100%);
     border-radius: var(--radius);
     padding: 28px 24px;
     border: 1px solid rgba(45,106,79,0.1);
-    display: flex;
-    flex-direction: column;
 }
 
-.visi-box { justify-content: center; }
-
-.visi-box h4, .misi-box h4 {
+.vm-item h4 {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--primary-dark);
@@ -2391,21 +2520,27 @@ body {
     gap: 8px;
 }
 
-.visi-box h4 i { color: var(--warning); }
-.misi-box h4 i { color: var(--info); }
+.vm-item h4 i.fa-eye { color: var(--warning); }
+.vm-item h4 i.fa-bullseye { color: var(--info); }
 
-.visi-box p {
+.vm-item p {
     font-size: 0.95rem;
     color: var(--gray-700);
     line-height: 1.7;
 }
 
-.misi-box ul {
+.vm-divider {
+    border: none;
+    border-top: 1px dashed rgba(45,106,79,0.15);
+    margin: 20px 0;
+}
+
+.vm-item ul {
     list-style: none;
     padding: 0;
 }
 
-.misi-box ul li {
+.vm-item ul li {
     font-size: 0.9rem;
     color: var(--gray-700);
     line-height: 1.7;
@@ -2414,7 +2549,7 @@ body {
     position: relative;
 }
 
-.misi-box ul li::before {
+.vm-item ul li::before {
     content: '✓';
     position: absolute;
     left: 0;
@@ -2423,9 +2558,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    .sambutan-visi-misi {
-        grid-template-columns: 1fr;
-    }
     .sambutan-quote {
         padding: 24px 20px;
     }
@@ -2752,6 +2884,29 @@ body {
     padding: 24px;
     border-radius: 4px;
     box-shadow: 0 0 80px rgba(0,0,0,0.6);
+}
+
+.btn-download-peta {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    transition: var(--transition);
+    z-index: 10;
+}
+.btn-download-peta:hover {
+    background: var(--primary-dark);
+    transform: scale(1.1);
 }
 
 .map-panel-placeholder {

@@ -5,9 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Peta Interaktif — Dusun Kasuran</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <style>
+        :root{--p:#2d6a4f;--pd:#1b4332;--wt:#fff;--dk:#1a1a2e;--g1:#f5f7f5;--g2:#e8ede9;--g5:#999;--g7:#555;--sh:0 2px 8px rgba(0,0,0,.1);--shl:0 4px 20px rgba(0,0,0,.12);--r:12px;--tr:.2s}
+        body.dark{--wt:#1a1a2e;--dk:#e0e0e0;--g1:#252540;--g2:#2a2a45;--g5:#aaa;--g7:#ccc;--sh:0 2px 8px rgba(0,0,0,.4);--shl:0 4px 20px rgba(0,0,0,.5)}
+        body.dark .layer-panel{background:var(--wt)}
+        body.dark .layer-header{background:var(--p)}
+        body.dark .layer-count{background:rgba(255,255,255,.1);color:#ccc}
+        body.dark input{accent-color:var(--p)}
+        body.dark .topbar{background:var(--wt);border-bottom-color:var(--g2)}
+        body.dark .topbar-brand{color:var(--dk)}
+        body.dark .basemap-switcher{background:var(--wt)}
+        body.dark .basemap-btn{color:var(--g7)}
+        body.dark .basemap-btn.active{background:var(--p);color:#fff}
+        body.dark{background:#12121f}
+        body.dark .leaflet-popup-content-wrapper{background:var(--wt)!important;color:var(--dk)!important}
+        body.dark .maplibregl-popup-content{background:var(--wt)!important;color:var(--dk)!important}
+        body.dark .popup-card .popup-title{border-bottom-color:rgba(255,255,255,.15)}
+        body.dark .popup-table td:first-child{color:var(--g5)}
+        body{transition:background .3s}
+        .layer-panel,.topbar,.basemap-switcher{transition:background .3s}
         :root{--p:#2d6a4f;--pd:#1b4332;--pl:#40916c;--a:#52b788;--al:#95d5b2;--d:#e74c3c;--w:#f39c12;--i:#3498db;--dk:#1a1a2e;--g1:#f8f9fa;--g2:#e9ecef;--g3:#dee2e6;--g5:#adb5bd;--g7:#495057;--wt:#fff;--r:12px;--rs:8px;--sh:0 4px 20px rgba(0,0,0,.1);--shl:0 10px 40px rgba(0,0,0,.15);--tr:all .3s ease}
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Segoe UI',system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--dk)}
@@ -20,8 +37,7 @@
         .mode-btn{padding:7px 18px;border:none;cursor:pointer;font-size:.82rem;font-weight:600;transition:var(--tr);background:transparent;color:var(--g7)}
         .mode-btn.active{background:var(--p);color:var(--wt)}
         .map-container{flex:1;position:relative}
-        #map2d,#map3d{position:absolute;inset:0;width:100%;height:100%}
-        #map3d{display:none}
+        #map2d{position:absolute;inset:0;width:100%;height:100%}
         .layer-panel{position:absolute;top:16px;right:16px;z-index:1000;background:var(--wt);border-radius:var(--r);box-shadow:var(--shl);width:310px;max-height:calc(100vh - 120px);display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--g3);backdrop-filter:blur(8px)}
         .layer-panel.collapsed .layer-body{display:none}
         .layer-panel.collapsed{width:auto}
@@ -71,14 +87,14 @@
 <div class="topbar">
     <a href="index.html" class="topbar-brand"><i class="fas fa-map-marked-alt" style="color:var(--p);font-size:1.2rem;"></i> Peta Interaktif Dusun Kasuran</a>
     <div class="topbar-actions">
-        <div class="mode-toggle"><button class="mode-btn active" onclick="switchMode('2d')" id="btn2d">🗺️ 2D</button><button class="mode-btn" onclick="switchMode('3d')" id="btn3d">🧊 3D</button></div>
+        <button class="topbar-btn" onclick="toggleDark()" title="Dark/Light">🌙</button>
+        <div class="mode-toggle"><button class="mode-btn active">🗺️ 2D</button></div>
         <button class="topbar-btn" onclick="zoomAll()"><i class="fas fa-expand-arrows-alt"></i> <span>Zoom</span></button>
         <a href="index.html" class="topbar-btn"><i class="fas fa-home"></i> <span>Beranda</span></a>
     </div>
 </div>
 <div class="map-container">
     <div id="map2d"></div>
-    <div id="map3d"></div>
     <div class="basemap-switcher" id="basemapSwitcher">
         <button class="basemap-btn active" onclick="switchBasemap('satellite')">🛰️ Satelit</button>
         <button class="basemap-btn" onclick="switchBasemap('osm')">🗺️ OSM</button>
@@ -87,34 +103,57 @@
     <div class="layer-panel" id="layerPanel"><div class="layer-header" onclick="togglePanel()"><h3><i class="fas fa-layer-group"></i> Peta & Legenda</h3><i class="fas fa-chevron-up" id="toggleIcon"></i></div><div class="layer-body" id="layerBody"></div></div>
 </div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/maplibre-gl@4.6.0/dist/maplibre-gl.js"></script>
 <script>
 const C=[-7.57406,110.18705],Z=14;
 const LAYERS=[
+    // 6. Batas (drawn first = bottom)
     {id:'batas_kasuran',label:'Batas Dusun Kasuran',g:'Batas',f:'batas_kasuran.geojson',t:'polygon',n:1,c:'#2d6a4f',fc:'#52b788',fo:.15,w:3},
     {id:'batas_rt_kasuran',label:'Batas RT Kasuran',g:'Batas',f:'batas_rt_kasuran.geojson',t:'polygon',n:3,c:'#999',fc:'#ccc',fo:.12,w:2,byRT:true},
     {id:'batas_sumberarum',label:'Batas Dusun Sumberarum',g:'Batas',f:'batas_sumberarum.geojson',t:'polygon',n:15,c:'#e67e22',fc:'#f39c12',fo:.08,w:2,d:'6 3'},
     {id:'batas_desa_magelang',label:'Batas Desa Magelang',g:'Batas',f:'batas_desa_magelang.geojson',t:'polygon',n:372,c:'#bdc3c7',fc:'#ecf0f1',fo:.04,w:1},
     {id:'batas_magelang',label:'Batas Kab.Magelang',g:'Batas',f:'batas_magelang.geojson',t:'polygon',n:1,c:'#2980b9',fc:'#3498db',fo:.06,w:3},
     {id:'batas_magelang_sekitar',label:'Batas Wilayah Sekitar',g:'Batas',f:'batas_magelang_sekitar.geojson',t:'polygon',n:16,c:'#95a5a6',fc:'#bdc3c7',fo:.04,w:1.5},
-    {id:'jalan_desa',label:'Jalan Desa',g:'Transportasi',f:'jalan_desa.geojson',t:'line',n:282,c:'#e74c3c',w:2.5},
-    {id:'jaringan_infrastruktur_transportasi',label:'Jaringan Transportasi',g:'Transportasi',f:'jaringan_infrastruktur_transportasi.geojson',t:'line',n:21,c:'#ff6f00',w:2},
+    // 5. Penggunaan Lahan
     {id:'pl_kasuran_revisi',label:'Penggunaan Lahan',g:'Penggunaan Lahan',f:'pl_kasuran_revisi.geojson',t:'fill3d',n:217,c:'#999',fc:'#4caf50',eh:4,byPL:true,plLegend:[
-        {label:'Hutan',c:'#1b5e20',pl:'1'},{label:'Permukiman',c:'#e74c3c',pl:'2'},{label:'Kebun Campur',c:'#7cb342',pl:'3'},
+        {label:'Hutan',c:'#1b5e20',pl:'1'},{label:'Hutan Rakyat',c:'#388e3c',pl:'17'},{label:'Permukiman',c:'#e74c3c',pl:'2'},{label:'Kebun Campur',c:'#7cb342',pl:'3'},
         {label:'Ladang/Tegalan',c:'#cddc39',pl:'19,26,27,29'},{label:'Fasilitas Umum',c:'#2196f3',pl:'6'},{label:'Peribadatan',c:'#9c27b0',pl:'8'},{label:'Perdagangan',c:'#ff9800',pl:'13,28'},
     ]},
-    {id:'persil_kasuran_revisi',label:'Persil Tanah',g:'Penggunaan Lahan',f:'persil_kasuran_revisi.geojson',t:'polygon',n:103,c:'#6d4c41',fc:'#8d6e63',fo:.12,w:1},
-    {id:'sarana_prasarana',label:'Sarana Prasarana',g:'Fasilitas',f:'sarana_prasarana.geojson',t:'point',n:7,cc:'#ef5350',cr:6},
+    // 4. Perairan
     {id:'perairan_area',label:'Area Perairan',g:'Alam',f:'perairan_area.geojson',t:'polygon',n:1,c:'#0277bd',fc:'#29b6f6',fo:.35,w:1.5},
-    {id:'nama_dusun',label:'Label Dusun',g:'Label',f:'nama_dusun.geojson',t:'label',n:1,c:'#4a148c'}
+    // 3. Transportasi
+    {id:'jalan_desa',label:'Jalan Desa',g:'Transportasi',f:'jalan_desa.geojson',t:'line',n:282,c:'#e74c3c',w:2.5},
+    {id:'jaringan_infrastruktur_transportasi',label:'Jaringan Transportasi',g:'Transportasi',f:'jaringan_infrastruktur_transportasi.geojson',t:'line',n:21,c:'#ff6f00',w:2},
+    // 2. Label Dusun
+    {id:'nama_dusun',label:'Label Dusun',g:'Label',f:'nama_dusun.geojson',t:'label',n:1,c:'#4a148c'},
+    // 1. Fasilitas (drawn last = top)
+    {id:'sarana_prasarana',label:'Sarana Prasarana',g:'Fasilitas',f:'sarana_prasarana.geojson',t:'point',n:7,cc:'#ef5350',cr:6},
 ];
 let mode='2d',m2d=null,m3d=null,ls={},ab=null;
 
+function toggleDark(){
+    document.body.classList.toggle('dark');
+    const isDark=document.body.classList.contains('dark');
+    document.getElementById('btnDark').textContent=isDark?'☀️':'🌙';
+    localStorage.setItem('darkMode',isDark?'1':'0');
+    // Switch basemap tiles
+    if(isDark){
+        if(satelliteLayer)satelliteLayer.setUrl('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
+        if(osmLayer)osmLayer.setUrl('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
+    }else{
+        if(satelliteLayer)satelliteLayer.setUrl('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+        if(osmLayer)osmLayer.setUrl('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    }
+}
+// Init dark mode from localStorage
+if(localStorage.getItem('darkMode')==='1'){document.body.classList.add('dark');document.addEventListener('DOMContentLoaded',()=>{document.getElementById('btnDark').textContent='☀️'})}
+
 function buildPanel(){
     const b=document.getElementById('layerBody'),gr={};
+    const groupOrder=['Fasilitas','Label','Transportasi','Alam','Penggunaan Lahan','Batas'];
     LAYERS.forEach(l=>{if(!gr[l.g])gr[l.g]=[];gr[l.g].push(l);ls[l.id]=true});
     let h='';
-    Object.keys(gr).forEach(g=>{
+    groupOrder.forEach(g=>{
+        if(!gr[g])return;
         h+=`<div class="layer-group"><div class="layer-group-title">${g}</div>`;
         gr[g].forEach(i=>{
             const sw=i.t==='line'?`<div class="layer-swatch" style="background:${i.c};height:3px;border:none;"></div>`:i.t==='point'?`<div class="layer-swatch" style="background:${i.cc};border-radius:50%;width:12px;height:12px;"></div>`:`<div class="layer-swatch" style="background:${i.fc||i.c};border-color:${i.c};"></div>`;
@@ -141,7 +180,7 @@ function buildPanel(){
                 if (!anyChecked && masterCb.checked) {
                     masterCb.checked = false;
                     ls['pl_kasuran_revisi'] = false;
-                    mode === '2d' ? tl2('pl_kasuran_revisi', false) : tl3('pl_kasuran_revisi', false);
+                        tl2('pl_kasuran_revisi',false);
                 } else if (anyChecked && !masterCb.checked) {
                     masterCb.checked = true;
                     ls['pl_kasuran_revisi'] = true;
@@ -182,6 +221,22 @@ function filterPLSub(codes,visible){
 
 let currentBasemap='satellite', satelliteLayer=null, osmLayer=null, topoLayer=null;
 
+// Custom icon mapper for Sarana Prasarana
+function sarprasIcon(p){
+    const toponim=(p.Toponim||'').toLowerCase();
+    const sub=p.Sub_Unsur||'';
+    let fa='fa-map-marker-alt',bg='#ef5350';
+    // Masjid / Mushola
+    if(toponim.includes('masjid')||toponim.includes('mushola')||sub==='4'){fa='fa-mosque';bg='#2ecc71'}
+    // Keamanan / Pos
+    else if(sub==='10'){fa='fa-shield-alt';bg='#3498db'}
+    // Pendidikan
+    else if(sub==='7'){fa='fa-school';bg='#e67e22'}
+    // Kesehatan / Umum
+    else if(sub==='9'){fa='fa-clinic-medical';bg='#e74c3c'}
+    return L.divIcon({className:'',html:`<div style="width:30px;height:30px;background:${bg};border:3px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.3);"><i class="fas ${fa}" style="color:#fff;font-size:12px;"></i></div>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-15]});
+}
+
 function init2D(){
     m2d=L.map('map2d',{center:C,zoom:Z,zoomControl:false,scrollWheelZoom:true});
     L.control.zoom({position:'bottomleft'}).addTo(m2d);
@@ -210,10 +265,12 @@ function switchBasemap(type){
     document.querySelector(`.basemap-btn[onclick*="${type}"]`)?.classList.add('active');
 }
 
-function popupHTML(props,label){
+function popupHTML(props,label,subtitle){
     const map={NAMOBJ:'Nama Objek',WADMKD:'Desa',WADMKC:'Kecamatan',WADMKK:'Kabupaten',WADMPR:'Provinsi',TIPADM:'Tipe Adm',DUSUN:'Dusun',Toponimi:'Toponimi',Toponim:'Toponim',RT:'RT',Kelas:'Kelas Jalan',Sub_Unsur:'Sub Unsur',KET_DETAIL:'Keterangan',KET_PL:'Kode PL',Shape_Leng:'Panjang',Shape_Length:'Panjang',Shape_Area:'Luas',FCODE:'Kode',KDEPUM:'Kode Desa',KDPKAB:'Kode Kab',NAME_1:'Provinsi',NAME_2:'Kabupaten',TYPE_2:'Tipe',Jenis:'Jenis',Nama:'Nama',NoPersil:'No Persil',NIB:'NIB'};
     const skip=['SRS_ID','METADATA','KDCPUM','KDPPUM','Shape_Le_1'];
-    let h=`<div class="popup-card"><div class="popup-title">${label}</div><table class="popup-table">`;
+    let h=`<div class="popup-card"><div class="popup-title">${label}</div>`;
+    if(subtitle)h+=`<div style="font-size:.7rem;color:var(--p);font-weight:600;margin-bottom:6px;padding:2px 8px;background:rgba(45,106,79,.08);display:inline-block;border-radius:4px;">${subtitle}</div>`;
+    h+=`<table class="popup-table">`;
     Object.entries(props).slice(0,12).forEach(([k,v])=>{
         if(skip.includes(k)||v===null||v===undefined||v==='')return;
         const label=map[k]||k.replace(/_/g,' ');
@@ -222,12 +279,31 @@ function popupHTML(props,label){
     h+='</table></div>';return h;
 }
 
+function getPLName(code){
+    const m={'1':'Hutan','2':'Permukiman','3':'Kebun Campur','6':'Fasilitas Umum','7':'Semak/Belukar','8':'Peribadatan','13':'Perdagangan','17':'Hutan Rakyat','18':'Tegalan','19':'Ladang','22':'Kebun','26':'Tegalan','27':'Ladang','28':'Perdagangan','29':'Ladang','34':'Sawah'};
+    return m[code]||'Penggunaan Lahan';
+}
+function getSarprasName(p){
+    const toponim=(p.Toponim||'').toLowerCase();
+    const sub=p.Sub_Unsur||'';
+    if(toponim.includes('masjid')||toponim.includes('mushola')||sub==='4')return 'Masjid/Mushola';
+    if(sub==='10')return 'Pos Keamanan';
+    if(sub==='7')return 'Pendidikan';
+    if(sub==='9')return 'Kesehatan/Umum';
+    return 'Sarana Prasarana';
+}
+
 function load2D(l){
     fetch('data/'+l.f).then(r=>r.json()).then(gj=>{
         if(!gj.features||!gj.features.length)return;
-        const o={onEachFeature:(f,ly)=>{if(f.properties)ly.bindPopup(popupHTML(f.properties,l.label),{className:'popup-custom',maxWidth:280})}};
+        const o={onEachFeature:(f,ly)=>{if(f.properties){
+            let sub=null;
+            if(l.byPL)sub=getPLName(f.properties.KET_PL);
+            if(l.id==='sarana_prasarana')sub=getSarprasName(f.properties);
+            ly.bindPopup(popupHTML(f.properties,l.label,sub),{className:'popup-custom',maxWidth:280});
+        }}};
         if(l.t==='line')o.style={color:l.c,weight:l.w||2,opacity:.85};
-        else if(l.t==='point')o.pointToLayer=(f,ll)=>L.circleMarker(ll,{radius:l.cr||6,color:l.cc,weight:2,fillColor:l.cc,fillOpacity:.8});
+        else if(l.t==='point')o.pointToLayer=(f,ll)=>{const p=f.properties;const icon=sarprasIcon(p);return L.marker(ll,{icon})};
         else if(l.byRT)o.style=f=>{const rt=f.properties.RT;const rtColors={'1':'#e67e22','2':'#2ecc71','3':'#f5e6ca'};const c=rtColors[rt]||l.c;return{color:c,weight:l.w||2,fillColor:c,fillOpacity:l.fo||.12}};
         else if(l.byPL)o.style=f=>{const pl=f.properties.KET_PL;const plc={'1':'#1b5e20','2':'#e74c3c','3':'#7cb342','6':'#2196f3','7':'#8bc34a','8':'#9c27b0','13':'#ff9800','17':'#689f38','18':'#558b2f','19':'#cddc39','22':'#8bc34a','26':'#fdd835','27':'#ffee58','28':'#ff9800','29':'#f9a825','34':'#aed581'};const c=plc[pl]||'#9e9e9e';return{color:c,weight:.5,fillColor:c,fillOpacity:.4}};
         else{o.style={color:l.c,weight:l.w||2,fillColor:l.fc,fillOpacity:l.fo||.15};if(l.d)o.style.dashArray=l.d}
@@ -270,7 +346,7 @@ async function load3D(l){
         else if(l.t==='point')m3d.addLayer({id:l.id,source:sid,type:'circle',paint:{'circle-color':l.cc,'circle-radius':l.cr||6,'circle-stroke-color':'#fff','circle-stroke-width':2},layout:{visibility:v()}});
         else if(l.t==='label')m3d.addLayer({id:l.id,source:sid,type:'symbol',layout:{'text-field':'Dusun Kasuran','text-size':14,'text-offset':[0,-1.5],'text-anchor':'top',visibility:v()},paint:{'text-color':l.c,'text-halo-color':'#fff','text-halo-width':2}});
         const pl=l.t==='fill3d'?l.id+'-ext':l.id;
-        m3d.on('click',pl,(e)=>{if(!e.features.length)return;new maplibregl.Popup({offset:[0,-10],maxWidth:'280'}).setLngLat(e.lngLat).setHTML(popupHTML(e.features[0].properties,l.label)).addTo(m3d)});
+        m3d.on('click',pl,(e)=>{if(!e.features.length)return;const p=e.features[0].properties;let sub=null;if(l.byPL)sub=getPLName(p.KET_PL);if(l.id==='sarana_prasarana')sub=getSarprasName(p);new maplibregl.Popup({offset:[0,-10],maxWidth:'280'}).setLngLat(e.lngLat).setHTML(popupHTML(p,l.label,sub)).addTo(m3d)});
         m3d.on('mouseenter',pl,()=>{m3d.getCanvas().style.cursor='pointer'});m3d.on('mouseleave',pl,()=>{m3d.getCanvas().style.cursor=''});
     }catch(e){console.warn('3D skip:',l.id,e.message)}
 }
@@ -279,11 +355,7 @@ function tl3(id,v){const w=v?'visible':'none';const l=LAYERS.find(x=>x.id===id);
     if(l.t==='fill3d'){if(m3d.getLayer(id+'-ext'))m3d.setLayoutProperty(id+'-ext','visibility',w);if(m3d.getLayer(id))m3d.setLayoutProperty(id,'visibility',w)}
     else{if(m3d.getLayer(id))m3d.setLayoutProperty(id,'visibility',w);if(m3d.getLayer(id+'-ln'))m3d.setLayoutProperty(id+'-ln','visibility',w)}}
 
-function switchMode(m){
-    mode=m;document.getElementById('map2d').style.display=m==='2d'?'block':'none';document.getElementById('map3d').style.display=m==='3d'?'block':'none';
-    document.getElementById('btn2d').classList.toggle('active',m==='2d');document.getElementById('btn3d').classList.toggle('active',m==='3d');
-    if(m==='2d'&&m2d)m2d.invalidateSize();if(m==='3d'&&m3d)m3d.resize();
-}
+function switchMode(m){}
 function zoomAll(){
     const c=document.getElementById('legendContent');let h='';
     if(mode==='2d'){

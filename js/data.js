@@ -40,13 +40,13 @@ const DUSUN_DATA = {
         luasHektar: 29.17,
         // 2025: data referensi tahun lalu (StoryMaps)
         populasi_2025: 0,
-        bangunan_2025: 119,
+        bangunan_2025: 102,
     },
 
     // ==================== BANGUNAN (2026) ====================
     bangunan2026: {
-        total: 119,
-        tempatTinggal: 101,
+        total: 102,
+        tempatTinggal: 94,
         gedung: "terdata di peta",
         catatan: "Data dari Peta Bangunan Kasuran, skala 1:3.500, survei 2026",
     },
@@ -98,7 +98,7 @@ const DUSUN_DATA = {
         {
             id: 'd-1', tabId: 'd-1',
             name: 'Peta Foto Udara',
-            icon: 'fa-drone',
+            icon: 'fa-satellite',
             filePDF: 'Peta Foto Udara.pdf',
             tahun: 2026,
             desc: 'Peta citra udara hasil akuisisi drone UAV tahun 2025, diolah secara fotogrametri. Menampilkan visualisasi wilayah Dusun Kasuran secara komprehensif: jaringan jalan, permukiman, vegetasi, lahan pertanian, dan fitur hidrografi.',
@@ -123,8 +123,8 @@ const DUSUN_DATA = {
             tahun: 2026,
             desc: 'Peta sebaran bangunan di Dusun Kasuran berdasarkan hasil digitasi foto udara dan verifikasi lapangan 2026. Mencakup klasifikasi bangunan: Gedung dan Tempat Tinggal.',
             stats: [
-                { label: 'Total Bangunan', value: '119' },
-                { label: 'Tempat Tinggal', value: '101' },
+                { label: 'Total Bangunan', value: '102' },
+                { label: 'Tempat Tinggal', value: '94' },
                 { label: 'Skala', value: '1:3.500' },
                 { label: 'Survei', value: 'Juli 2026' },
             ],
@@ -169,7 +169,7 @@ const DUSUN_DATA = {
             tahun: 2026,
             desc: 'Peta tematik persebaran sarana dan prasarana di Dusun Kasuran. Mencakup fasilitas umum, peribadatan, keamanan, dan infrastruktur pendukung kehidupan masyarakat.',
             stats: [
-                { label: 'Bangunan', value: '119' },
+                { label: 'Bangunan', value: '102' },
                 { label: 'Skala', value: '1:3.500' },
                 { label: 'Survei', value: 'Juli 2026' },
                 { label: 'Sumber', value: 'Foto Udara 2025' },
@@ -203,7 +203,7 @@ const DUSUN_DATA = {
     ],
 
     // ================================================================
-    //  5 PETA TEMATIK (2026)
+    //  2 PETA TEMATIK (2026)
     // ================================================================
     petaTematik: [
         {
@@ -221,34 +221,34 @@ const DUSUN_DATA = {
             ],
             jenisUsaha: [
                 { icon: 'fa-shopping-basket', nama: 'Perdagangan', warna: '#e74c3c', contoh: 'Warung, toko kelontong' },
-                { icon: 'fa-handshake', nama: 'Jasa', warna: '#3498db', contoh: 'Jahit, bengkel, layanan' },
-                { icon: 'fa-industry', nama: 'Industri Rumah Tangga', warna: '#f39c12', contoh: 'Usus ayam, kerajinan' },
-                { icon: 'fa-seedling', nama: 'Pertanian/Perkebunan/Peternakan', warna: '#2ecc71', contoh: 'Melon, kambing, kebun' },
+                { icon: 'fa-handshake', nama: 'Jasa', warna: '#3498db', contoh: 'Laundry, katering, salon, bengkel' },
+                { icon: 'fa-industry', nama: 'Industri Rumah Tangga', warna: '#f39c12', contoh: 'Keripik, usus ayam, kerajinan' },
+                { icon: 'fa-seedling', nama: 'Pertanian/Perkebunan/Peternakan', warna: '#2ecc71', contoh: 'Semangka, kambing, kebun' },
             ],
         },
         {
             id: 't-2', tabId: 't-2',
-            name: 'Peta Persebaran Fungsi Bangunan',
+            name: 'Peta Fungsi Bangunan',
             icon: 'fa-home',
             filePDF: 'Peta Persebaran Fungsi Bangunan.pdf',
             tahun: 2026,
             desc: 'Peta yang menunjukkan klasifikasi fungsi setiap bangunan di Dusun Kasuran — membedakan bangunan tempat tinggal dari bangunan dengan fungsi khusus lainnya (usaha, fasilitas umum, dll).',
             stats: [
-                { label: 'Bangunan', value: '119' },
+                { label: 'Bangunan', value: '102' },
                 { label: 'Skala', value: '1:3.500' },
                 { label: 'Survei', value: '6–9 Juli 2026' },
                 { label: 'Tim', value: 'Kelompok C5' },
             ],
             fungsiList: [
-                { fungsi: 'Tempat Tinggal', jumlah: 101, warna: '#e74c3c' },
-                { fungsi: 'Usaha/UMKM', jumlah: 16, warna: '#f39c12' },
+                { fungsi: 'Tempat Tinggal', jumlah: 94, warna: '#e74c3c' },
+                { fungsi: 'Usaha/UMKM', jumlah: 30, warna: '#f39c12' },
                 { fungsi: 'Fasilitas Umum', jumlah: 2, warna: '#3498db' },
                 { fungsi: 'Lainnya', jumlah: '—', warna: '#95a5a6' },
             ],
         },
         {
             id: 't-3', tabId: 't-3',
-            name: 'Peta Persebaran Jumlah Penduduk',
+            name: 'Peta Jumlah Penduduk',
             icon: 'fa-users',
             filePDF: 'Peta Persebaran Jumlah Penduduk.pdf',
             tahun: 2026,
@@ -305,7 +305,6 @@ const DUSUN_DATA = {
                 { label: 'RT', value: '3 (01-03)' },
                 { label: 'Survei', value: '6–9 Juli 2026' },
                 { label: 'Skala', value: '1:3.500' },
-                { label: 'Jenjang', value: 'Bertingkat' },
             ],
             jenjangPendidikan: ['Tidak/Belum Sekolah', 'SD/Sederajat', 'SMP/Sederajat', 'SMA/Sederajat', 'Perguruan Tinggi'],
             dataPerRT: {
@@ -338,5 +337,12 @@ const DUSUN_DATA = {
         // Dokumentasi Survei Juli 2026
         { src: 'assets/images/galeri/IMG_20260707_151057.jpg', caption: 'Survei Lapangan Dusun Kasuran', category: 'DOKUMENTASI' },
         { src: 'assets/images/galeri/IMG_20260708_100719.jpg', caption: 'Dokumentasi Wilayah Kasuran', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/permukiman-warga.jpg', caption: 'Permukiman Warga', category: 'WILAYAH' },
+        { src: 'assets/images/galeri/peternakan.jpg', caption: 'Peternakan', category: 'USAHA' },
+        { src: 'assets/images/galeri/wawancara-warga.jpg', caption: 'Wawancara Warga', category: 'DOKUMENTASI' },
+        { src: 'assets/images/galeri/rumput.jpg', caption: 'Rumput', category: 'ALAM' },
+        { src: 'assets/images/galeri/tegalan.jpg', caption: 'Tegalan/Ladang', category: 'WILAYAH' },
+        { src: 'assets/images/galeri/kebun-campur.jpg', caption: 'Kebun Campur', category: 'WILAYAH' },
+        { src: 'assets/images/galeri/sungai.jpg', caption: 'Sungai', category: 'ALAM' },
     ],
 };
