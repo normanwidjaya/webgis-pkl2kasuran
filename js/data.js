@@ -54,8 +54,7 @@ const DUSUN_DATA = {
     // ==================== PENGGUNAAN LAHAN (2026 Revisi) ====================
     penggunaanLahan2026: {
         sumber: "Peta Penggunaan Lahan Revisi (2026)",
-        hutan: 60,
-        perkebunan: 30,
+        hutanRakyat: 90,
         permukiman: 10,
     },
 
@@ -187,16 +186,14 @@ const DUSUN_DATA = {
             icon: 'fa-tree',
             filePDF: 'Peta Penggunaan Lahan Revisi.pdf',
             tahun: 2026,
-            desc: 'Peta penggunaan lahan revisi 2026 — hasil interpretasi citra dan verifikasi lapangan. Klasifikasi berdasarkan jenis aktivitas dan penutup lahan: hutan, perkebunan, permukiman.',
+            desc: 'Peta penggunaan lahan revisi 2026 — hasil interpretasi citra dan verifikasi lapangan. Klasifikasi berdasarkan jenis aktivitas dan penutup lahan: hutan rakyat, kebun campur, permukiman, ladang/tegalan.',
             stats: [
-                { label: 'Hutan', value: '60%' },
-                { label: 'Perkebunan', value: '30%' },
+                { label: 'Hutan Rakyat', value: '90%' },
                 { label: 'Permukiman', value: '10%' },
                 { label: 'Skala', value: '1:3.500' },
             ],
             chartBars: [
-                { label: 'Hutan Alami', pct: 60, color: '#2d6a4f' },
-                { label: 'Perkebunan', pct: 30, color: '#52b788' },
+                { label: 'Hutan Rakyat', pct: 90, color: '#2d6a4f' },
                 { label: 'Permukiman', pct: 10, color: '#f39c12' },
             ],
         },
@@ -223,7 +220,7 @@ const DUSUN_DATA = {
                 { icon: 'fa-shopping-basket', nama: 'Perdagangan', warna: '#e74c3c', contoh: 'Warung, toko kelontong' },
                 { icon: 'fa-handshake', nama: 'Jasa', warna: '#3498db', contoh: 'Laundry, katering, salon, bengkel' },
                 { icon: 'fa-industry', nama: 'Industri Rumah Tangga', warna: '#f39c12', contoh: 'Keripik, usus ayam, kerajinan' },
-                { icon: 'fa-seedling', nama: 'Pertanian/Perkebunan/Peternakan', warna: '#2ecc71', contoh: 'Semangka, kambing, kebun' },
+                { icon: 'fa-seedling', nama: 'Pertanian/Perkebunan/Peternakan', warna: '#2ecc71', contoh: 'Semangka, kambing, hutan rakyat' },
             ],
         },
         {

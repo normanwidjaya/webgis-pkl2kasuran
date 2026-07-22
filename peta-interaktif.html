@@ -115,8 +115,7 @@ const LAYERS=[
     {id:'batas_magelang_sekitar',label:'Batas Wilayah Sekitar',g:'Batas',f:'batas_magelang_sekitar.geojson',t:'polygon',n:16,c:'#95a5a6',fc:'#bdc3c7',fo:.04,w:1.5},
     // 5. Penggunaan Lahan
     {id:'pl_kasuran_revisi',label:'Penggunaan Lahan',g:'Penggunaan Lahan',f:'pl_kasuran_revisi.geojson',t:'fill3d',n:217,c:'#999',fc:'#4caf50',eh:4,byPL:true,plLegend:[
-        {label:'Hutan',c:'#1b5e20',pl:'1'},{label:'Hutan Rakyat',c:'#388e3c',pl:'17'},{label:'Permukiman',c:'#e74c3c',pl:'2'},{label:'Kebun Campur',c:'#7cb342',pl:'3'},
-        {label:'Ladang/Tegalan',c:'#cddc39',pl:'19,26,27,29'},{label:'Fasilitas Umum',c:'#2196f3',pl:'6'},{label:'Peribadatan',c:'#9c27b0',pl:'8'},{label:'Perdagangan',c:'#ff9800',pl:'13,28'},
+        {label:'Hutan Rakyat',c:'#1b5e20',pl:'1,3,17,22'},{label:'Kebun Campur',c:'#689f38',pl:'27'},{label:'Permukiman',c:'#e74c3c',pl:'2'},{label:'Ladang/Tegalan',c:'#cddc39',pl:'19,26,29'},{label:'Fasilitas Umum',c:'#2196f3',pl:'6'},{label:'Peribadatan',c:'#9c27b0',pl:'8'},{label:'Perdagangan',c:'#ff9800',pl:'13,28'},
     ]},
     // 4. Perairan
     {id:'perairan_area',label:'Area Perairan',g:'Alam',f:'perairan_area.geojson',t:'polygon',n:1,c:'#0277bd',fc:'#29b6f6',fo:.35,w:1.5},
@@ -280,7 +279,7 @@ function popupHTML(props,label,subtitle){
 }
 
 function getPLName(code){
-    const m={'1':'Hutan','2':'Permukiman','3':'Kebun Campur','6':'Fasilitas Umum','7':'Semak/Belukar','8':'Peribadatan','13':'Perdagangan','17':'Hutan Rakyat','18':'Tegalan','19':'Ladang','22':'Kebun','26':'Tegalan','27':'Ladang','28':'Perdagangan','29':'Ladang','34':'Sawah'};
+    const m={'1':'Hutan Rakyat','2':'Permukiman','3':'Hutan Rakyat','6':'Fasilitas Umum','7':'Semak/Belukar','8':'Peribadatan','13':'Perdagangan','17':'Hutan Rakyat','18':'Tegalan','19':'Ladang','22':'Hutan Rakyat','26':'Tegalan','27':'Kebun Campur','28':'Perdagangan','29':'Ladang','34':'Sawah'};
     return m[code]||'Penggunaan Lahan';
 }
 function getSarprasName(p){
@@ -305,7 +304,7 @@ function load2D(l){
         if(l.t==='line')o.style={color:l.c,weight:l.w||2,opacity:.85};
         else if(l.t==='point')o.pointToLayer=(f,ll)=>{const p=f.properties;const icon=sarprasIcon(p);return L.marker(ll,{icon})};
         else if(l.byRT)o.style=f=>{const rt=f.properties.RT;const rtColors={'1':'#e67e22','2':'#2ecc71','3':'#f5e6ca'};const c=rtColors[rt]||l.c;return{color:c,weight:l.w||2,fillColor:c,fillOpacity:l.fo||.12}};
-        else if(l.byPL)o.style=f=>{const pl=f.properties.KET_PL;const plc={'1':'#1b5e20','2':'#e74c3c','3':'#7cb342','6':'#2196f3','7':'#8bc34a','8':'#9c27b0','13':'#ff9800','17':'#689f38','18':'#558b2f','19':'#cddc39','22':'#8bc34a','26':'#fdd835','27':'#ffee58','28':'#ff9800','29':'#f9a825','34':'#aed581'};const c=plc[pl]||'#9e9e9e';return{color:c,weight:.5,fillColor:c,fillOpacity:.4}};
+        else if(l.byPL)o.style=f=>{const pl=f.properties.KET_PL;const plc={'1':'#1b5e20','2':'#e74c3c','3':'#388e3c','6':'#2196f3','7':'#8bc34a','8':'#9c27b0','13':'#ff9800','17':'#388e3c','18':'#558b2f','19':'#cddc39','22':'#388e3c','26':'#fdd835','27':'#ffee58','28':'#ff9800','29':'#f9a825','34':'#aed581'};const c=plc[pl]||'#9e9e9e';return{color:c,weight:.5,fillColor:c,fillOpacity:.4}};
         else{o.style={color:l.c,weight:l.w||2,fillColor:l.fc,fillOpacity:l.fo||.15};if(l.d)o.style.dashArray=l.d}
         const lg=L.geoJSON(gj,o);layerRefs2D[l.id]=lg;if(ls[l.id]!==false)lg.addTo(m2d);
         const b=lg.getBounds();if(b.isValid()){if(!ab)ab=b;else ab.extend(b)}
@@ -339,7 +338,7 @@ async function load3D(l){
             m3d.addLayer({id:l.id,source:sid,type:'fill',paint:{'fill-color':fc,'fill-opacity':l.fo||.15,'fill-outline-color':oc},layout:{visibility:v()}});
             m3d.addLayer({id:l.id+'-ln',source:sid,type:'line',paint:{'line-color':oc,'line-width':l.w||1.5,'line-opacity':.4},layout:{visibility:v()}})}
         else if(l.t==='fill3d'){
-            const ec=l.byPL?['match',['get','KET_PL'],'1','#1b5e20','2','#e74c3c','3','#7cb342','6','#2196f3','7','#8bc34a','8','#9c27b0','13','#ff9800','17','#689f38','18','#558b2f','19','#cddc39','22','#8bc34a','26','#fdd835','27','#ffee58','28','#ff9800','29','#f9a825','34','#aed581',l.fc]:l.fc;
+            const ec=l.byPL?['match',['get','KET_PL'],'1','#1b5e20','2','#e74c3c','3','#388e3c','6','#2196f3','7','#8bc34a','8','#9c27b0','13','#ff9800','17','#388e3c','18','#558b2f','19','#cddc39','22','#388e3c','26','#fdd835','27','#ffee58','28','#ff9800','29','#f9a825','34','#aed581',l.fc]:l.fc;
             m3d.addLayer({id:l.id+'-ext',source:sid,type:'fill-extrusion',paint:{'fill-extrusion-color':ec,'fill-extrusion-height':l.eh||6,'fill-extrusion-opacity':.7},layout:{visibility:v()}});
             m3d.addLayer({id:l.id,source:sid,type:'line',paint:{'line-color':l.c,'line-width':.5,'line-opacity':.5},layout:{visibility:v()}})}
         else if(l.t==='line')m3d.addLayer({id:l.id,source:sid,type:'line',paint:{'line-color':l.c,'line-width':l.w||2,'line-opacity':.85},layout:{visibility:v()}});
@@ -372,7 +371,7 @@ function zoomAll(){
         h+='<div style="margin:8px 0 6px;"><strong style="font-size:.65rem;color:#666;">PENGGUNAAN LAHAN</strong></div>';
         h+='<div class="legend-row"><div class="legend-swatch" style="background:#1b5e20;"></div> Hutan</div>';
         h+='<div class="legend-row"><div class="legend-swatch" style="background:#e74c3c;"></div> Permukiman</div>';
-        h+='<div class="legend-row"><div class="legend-swatch" style="background:#7cb342;"></div> Kebun Campur</div>';
+        h+='<div class="legend-row"><div class="legend-swatch" style="background:#388e3c;"></div> Hutan Rakyat</div>';
         h+='<div class="legend-row"><div class="legend-swatch" style="background:#cddc39;"></div> Ladang/Tegalan</div>';
         h+='<div class="legend-row"><div class="legend-swatch" style="background:#2196f3;"></div> Fasilitas Umum</div>';
         h+='<div class="legend-row"><div class="legend-swatch" style="background:#9c27b0;"></div> Peribadatan</div>';
